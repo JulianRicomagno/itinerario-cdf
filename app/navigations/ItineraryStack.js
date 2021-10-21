@@ -1,16 +1,39 @@
-import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack-navigator';
-import Itinerary from '../screens/Itinerary';
+import React from "react";
+import { createStackNavigator } from "@react-navigation/stack";
+
+import General from "../screens/Attractions/General";
+import CreateItineraty from "../screens/Attractions/CreateItineraty";
+import DetalleAtraccion from "../screens/Attractions/DetalleAtraccion";
+import MyTrip from "../screens/Attractions/MyTrip";
+import SearchAtraccion from "../screens/Attractions/SearchAtraccion";
 
 const Stack = createStackNavigator();
+
 export default function ItineraryStack() {
-    return (
-        <Stack.Navigator>
-            <Stack.Screen
-                name="attractions"
-                component={Itinerary}
-                options={{ title: 'Itinerario' }}
-            />
+    return(
+        <Stack.Navigator 
+        >
+            <Stack.Screen 
+                name="general" 
+                component={General} 
+                options={{title: "Home"}}/>
+            <Stack.Screen 
+                name="createItineraty" 
+                component={CreateItineraty} 
+                options={{title: "Crear Itinerario"}}/>
+            <Stack.Screen 
+                name="detalleAtraccion" 
+                component={DetalleAtraccion} 
+                options={{title: "Detalle Atraccion"}}/>
+            <Stack.Screen 
+                name="myTrip" 
+                component={MyTrip} 
+                options={{title: "Mi viaje"}}/>
+            <Stack.Screen 
+                name="searchAtraccion" 
+                component={SearchAtraccion} 
+                options={{title: "Search Atraccion"}}/> 
         </Stack.Navigator>
     )
+    
 }
