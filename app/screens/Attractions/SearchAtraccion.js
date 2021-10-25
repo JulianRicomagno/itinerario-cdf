@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { StyleSheet, View, Text } from "react-native";
 
-
 export default function SearchAtraccion() {
         //Local
     const [atraccion, setAtraccion] = useState([]);
@@ -38,11 +37,22 @@ export default function SearchAtraccion() {
             <Text>Aca va el listado de  las atracciones ofrecidas</Text>
             {console.log(atraccion)}
             {atraccion.map((atra, idx) => (<Text key={idx}> {atra.name} </Text>))}
-
-          
-
-      
-            
         </View>
     )
 }
+
+const styles = StyleSheet.create({
+    input: {
+        alignSelf: 'center',
+        paddingVertical: 15,
+        marginVertical: 10,
+        width: '60%',
+        borderRadius: 32,
+        borderColor: '#32BB77',
+        borderWidth: 1
+    },
+    buttonText: {
+        textAlign: 'center',
+        fontSize: 18
+    }
+})
