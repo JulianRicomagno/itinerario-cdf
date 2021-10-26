@@ -1,10 +1,17 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { StyleSheet, View, Text } from "react-native";
+import {SearchBar} from 'react-native-elements';
 
 export default function SearchAtraccion() {
         //Local
     const [atraccion, setAtraccion] = useState([]);
     const [isLoading , setIsLoading] = useState(true);
+    const [search, setSearch] = useState('');
+
+    const items = [
+        {item: 'item1' , path: 'tobe'},
+        {item: 'item2' , path: 'tobe'}
+    ]
     
     async function buscarAtraccion() {
         const requestOptions = {
@@ -27,16 +34,32 @@ export default function SearchAtraccion() {
     useEffect(() =>{
         setTimeout(()=>{
             buscarAtraccion();
-        setIsLoading(false);
+            setIsLoading(false);
         },400);
     }, []);
 
     
     return (
         <View>
-            <Text>Aca va el listado de  las atracciones ofrecidas</Text>
-            {console.log(atraccion)}
-            {atraccion.map((atra, idx) => (<Text key={idx}> {atra.name} </Text>))}
+                <View style={{padding:20}}>
+                    <SearchBar
+                    placeholder="Search..."
+                    onChangeText={(e)=> setSearch(e)}
+                    value={search}
+                    placeholderTextColor={'#0B3534'}
+                    inputContainerStyle={styles.searchBarInput}
+                    containerStyle={styles.searchBarContainer}
+                    inputStyle={styles.searchBarInput}
+                    searchIcon={{color: '#32BB77'}}
+                    />
+                </View>
+                <View style={{flex: 1, flexDirection:'row', justifyContent:'center'}}>
+
+                </View>
+                <View>
+                    <Text>Aca va el listado de  las atracciones ofrecidas</Text>
+                    {atraccion.map((atra, idx) => (<Text key={idx}> {atra.name} </Text>))}
+                </View>
         </View>
     )
 }
@@ -54,5 +77,20 @@ const styles = StyleSheet.create({
     buttonText: {
         textAlign: 'center',
         fontSize: 18
+    },
+    searchBarContainer :{ 
+        borderColor: '#32BB77',
+        backgroundColor: '#FFFFFF',
+        borderRadius: 30,
+        height: 45,
+        borderWidth: 2,
+        borderTopColor: '#32BB77',
+        borderBottomColor: '#32BB77'
+    },
+    searchBarInput: {
+        height: 30,
+        borderRadius: 30,
+        backgroundColor: '#FFFFFF',
+        color: '#0B3534'
     }
 })
