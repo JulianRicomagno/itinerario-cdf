@@ -4,12 +4,13 @@ import {SearchBar} from 'react-native-elements';
 import AttracItem from "../../components/attracItem";
 import TagItem from "../../components/tagItem";
 
-export default function SearchAtraccion() {
+export default function SearchAtraccion(props) {
+    const {navigation, route} = props;
     const [atraccion, setAtraccion] = useState([]);
     const [isLoading , setIsLoading] = useState(true);
     const [search, setSearch] = useState('');
     const [selectedId, setSelectedId] = useState('all');
-
+    
     const tags = [
         {title: 'all' , id: 'all'},
         {title: 'alive' , id: 'alive'},
@@ -101,7 +102,9 @@ export default function SearchAtraccion() {
         return(
             <AttracItem
                 item={item}
-                onPress={onPress()}/>   
+                onPress={() => {navigation.navigate(
+                    'detalleAtraccion' , {item: item}
+                )}}/>   
         );
     }
 

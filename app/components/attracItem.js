@@ -3,12 +3,12 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import {StyleSheet} from 'react-native';
 import React from 'react';
 
-export default function AttracItem({item}) {
+export default function AttracItem({item, onPress}) {
     return (
         <ListItem
             Component={TouchableOpacity}
             style={[styles.atracItem]}
-            onPress={() => {}}>
+            onPress={onPress}>
                     <Avatar size={100} rounded={true} source={{uri: item.image}}/>
                     <ListItem.Content>
                         <ListItem.Title>{item.name}</ListItem.Title>
