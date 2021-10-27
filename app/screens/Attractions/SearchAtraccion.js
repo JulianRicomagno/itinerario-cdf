@@ -1,24 +1,42 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text, FlatList, SafeAreaView, StatusBar} from "react-native";
 import {SearchBar} from 'react-native-elements';
+import AttracItem from "../../components/attracItem";
+import TagItem from "../../components/tagItem";
 
 export default function SearchAtraccion() {
-        //Local
     const [atraccion, setAtraccion] = useState([]);
     const [isLoading , setIsLoading] = useState(true);
     const [search, setSearch] = useState('');
+    const [selectedId, setSelectedId] = useState('all');
 
-    const items = [
-        {item: 'item1' , path: 'tobe'},
-        {item: 'item2' , path: 'tobe'}
+    const tags = [
+        {title: 'all' , id: 'all'},
+        {title: 'alive' , id: 'alive'},
+        {title: 'dead' , id: 'dead'},
+        {title: 'unknown' , id: 'unknown'},
+        {title: 'fillertext' , id: 'aa3'},
+        {title: 'fillertext' , id: 'aa4'},
+        {title: 'fillertext' , id: 'aa5'},
     ]
     
     async function buscarAtraccion() {
         const requestOptions = {
           method: "GET",
         }
+        if(selectedId === 'all' ) {
+            try{
+                const atr = fetch(`https://rickandmortyapi.com/api/character/?name=${search}`, requestOptions)
+                return atr
+                    .then(res => res.json())
+                    .then(data => {
+                        setAtraccion(data.results);
+                    })
+                    .catch(error => console.log('Ocurrio un error ' + error));
+            }catch(error){console.log(error.message);}
+        } 
         try{
-        const atr = fetch('https://rickandmortyapi.com/api/character', requestOptions);
+        const atr = fetch(`https://rickandmortyapi.com/api/character/?name=${search}&status=${selectedId}`, requestOptions);
         return atr
           .then(res => res.json())
           .then(data => {
@@ -30,20 +48,18 @@ export default function SearchAtraccion() {
         }catch(error){console.log(error.message);}
       }
     
-    
     useEffect(() =>{
         setTimeout(()=>{
             buscarAtraccion();
             setIsLoading(false);
         },400);
-    }, []);
+    }, [search, selectedId]);
 
-    
     return (
-        <View>
+        <View style={{flex: 1, backgroundColor: '#FFFFFF'}}>
                 <View style={{padding:20}}>
                     <SearchBar
-                    placeholder="Search..."
+                    placeholder="Search Attractions..."
                     onChangeText={(e)=> setSearch(e)}
                     value={search}
                     placeholderTextColor={'#0B3534'}
@@ -53,15 +69,57 @@ export default function SearchAtraccion() {
                     searchIcon={{color: '#32BB77'}}
                     />
                 </View>
-                <View style={{flex: 1, flexDirection:'row', justifyContent:'center'}}>
-
+                <View style={{ flexDirection:'row', justifyContent:'center'}}>
+                    <SafeAreaView style={styles.container}>
+                        <FlatList
+                            horizontal={true}
+                            data={tags}
+                            renderItem={renderTagItem}
+                            keyExtractor={(item) => item.id}                            
+                            showsHorizontalScrollIndicator={false}
+                            extraData={selectedId}
+                        />
+                    </SafeAreaView>
                 </View>
-                <View>
-                    <Text>Aca va el listado de  las atracciones ofrecidas</Text>
-                    {atraccion.map((atra, idx) => (<Text key={idx}> {atra.name} </Text>))}
-                </View>
+                {atraccion == undefined ?
+                (<View>
+                    <Text style={styles.primaryText}>No se encontraron resultados</Text>
+                </View>) : (
+                    <View style={{flex: 1, flexDirection:'column', justifyContent:'center'}}>
+                        <SafeAreaView style={styles.container}>
+                            <FlatList
+                                keyExtractor={(item) => item.id}
+                                data={atraccion}
+                                renderItem={renderAtracc}
+                            />
+                        </SafeAreaView>
+                </View>)}
         </View>
-    )
+    );
+
+    function renderAtracc({ item })  {
+        return(
+            <AttracItem
+                item={item}
+                onPress={onPress()}/>   
+        );
+    }
+
+    function renderTagItem({ item })  {
+        const backgroundColor = item.id === selectedId ?  '#32BB77' : '#FFFFFF';
+        const color = item.id === selectedId ? '#FFFFFF' : '#32BB77' ;
+
+        return (
+            <TagItem
+                item={item}
+                onPress={() => setSelectedId(item.id)}
+                backgroundColor={{ backgroundColor }}
+                textColor={{ color }}
+            />
+        );
+    };
+
+    
 }
 
 const styles = StyleSheet.create({
@@ -92,5 +150,13 @@ const styles = StyleSheet.create({
         borderRadius: 30,
         backgroundColor: '#FFFFFF',
         color: '#0B3534'
-    }
-})
+    },
+    container: {
+        flex : 1,
+        marginTop: StatusBar.currentHeight || 0,
+      },
+      secondaryText: {
+        fontSize: 14,
+        color: 'grey',
+      },
+});
