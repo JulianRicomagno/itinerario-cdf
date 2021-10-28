@@ -28,6 +28,7 @@ export default function General(props) {
                 title="Detalle Atracciones"
                 onPress={() =>
                     navigation.navigate("detalleAtraccion")}
+                    disabled={true}
             />
             
             </View>
