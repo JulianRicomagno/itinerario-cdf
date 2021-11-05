@@ -27,6 +27,7 @@
     "react-native-safe-area-context": "3.2.0",
     "react-native-screens": "~3.4.0",
     "react-native-shapes": "^0.1.0",
+    "react-native-timeline-flatlist": "^0.7.6",
     "react-native-web": "~0.13.12"
   },
   "devDependencies": {
