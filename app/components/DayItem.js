@@ -8,10 +8,8 @@ import ButtonAdd from './ButtonAdd';
 
 export default function DayItem({item, navigator}) {
     const data = [
-                    {title: '', description: '' , image: ''},
+                    {title: '', description: 'asdasd' , image: ''},
                     {title: item.name , description: item.status , image: item.image, gender: item.gender, species: item.species,},
-                    {title: 'asdasd', description: 'asdasd' , image: ''},
-                    {title: 'asdasd', description: 'asdasd' , image: ''},
                     {title: 'asdasd', description: 'asdasd' , image: ''},
                 ]
     

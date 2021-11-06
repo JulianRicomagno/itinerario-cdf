@@ -6,6 +6,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function MiniAttracItem({item, onPress}) {
     if(item.title !== ''){
+      item.name = item.title;
+      item.status = item.description;
     return (
         <SafeAreaView style={{marginBottom: 35, flex: 1, marginTop: -15,}}>
         <ListItem
