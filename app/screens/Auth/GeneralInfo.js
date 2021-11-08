@@ -8,17 +8,17 @@ import {
   KeyboardAvoidingView,
 } from "react-native";
 import logo from "../../../assets/logoPosadas.png";
-import { LoginForm } from "../../components/Auth/LoginForm";
+import { GeneralInfoForm } from "../../components/Auth/GeneralInfoForm";
 
-export default function Login(props) {
-  const { navigation, route } = props;
-
+export default function GeneralInfo(props) {
+  const { navigation } = props;
   return (
     <ScrollView style={{ backgroundColor: "white" }}>
       <View style={styles.container}>
         <Image style={styles.logo} source={logo} />
-        <Text style={styles.textTitles}> PosadaApp </Text>
-        <LoginForm navigation={navigation} />
+        <Text style={styles.textTitles}> General Info </Text>
+        <GeneralInfoForm />
+        <Text onPress={() => navigation.navigate("login")}> Log in </Text>
       </View>
     </ScrollView>
   );
