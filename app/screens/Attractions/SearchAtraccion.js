@@ -92,7 +92,7 @@ export default function SearchAtraccion(props) {
             horizontal={true}
             data={tags}
             renderItem={renderTagItem}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item) => item.id.toString()}
             showsHorizontalScrollIndicator={false}
             extraData={selectedId}
           />
@@ -108,7 +108,7 @@ export default function SearchAtraccion(props) {
         >
           <SafeAreaView style={styles.container}>
             <FlatList
-              keyExtractor={(item) => item.id}
+              keyExtractor={(item) => item.id.toString()}
               data={atraccion}
               renderItem={renderAtracc}
             />

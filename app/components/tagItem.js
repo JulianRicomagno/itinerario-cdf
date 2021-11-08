@@ -1,6 +1,6 @@
-import { TouchableOpacity } from 'react-native-gesture-handler';
+//import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Text } from 'react-native-elements';
-import {StyleSheet} from 'react-native';
+import {StyleSheet , TouchableOpacity} from 'react-native';
 import React from 'react';
 
 export default function TagItem({item , onPress, backgroundColor, textColor}) {
@@ -13,7 +13,8 @@ export default function TagItem({item , onPress, backgroundColor, textColor}) {
 
 const styles = StyleSheet.create({
     itemText: {
-        fontSize: 22
+        fontSize: 22,
+        textAlign: 'center',
     },
     item: {
         padding: 5,
@@ -26,6 +27,6 @@ const styles = StyleSheet.create({
         width: 'auto',
         maxWidth: 200,
         minWidth: 100,
-        textAlign: 'center',
+        alignContent: 'center',
       },
 })
