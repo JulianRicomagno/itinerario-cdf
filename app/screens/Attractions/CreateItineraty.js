@@ -27,6 +27,12 @@ export default function CreateItineraty(props) {
   const [place, setPlace] = useState("Select type of stay");
   const [search, setSearch] = useState("");
   const [hoteles, setHoteles] = useState([]);
+  const [day, setDay] = useState();
+
+  /*async function calcDay () {
+    const dias = diff.
+    return
+  }*/
 
   async function buscarHotel() {
     const requestOptions = {
@@ -77,6 +83,13 @@ export default function CreateItineraty(props) {
           selectedDayTextColor="#FFFFFF"
           onDateChange={onDateChange}
         />
+        {console.log(typeof selectedStartDate)}
+        {console.log(typeof selectedEndDate)}
+        {console.log(selectedStartDate)}
+        {console.log(selectedEndDate)}
+        {console.log(Date.parse(selectedStartDate))}
+        {console.log(Date.parse(selectedEndDate))}
+
         <Text style={styles.text}> Place of Stay </Text>
         <View>
           <View style={styles.picker}>
@@ -152,7 +165,10 @@ function Hotel(props) {
 
   return (
     <View>
-      <ListItem bottomDivider onPress={() => navigation.navigate("myTrip")}>
+      <ListItem
+        bottomDivider
+        onPress={() => navigation.navigate("myTrip", { item: null })}
+      >
         <Avatar source={{ uri: image }} />
         <ListItem.Content>
           <ListItem.Title>{name}</ListItem.Title>
