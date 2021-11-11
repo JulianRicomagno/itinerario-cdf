@@ -10,7 +10,6 @@ export default function DayItem({item, navigator}) {
     const data = [
                     {title: '', description: 'asdasd' , image: ''},
                     {title: item.name , description: item.status , image: item.image, gender: item.gender, species: item.species,},
-                    {title: 'asdasd', description: 'asdasd' , image: ''},
                 ]
     
     const renderDetail = (rowData, sectionID, rowID) => {

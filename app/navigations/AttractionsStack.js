@@ -1,6 +1,7 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import Attractions from '../screens/Attractions';
+import SearchAtraccion from '../screens/Attractions/SearchAtraccion';
 
 const Stack = createStackNavigator();
 export default function AttractionsStack() {
@@ -8,7 +9,7 @@ export default function AttractionsStack() {
         <Stack.Navigator>
             <Stack.Screen
                 name="attractions"
-                component={Attractions}
+                component={SearchAtraccion}
                 options={{ title: 'Atracciones' }}
             />
         </Stack.Navigator>

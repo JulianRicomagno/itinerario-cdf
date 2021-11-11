@@ -44,7 +44,7 @@ export default function MyTrip({ route, navigation }) {
       buscarAtraccion();
     }, 400);
   }, [])
-
+  
   return(
     <View style={styles.container}>
       <FlatList

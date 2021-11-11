@@ -1,14 +1,23 @@
-import React from 'react';
+import React , {useState, useEffect} from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Icon } from 'react-native-elements';
 import AccountStack from './AccountStack';
 import AttractionsStack from './AttractionsStack';
+import LoggedAccountStack from './LoggedAccountStack';
 import ItineraryStack from './ItineraryStack';
+import { Image } from 'react-native';
+import {useAuthContext, useAuthUpdateContext} from '../utils/Context/AuthContext' 
+import { handleUser } from '../utils/Context/Storage';
+import logo from '../../assets/logoPosadas.png';
 
 const Tab = createBottomTabNavigator();
-
 export default function Navigation() {
+    const updateUser = useAuthUpdateContext();
+    const user = useAuthContext();
+    const [isLoading , setIsLoading] = useState(true);
+
+    if(user.token != undefined && user.token !== ''){
     return (
         <NavigationContainer>
             <Tab.Navigator
@@ -20,6 +29,7 @@ export default function Navigation() {
                     tabBarIcon: ({ color }) => screenOptions(route, color), 
                 })}
             >
+                
                 <Tab.Screen
                     name='explore'
                     component={AttractionsStack}
@@ -30,11 +40,18 @@ export default function Navigation() {
                     options={{ title: 'Itinerario' }}/>
                 <Tab.Screen
                     name='account'
-                    component={AccountStack}
+                    component={LoggedAccountStack}
                     options={{ title: 'Mi Cuenta' }}/>
             </Tab.Navigator>
         </NavigationContainer>
-    )
+    );
+    }
+    return(
+        <NavigationContainer>
+            <AccountStack/>
+        </NavigationContainer>
+    );
+    
 }
 
 function screenOptions(route, color) {

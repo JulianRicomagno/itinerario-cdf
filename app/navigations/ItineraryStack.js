@@ -12,11 +12,7 @@ const Stack = createStackNavigator();
 export default function ItineraryStack() {
     return(
         <Stack.Navigator 
-        >
-            <Stack.Screen 
-                name="general" 
-                component={General} 
-                options={{title: "Home"}}/>
+        >   
             <Stack.Screen 
                 name="createItineraty" 
                 component={CreateItineraty} 
