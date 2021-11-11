@@ -5,20 +5,19 @@ import {
   ScrollView,
   View,
   Text,
-  KeyboardAvoidingView,
 } from "react-native";
 import logo from "../../../assets/logoPosadas.png";
 import { GeneralInfoForm } from "../../components/Auth/GeneralInfoForm";
 
 export default function GeneralInfo(props) {
-  const { navigation } = props;
+  const { navigation , route } = props;
   return (
     <ScrollView style={{ backgroundColor: "white" }}>
       <View style={styles.container}>
         <Image style={styles.logo} source={logo} />
-        <Text style={styles.textTitles}> General Info </Text>
-        <GeneralInfoForm />
-        <Text onPress={() => navigation.navigate("login")}> Log in </Text>
+        <Text style={styles.textTitles}> Información General </Text>
+        <GeneralInfoForm navigation={navigation} route={route}/>
+        <Text onPress={() => navigation.navigate("login")}> Inicio </Text>
       </View>
     </ScrollView>
   );

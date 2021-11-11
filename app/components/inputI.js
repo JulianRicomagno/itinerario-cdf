@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from 'react-native'
 import { Input } from 'react-native-elements';
 
 export function InputI(props) {
-    const { placeHolder, isSecure } = props;
+    const { placeHolder, isSecure , onChange , defaultValue } = props;
     return (
         <View>
             <Input
@@ -15,6 +15,8 @@ export function InputI(props) {
                 placeholder={placeHolder}
                 inputContainerStyle={{ borderBottomWidth: 0 }}
                 secureTextEntry={isSecure}
+                defaultValue={defaultValue}
+                onChangeText={onChange}
         />
         </View>
     )

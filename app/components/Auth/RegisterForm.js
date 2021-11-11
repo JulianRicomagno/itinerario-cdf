@@ -1,18 +1,21 @@
-import React from "react";
+import React , {useState} from "react";
 import { StyleSheet, View, Text } from "react-native";
 import { InputI } from "../../components/inputI";
 import { GreenButton } from "../../components/buttonI";
 
-export function RegisterForm(props) {
-  const { navigation } = props;
+export function RegisterForm({route, navigation}) {
+  const [email , setEmail] = useState('');
+  const [passwd, setPasswd] = useState('');
+  const [userName , setUserName] = useState('');
+  // <InputI placeHolder="Confirm Password" isSecure={true} /> (Cuando valide lo agrego)
+
   return (
     <View style={styles.formContainer}>
-      <InputI placeHolder="Username" />
-      <InputI placeHolder="Email" />
-      <InputI placeHolder="Password" isSecure={true} />
-      <InputI placeHolder="Confirm Password" isSecure={true} />
+      <InputI placeHolder="Nombre de Usuario" onChange={setUserName} />
+      <InputI placeHolder="Correo electrónico" onChange={setEmail} />
+      <InputI placeHolder="Contraseña" isSecure={true} onChange={setPasswd}/>
       <GreenButton
-        onPress={() => navigation.navigate("generalinfo")}
+        onPress={() => navigation.navigate("generalinfo" , { user: {userName: userName , passwd: passwd, email: email}})}
         text="Continuar"
       />
     </View>

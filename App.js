@@ -1,13 +1,12 @@
-import React, { useState } from 'react';
-import { View } from 'react-native';
+import React from 'react';
 import Navigation from './app/navigations/Navigation';
-import Auth from './app/screens/Auth/Auth';
-import Login from './app/screens/Auth/Login';
+import { AuthProvider } from './app/utils/Context/AuthContext';
 
-export default function App() {
-  // const [auth, setAuth] = useState(true);
+export default function App() {  
   
   return (
+    <AuthProvider>
       <Navigation/>
+    </AuthProvider>
   );
 }
