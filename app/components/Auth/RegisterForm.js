@@ -1,8 +1,7 @@
-import React , {useState} from "react";
-import { StyleSheet, View, Text } from "react-native";
+import React , {useState, useEffect} from "react";
+import { StyleSheet, View } from "react-native";
 import { InputI } from "../../components/inputI";
 import { GreenButton } from "../../components/buttonI";
-//import { Input } from 'react-native-elements';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
 
@@ -28,7 +27,7 @@ const registerSchema = Yup.object().shape({
 });
 
 export function RegisterForm({route, navigation}) {
-  
+ 
   return (
 
     <Formik
