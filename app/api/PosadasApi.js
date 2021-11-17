@@ -37,3 +37,39 @@ export function registerUser(user){
         nationality: user.nationality,
     })
 }
+
+
+export async function getToken(){
+    return await axios({
+        method: 'get',
+        url: 'https://www.universal-tutorial.com/api/getaccesstoken',
+        headers: {
+            "Accept": "application/json",
+            "api-token": "UywfGTVaISQviEE6aZtvNOLKmGgBhkRGsBDvT4Sg3UwfI5hQMMpeYRoAmE237O2dtDw",
+            "user-email": "aa.sorrentino94@gmail.com"
+        }
+    })
+}
+
+    
+export async function getCountries(token){
+    return await axios({
+    method: 'get',
+    url: 'https://www.universal-tutorial.com/api/countries/',
+        headers: {
+        "Authorization": `bearer ${token}`,
+        "Accept": "application/json"
+        }
+    })
+}
+
+export async function getCities(token, country){
+    return await axios({
+    method: 'get',
+    url: `https://www.universal-tutorial.com/api/states/${country} `,
+        headers: {
+        "Authorization": `bearer ${token}`,
+        "Accept": "application/json"
+        }
+    })
+}
