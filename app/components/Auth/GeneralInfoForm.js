@@ -1,4 +1,4 @@
-import React , {useState} from "react";
+import React , {useState, useEffect} from "react";
 import { StyleSheet, View, Text, ScrollView } from "react-native";
 import { InputI } from "../../components/inputI";
 import { GreenButton } from "../../components/buttonI";
@@ -8,8 +8,9 @@ import { ItemDropdown } from "../ItemDropdown";
 import * as Yup from 'yup';
 import { Formik } from 'formik';
 import RNPickerSelect from "react-native-picker-select";
+import {getToken, getCountries, getCities} from "../../api/PosadasApi"
 
-const mensajeYup = 'El campo es obligatorio';
+const mensajeYup = "El campo es obligatorio";
 
 const generalInfoSchema = Yup.object().shape({
   name: Yup
@@ -32,16 +33,22 @@ const generalInfoSchema = Yup.object().shape({
 
   countryOrigin: Yup
   .string(mensajeYup)
-  .required(mensajeYup),
+  .required(mensajeYup)
+  .typeError(mensajeYup),
 
   countryResidence: Yup
   .string(mensajeYup)
-  .required(mensajeYup),
+  .required(mensajeYup)
+  .typeError(mensajeYup),
 
   cityResidence: Yup
-  .string(mensajeYup)
-  .required(mensajeYup),
+  .string("Campo obligatorio")
+  .required(mensajeYup)
+  .typeError(mensajeYup),
 });
+
+
+
 
 export function GeneralInfoForm({route , navigation}) {
   const {userName, email, passwd} = route.params.user;
@@ -49,6 +56,68 @@ export function GeneralInfoForm({route , navigation}) {
   const [nationality, setNationality] = useState('Pais de Origen');
   const [country, setCountry] = useState('Pais de Residencia');
   const [city, setCity] = useState('Ciudad de Residencia');
+
+  const [countryNames, setCountryNames] = useState([]);
+ 	const [citiesName, setCitiesName] = useState([]);
+	const [token, setToken] = useState();
+
+  useEffect(() => {
+    getToken().then(response => {
+        setToken(response.data.auth_token)
+        getAllCountries(response.data.auth_token)
+
+    }).catch(error => {
+      console.log(error.message)
+    })
+
+  },[])
+
+  useEffect(() => {
+    //console.log(countryNames)
+    getAllCities(token, country)
+
+  },[country])
+
+
+  function getAllCountries(token){ 
+    if(token){
+      let countries = [];
+      getCountries(token).then(response => {
+        response.data.forEach(c=>{
+          let myCountry = {
+           label: c.country_name,
+           value: c.country_name
+         }
+         countries.push(myCountry)
+       })
+        setCountryNames(countries)
+      }).catch(error => {
+        console.log(error.message)
+      })
+    }
+  }
+
+  function getAllCities(token, country){ 
+    if(token && country){
+      let cities = [];
+      getCities(token, country).then(response => {
+        response.data.forEach(c=>{
+          let myCity = {
+           label: c.state_name,
+           value: c.state_name
+         } 
+         cities.push(myCity)
+       })
+        setCitiesName(cities)
+      }).catch(error => {
+        console.log(error.message)
+      })
+    }
+    
+  }
+
+
+
 
   function register(data){
     const user = {
@@ -63,7 +132,7 @@ export function GeneralInfoForm({route , navigation}) {
       country: data.countryResidence, 
       city: data.cityResidence,}
     handleUser('register' , () => {} , user);
-    navigation.navigate('login');
+    //navigation.navigate('login');
   }
 
   const generoPlaceHolder = {
@@ -94,6 +163,9 @@ export function GeneralInfoForm({route , navigation}) {
     { label: "Masculino", value: "Masculino" },
     { label: "Femenino", value: "Femenino" },
   ]
+
+
+
 
   return (
 
@@ -164,10 +236,7 @@ export function GeneralInfoForm({route , navigation}) {
       <View style={styles.picker}>
         <RNPickerSelect
           placeholder={nationalityPlaceHolder}
-          items={[
-            { label: "Argentina", value: "Argentina" },
-            { label: "Brasil", value: "Brasil" },
-          ]}
+          items={countryNames}
           onValueChange={(value) => { 
             setNationality(value);
             setFieldValue('countryOrigin',value);
@@ -182,10 +251,7 @@ export function GeneralInfoForm({route , navigation}) {
       <View style={styles.picker}>
         <RNPickerSelect
           placeholder={countryPlaceHolder}
-          items={[
-            { label: "Argentina", value: "Argentina" },
-            { label: "Brasil", value: "Brasil" },
-          ]}
+          items={countryNames}
           onValueChange={(value) => { 
             setCountry(value);
             setFieldValue('countryResidence',value);
@@ -200,10 +266,7 @@ export function GeneralInfoForm({route , navigation}) {
       <View style={styles.picker}>
         <RNPickerSelect
           placeholder={cityPlaceHolder}
-          items={[
-            { label: "Buenos Aires", value: "Buenos Aires" },
-            { label: "Cordoba", value: "Cordoba" },
-          ]}
+          items={citiesName}
           onValueChange={(value) => { 
             setCity(value);
             setFieldValue('cityResidence',value);
