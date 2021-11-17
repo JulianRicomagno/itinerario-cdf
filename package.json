@@ -17,6 +17,7 @@
     "axios": "^0.24.0",
     "expo": "~42.0.1",
     "expo-status-bar": "~1.0.4",
+    "formik": "^2.2.9",
     "moment": "^2.29.1",
     "react": "16.13.1",
     "react-dom": "16.13.1",
@@ -30,7 +31,8 @@
     "react-native-screens": "~3.4.0",
     "react-native-shapes": "^0.1.0",
     "react-native-timeline-flatlist": "^0.7.6",
-    "react-native-web": "^0.17.5"
+    "react-native-web": "^0.17.5",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0"

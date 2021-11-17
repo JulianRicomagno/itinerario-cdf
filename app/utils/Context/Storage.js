@@ -50,7 +50,7 @@ function register(user){
     try{
     registerUser(user)
         .then(response => {
-            console.log(JSON.stringify(response));
+            //console.log(JSON.stringify(response));
             if(JSON.stringify(response.status) == '200'){
                 return alert('Registro exitoso.');
             }

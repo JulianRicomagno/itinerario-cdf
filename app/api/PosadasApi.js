@@ -23,7 +23,7 @@ export async function loginUser(user){
     
 export function registerUser(user){
     const url = `${API_HOST}api/user/create`
-    console.log(user);
+    //console.log(user);
     return axios.post(url , {
         userName: user.userName,
         email: user.email,
@@ -34,5 +34,6 @@ export function registerUser(user){
         country: user.country,
         city: user.city,
         gender: user.gender,
+        nationality: user.nationality,
     })
 }

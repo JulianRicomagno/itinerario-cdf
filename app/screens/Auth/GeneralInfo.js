@@ -17,7 +17,7 @@ export default function GeneralInfo(props) {
         <Image style={styles.logo} source={logo} />
         <Text style={styles.textTitles}> Información General </Text>
         <GeneralInfoForm navigation={navigation} route={route}/>
-        <Text onPress={() => navigation.navigate("login")}> Inicio </Text>
+        {/* <Text onPress={() => navigation.navigate("login")}> Inicio </Text> */}
       </View>
     </ScrollView>
   );
@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   textTitles: {
-    alignSelf: "center",
+    textAlign: "center",
     fontSize: 48,
     color: "#0B3534",
   },
