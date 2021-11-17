@@ -7,6 +7,7 @@ import { useAuthContext } from '../utils/Context/AuthContext';
 export async function loginUser(user){
     const url = `${API_HOST}api/auth/login`;
     console.log('busca');
+    console.log(user);
     return axios.post(url , user);
   };
     //const retorno = axios({

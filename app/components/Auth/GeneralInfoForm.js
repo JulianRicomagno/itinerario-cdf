@@ -8,7 +8,7 @@ import { ItemDropdown } from "../ItemDropdown";
 import * as Yup from 'yup';
 import { Formik } from 'formik';
 import RNPickerSelect from "react-native-picker-select";
-import {getToken, getCountries, getCities} from "../../api/PosadasApi"
+import {getCities} from "../../api/PosadasApi"
 
 const mensajeYup = "El campo es obligatorio";
 
@@ -29,73 +29,45 @@ const generalInfoSchema = Yup.object().shape({
 
   genre: Yup
   .string(mensajeYup)
-  .required(mensajeYup),
+  .required(mensajeYup)
+  .typeError(mensajeYup)
+  .notOneOf(['Genero'],mensajeYup),
 
   countryOrigin: Yup
   .string(mensajeYup)
   .required(mensajeYup)
+  .notOneOf(['Nacionalidad'],mensajeYup)
   .typeError(mensajeYup),
 
   countryResidence: Yup
   .string(mensajeYup)
   .required(mensajeYup)
-  .typeError(mensajeYup),
+  .typeError(mensajeYup)
+  .notOneOf(['Pais de Residencia'],mensajeYup),
 
   cityResidence: Yup
   .string("Campo obligatorio")
   .required(mensajeYup)
-  .typeError(mensajeYup),
+  .typeError(mensajeYup)
+  .notOneOf(['Ciudad de Residencia'],mensajeYup),
 });
 
 
 
 
-export function GeneralInfoForm({route , navigation}) {
+export function GeneralInfoForm({route , navigation,countryNames,token}) {
   const {userName, email, passwd} = route.params.user;
   const [gender, setGender] = useState('Genero');
-  const [nationality, setNationality] = useState('Pais de Origen');
+  const [nationality, setNationality] = useState('Nacionalidad');
   const [country, setCountry] = useState('Pais de Residencia');
   const [city, setCity] = useState('Ciudad de Residencia');
 
-  const [countryNames, setCountryNames] = useState([]);
  	const [citiesName, setCitiesName] = useState([]);
-	const [token, setToken] = useState();
-
+	
   useEffect(() => {
-    getToken().then(response => {
-        setToken(response.data.auth_token)
-        getAllCountries(response.data.auth_token)
-
-    }).catch(error => {
-      console.log(error.message)
-    })
-
-  },[])
-
-  useEffect(() => {
-    //console.log(countryNames)
     getAllCities(token, country)
-
+    console.log("a")
   },[country])
-
-
-  function getAllCountries(token){ 
-    if(token){
-      let countries = [];
-      getCountries(token).then(response => {
-        response.data.forEach(c=>{
-          let myCountry = {
-           label: c.country_name,
-           value: c.country_name
-         }
-         countries.push(myCountry)
-       })
-        setCountryNames(countries)
-      }).catch(error => {
-        console.log(error.message)
-      })
-    }
-  }
 
   function getAllCities(token, country){ 
     if(token && country){
@@ -113,10 +85,7 @@ export function GeneralInfoForm({route , navigation}) {
         console.log(error.message)
       })
     }
-    
   }
-
-
 
 
   function register(data){
@@ -130,32 +99,35 @@ export function GeneralInfoForm({route , navigation}) {
       gender: data.genre, 
       nationality: data.countryOrigin, 
       country: data.countryResidence, 
-      city: data.cityResidence,}
-    handleUser('register' , () => {} , user);
-    //navigation.navigate('login');
+      city: data.cityResidence,
+    }
+    if(user){
+      handleUser('register' , () => {} , user);
+      navigation.navigate('login');
+    }
   }
 
   const generoPlaceHolder = {
     label: 'Genero',
-    value: null,
+    value: 'Genero',
     color: 'grey',
   };
 
   const nationalityPlaceHolder = {
-    label: 'Pais de Origen',
-    value: null,
+    label: 'Nacionalidad',
+    value: 'Nacionalidad',
     color: 'grey',
   };
 
   const countryPlaceHolder = {
     label: 'Pais de Residencia',
-    value: null,
+    value: 'Pais de Residencia',
     color: 'grey',
   };
 
   const cityPlaceHolder = {
     label: 'Ciudad de Residencia',
-    value: null,
+    value: 'Ciudad de Residencia',
     color: 'grey',
   };
 
@@ -163,8 +135,6 @@ export function GeneralInfoForm({route , navigation}) {
     { label: "Masculino", value: "Masculino" },
     { label: "Femenino", value: "Femenino" },
   ]
-
-
 
 
   return (
