@@ -3,32 +3,136 @@ import { StyleSheet, View, Text, ScrollView } from "react-native";
 import { InputI } from "../../components/inputI";
 import { GreenButton } from "../../components/buttonI";
 import { handleUser } from "../../utils/Context/Storage";
-import { Input } from "react-native-elements/dist/input/Input";
+import { Input } from 'react-native-elements';
 import { ItemDropdown } from "../ItemDropdown";
+import * as Yup from 'yup';
+import { Formik } from 'formik';
+import RNPickerSelect from "react-native-picker-select";
+
+const mensajeYup = 'El campo es obligatorio';
+
+const generalInfoSchema = Yup.object().shape({
+  name: Yup
+  .string()
+  .min(5,'Su nombre debe tener un minimo de 5 caracteres')
+  .required(mensajeYup),
+  surname: Yup
+  .string()
+  .min(5,'Su apellido debe tener un minimo de 5 caracteres')
+  .required(mensajeYup),
+  age: Yup
+  .number("Solo se pueden ingresar numeros")
+  .min(18, "Debes tener al menos 18 años")
+  .max(99,"Debes tener menos de 100 años")
+  .required(mensajeYup),
+
+  genre: Yup
+  .string(mensajeYup)
+  .required(mensajeYup),
+
+  countryOrigin: Yup
+  .string(mensajeYup)
+  .required(mensajeYup),
+
+  countryResidence: Yup
+  .string(mensajeYup)
+  .required(mensajeYup),
+
+  cityResidence: Yup
+  .string(mensajeYup)
+  .required(mensajeYup),
+});
 
 export function GeneralInfoForm({route , navigation}) {
   const {userName, email, passwd} = route.params.user;
-  const [name, setName] = useState();
-  const [lastName, setLastName] = useState();
-  const [age, setAge] = useState();
-  const [gender, setGender] = useState();
-  const [nationality, setNationality] = useState();
-  const [country, setCountry] = useState();
-  const [city, setCity] = useState();
+  const [gender, setGender] = useState('Genero');
+  const [nationality, setNationality] = useState('Pais de Origen');
+  const [country, setCountry] = useState('Pais de Residencia');
+  const [city, setCity] = useState('Ciudad de Residencia');
 
-  function register(){
-    setTimeout(() => {
-      const user = {userName : userName, email: email, passwd: passwd, name: name, lastName: lastName, age: age, gender: gender, nationality: nationality, country: country, city: city,}
-      handleUser('register' , () => {} , user);
-      navigation.navigate('login');
-    }, 400)
+  function register(data){
+    const user = {
+      userName : userName, 
+      email: email, 
+      passwd: passwd, 
+      name: data.name, 
+      lastName: data.surname, 
+      age: data.age, 
+      gender: data.genre, 
+      nationality: data.countryOrigin, 
+      country: data.countryResidence, 
+      city: data.cityResidence,}
+    handleUser('register' , () => {} , user);
+    navigation.navigate('login');
   }
-  //<ItemDropdown data={[{ label: 'Masculino' ,value :'Masculino'} ,{label: 'Femenino' , value: 'Femenino'}  , {label: 'Otro', value: 'Otro'}]} title={'Genero'} hook={setGender}/>
+
+  const generoPlaceHolder = {
+    label: 'Genero',
+    value: null,
+    color: 'grey',
+  };
+
+  const nationalityPlaceHolder = {
+    label: 'Pais de Origen',
+    value: null,
+    color: 'grey',
+  };
+
+  const countryPlaceHolder = {
+    label: 'Pais de Residencia',
+    value: null,
+    color: 'grey',
+  };
+
+  const cityPlaceHolder = {
+    label: 'Ciudad de Residencia',
+    value: null,
+    color: 'grey',
+  };
+
+  const generos = [
+    { label: "Masculino", value: "Masculino" },
+    { label: "Femenino", value: "Femenino" },
+  ]
 
   return (
+
+    <Formik
+    initialValues={{
+      name: '' ,
+      surname: '',
+      age: '',
+      genre: '',
+      countryOrigin: '',
+      countryResidence: '',
+      cityResidence: '',
+    }}
+    validationSchema={generalInfoSchema}
+    onSubmit={
+      (values)=> {
+        register(values);
+      }
+    }
+    >
+    
+    {({ errors,  handleChange, handleSubmit, setFieldValue, values }) => (
     <View style={styles.formContainer}>
-      <InputI placeHolder="Nombre" onChange={setName} />
-      <InputI placeHolder="Apellido" onChange={setLastName} />
+      <InputI
+      placeHolder={"Nombre"} 
+      isSecure={false}
+      value={values.name} 
+      onChangeText={handleChange('name')}
+      errorMessage={errors.name}
+      id={"name"} 
+      />
+      <InputI 
+      placeHolder={"Apellido"} 
+      isSecure={false}
+      value={values.surname} 
+      onChangeText={handleChange('surname')}
+      errorMessage={errors.surname}
+      id={"surname"}  
+      />
       <Input style={{
                     ...styles.input,
                     textAlign: 'center',
@@ -36,22 +140,86 @@ export function GeneralInfoForm({route , navigation}) {
                 }}
                 placeholder={"Edad"}
                 inputContainerStyle={{ borderBottomWidth: 0 }}
-                onChangeText={setAge}
                 keyboardType = 'numeric'
-        />
-      <InputI placeHolder="Genero" onChange={setGender}/>
-      <InputI placeHolder="Nacionalidad" onChange={setNationality}/>
-      <InputI placeHolder="Pais de Residencia" onChange={setCountry}/>
-      <InputI placeHolder="Ciuda de Residencia" onChange={setCity}/>
-      <GreenButton onPress={register} text="Registrarse" />
+                value={values.age} 
+                onChangeText={handleChange('age')}
+                errorMessage={errors.age}
+                id={"age"}
+      />
+      <View style={styles.picker}>
+        <RNPickerSelect
+          placeholder={generoPlaceHolder}
+          items={generos}
+          onValueChange={(value) => { 
+            setGender(value);
+            setFieldValue('genre',value);
+          }}
+          value={values.genre}
+        >
+          <Text style={styles.buttonText}>{gender}</Text>
+        </RNPickerSelect>
+      </View>
+      <Text style={styles.errorText}>{errors.genre}</Text>
+
+      <View style={styles.picker}>
+        <RNPickerSelect
+          placeholder={nationalityPlaceHolder}
+          items={[
+            { label: "Argentina", value: "Argentina" },
+            { label: "Brasil", value: "Brasil" },
+          ]}
+          onValueChange={(value) => { 
+            setNationality(value);
+            setFieldValue('countryOrigin',value);
+          }}
+          value={values.countryOrigin}
+        >
+          <Text style={styles.buttonText}>{nationality}</Text>
+        </RNPickerSelect>
+      </View>
+      <Text style={styles.errorText}>{errors.countryOrigin}</Text>
+
+      <View style={styles.picker}>
+        <RNPickerSelect
+          placeholder={countryPlaceHolder}
+          items={[
+            { label: "Argentina", value: "Argentina" },
+            { label: "Brasil", value: "Brasil" },
+          ]}
+          onValueChange={(value) => { 
+            setCountry(value);
+            setFieldValue('countryResidence',value);
+          }}
+          value={values.countryResidence}
+        >
+          <Text style={styles.buttonText}>{country}</Text>
+        </RNPickerSelect>
+      </View>
+      <Text style={styles.errorText}>{errors.countryResidence}</Text>
+
+      <View style={styles.picker}>
+        <RNPickerSelect
+          placeholder={cityPlaceHolder}
+          items={[
+            { label: "Buenos Aires", value: "Buenos Aires" },
+            { label: "Cordoba", value: "Cordoba" },
+          ]}
+          onValueChange={(value) => { 
+            setCity(value);
+            setFieldValue('cityResidence',value);
+          }}
+          value={values.cityResidence}
+        >
+          <Text style={styles.buttonText}>{city}</Text>
+        </RNPickerSelect>
+      </View>
+      <Text style={styles.errorText}>{errors.cityResidence}</Text>
+
+      <GreenButton onPress={handleSubmit} text="Registrarse" />
     </View>
+    )}
+    </Formik>
   );
-
-  // todo
-  function validateNumeric(e){
-
-    setAge(e.replace(/[^0-9]/g, ''))
-  }
 }
 
 const styles = StyleSheet.create({
@@ -72,4 +240,29 @@ const styles = StyleSheet.create({
     fontSize: 18,
     backgroundColor: '#FFFFFF'
   },
+  picker: {
+    paddingVertical: 10,
+    marginVertical: 1,
+    width: '91%',
+    height: 50,
+    borderRadius: 32,
+    borderColor: '#32BB77',
+    borderWidth: 1,
+    fontSize: 18,
+    backgroundColor: '#FFFFFF',
+    justifyContent: 'center',
+    marginLeft: 20,
+  },
+  buttonText: {
+    textAlign: 'center',
+    fontSize: 18,
+    color: 'black',
+  },
+  errorText:{
+    fontSize: 12,
+    color: 'red',
+    marginBottom: 10,
+    marginLeft: 15,
+    marginTop: 1,
+  }
 });
