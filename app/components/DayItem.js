@@ -8,8 +8,8 @@ import ButtonAdd from './ButtonAdd';
 
 export default function DayItem({item, navigator}) {
     const data = [
-                    {title: '', description: 'asdasd' , image: ''},
                     {title: item.name , description: item.status , image: item.image, gender: item.gender, species: item.species,},
+                    {title: 'nombre2' , description: item.status , image: item.image, gender: item.gender, species: item.species,},
                 ]
     
     const renderDetail = (rowData, sectionID, rowID) => {
@@ -21,26 +21,34 @@ export default function DayItem({item, navigator}) {
         );
     }
 
+    const renderCircle = (rowData, sectionID, rowID) => {
+        return(
+            <TouchableOpacity 
+                disabled={true}
+                style={{backgroundColor:'green',width:10,height:10,borderRadius:95,}}
+            />
+        )
+    }
+
     return (
         <SafeAreaView>
-            <ListItem Component={TouchableOpacity} onPress={() => {navigator.navigate('searchAtraccion')}} containerStyle={styles.container}>
+            <ListItem Component={TouchableOpacity} disabled={true} containerStyle={styles.container}>
                 <ListItem.Title style={styles.primaryText}>
-                    Dia 2
+                   {'Día ' + item.number}
                 </ListItem.Title>
                 <ListItem.Subtitle style={styles.secondaryText}>
-                    Feb 9
+                    {item.date}
                 </ListItem.Subtitle>
                 <ButtonAdd onPress={() => {navigator.navigate('searchAtraccion')}}/>
             </ListItem>
             <Timeline
-                options={{style:{marginVertical: -45 }}}
                 circleColor={'#32BB77'}
                 lineColor={'#32BB77'}
                 data={data}
                 showTime={false}
                 renderDetail={renderDetail}
                 renderFullLine={true}
-                circleSize={21}
+                circleSize={20}
             />
         </SafeAreaView>
     )
@@ -52,7 +60,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#32BB77',
         borderRadius: 15,
         marginHorizontal: 5,
-        marginVertical: 25,
+        marginVertical: 5,
         padding: 15,
         height: 35,
     },

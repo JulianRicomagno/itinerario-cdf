@@ -1,42 +1,61 @@
 import { API_HOST } from '../utils/constants';
 import axios from 'axios';
-import { useAuthContext } from '../utils/Context/AuthContext';
-
-// AL QUE SE LE OCURRA UNA SOLUCIÓN LE CHUPO LA VERGA
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export async function loginUser(user){
-    const url = `${API_HOST}api/auth/login`;
-    console.log('busca');
-    console.log(user);
-    return axios.post(url , user);
+    const request = {
+        url: `${API_HOST}public-api/auth/login`,
+        method: 'POST',
+        headers: {'Content-Type' : 'application/json'},
+        data:{
+            email: user.email,
+            passwd: user.passwd,
+            device: 'mobileApp',
+        }
+    }
+    return axios(request);
   };
-    //const retorno = axios({
-    //    method: 'get',
-    //    url:'http://10.0.0.2:8080/api/user/fetchall'
-    //    }
-    //);
-    //return retorno //.then((response) => console.log('respuesta: ' + response.data)).catch((error) => console.log('error: ' + error));
-    /*axios.post( url , {
-        email: user.email,
-        passwd: user.passwd,
-        device: 'mobileApp',
-    }).then(function (response) {console.log('hola' + response)}).catch(function (error) {console.log('error' + error)})*/
+
+  export async function updateUser(){
+      const user = {id: '' , token: ''};
+      user.id = await AsyncStorage.getItem('id');
+      user.token = await AsyncStorage.getItem('token');
+      // Por algún motivo el Content-Length es importante
+      const request ={
+        url: `${API_HOST}api/usertourist/id`,
+        method: 'GET',
+        headers: {
+            'Content-Type' : 'application/json',
+            'Content-Length' : user.token.length,
+            'x-token' : user.token
+        },
+        data:{
+            id: user.id,
+        },
+      }
+      return axios(request);
+  }
     
 export function registerUser(user){
-    const url = `${API_HOST}api/user/create`
-    //console.log(user);
-    return axios.post(url , {
-        userName: user.userName,
-        email: user.email,
-        passwd: user.passwd,
-        name: user.name,
-        lastName: user.lastName,
-        age: user.age,
-        country: user.country,
-        city: user.city,
-        gender: user.gender,
-        nationality: user.nationality,
-    })
+const request = {
+    url : `${API_HOST}public-api/usertourist/create`,
+    method: 'POST',
+    headers: {
+        'Content-Type' : 'application/json',
+    },
+    data:{
+            userName: user.userName,
+            email: user.email,
+            passwd: user.passwd,
+            name: user.name,
+            lastName: user.lastName,
+            age: user.age,
+            country: user.country,
+            city: user.city,
+            gender: user.gender,
+        }
+    }
+    return axios(request)
 }
 
 

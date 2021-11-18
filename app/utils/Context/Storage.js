@@ -1,15 +1,32 @@
 import React from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {loginUser , registerUser} from '../../api/PosadasApi';
+import {loginUser , registerUser, updateUser} from '../../api/PosadasApi';
 
-async function addUser(token , id){
+async function addUser(data){
     try{
-        await AsyncStorage.setItem('token' , token);
-        await AsyncStorage.setItem('id' , id);
+        const user = data.user;
+        await AsyncStorage.setItem('token' , data.token);
+        await AsyncStorage.setItem('id' , user.id);
+/*      
+        await AsyncStorage.setItem('name' , user.generalInfo.name);
+        await AsyncStorage.setItem('lastName' , user.generalInfo.lastName);
+        await AsyncStorage.setItem('age' , user.generalInfo.age);
+        await AsyncStorage.setItem('country' , user.generalInfo.country);
+        await AsyncStorage.setItem('nationality' , user.generalInfo.nationality);
+        await AsyncStorage.setItem('city' , user.generalInfo.city);
+        await AsyncStorage.setItem('gender' , user.generalInfo.gender);
+*/
     }catch(e){console.log(e);}
 }
 
 async function checkCredentials(){
+    if(await AsyncStorage.getItem('token') != null){
+        try{
+            updateUser().then(response => {
+                const data = response.data;
+                AsyncStorage.setItem('token' , data.token);
+        })}catch(e){console.log(e); await AsyncStorage.removeItem('token')}
+    }
     return await AsyncStorage.getItem('token') != null;
 }
 
@@ -28,11 +45,8 @@ async function loginUserStorage(user , hook){
                 try{
                     loginUser(user).then(function (response) {
                         const data = response.data;
-                        console.log(data);
-                        const token = data.token;
-                        const id = data.user.id;
-                        addUser(token , id);
-                        hook({token: token, id: id , generalInfo: data.user});
+                        addUser(data);
+                        hook({token: data.token, id: data.user.id , generalInfo: data.user.generalInfo});
                         alert('Login correcto.');
                       })
                       .catch(function (error) {
@@ -73,13 +87,17 @@ export async function handleUser(action, hook, user){
             forceUpdateCredentials(hook);
             console.log('forceUpdate');
             break;
-        case 'update' :
-            console.log('update');
-            updateCredentials(hook);
+        case 'updateLocal' :
+            console.log('updateLocal');
+            updateLocalCredentials(hook);
             break;
         case 'register' :
             console.log('register');
             register(user);
+            break;
+        case 'updateApi' :
+            console.log('updateApi');
+            updateApi(hook)
             break;
     }
 }
@@ -94,7 +112,7 @@ async function forceUpdateCredentials(hook){
             console.log(e)}
 }
 
-async function updateCredentials(hook){
+async function updateLocalCredentials(hook){
     try{
         const logged = checkCredentials();
         if(!logged){
@@ -105,4 +123,16 @@ async function updateCredentials(hook){
             hook({token: token, id: id});
         }
     }catch(e){console.log(e)}
+}
+
+async function updateApi(hook){
+    // La verdad a esta altura ya ni se qué estoy haciendo
+    try{
+        updateUser().then(response => {
+            const data = response.data;
+            addUser(data);
+            hook({generalInfo: data.user.generalInfo});
+            return data;
+        })
+    }catch(e){alert('Ocurrió un error.')}
 }

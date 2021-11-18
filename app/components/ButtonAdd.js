@@ -1,6 +1,5 @@
 import React from 'react'
 import { Text } from 'react-native-elements'
-//import {  } from 'react-native-gesture-handler'
 import { StyleSheet, TouchableOpacity } from 'react-native'
 
 export default function ButtonAdd({onPress}) {
@@ -28,5 +27,7 @@ const styles = StyleSheet.create({
         fontSize: 25,
         color: '#FFFFFF',
         alignSelf: 'center',
+        justifyContent: 'center',
+        marginTop: 4,
     }
 })

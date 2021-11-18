@@ -4,6 +4,7 @@ import { WhiteButton } from '../buttonI';
 import { useAuthRemoveContext , useAuthContext } from "../../utils/Context/AuthContext";
 import {handleUser} from '../../utils/Context/Storage';
 import { Text } from 'react-native-elements';
+import { StyleSheet } from 'react-native';
 
 
 export default function UserInfo() {
@@ -20,7 +21,7 @@ export default function UserInfo() {
     //<Text>Nombre: {userInfo.name} {userInfo.lastName}</Text>
     //<Text>Email: {user.email}</Text>
     return (
-        <ScrollView>         
+        <ScrollView style={styles.container}>
             <WhiteButton
                 onPress={logout}
                 text="Logout"
@@ -28,3 +29,10 @@ export default function UserInfo() {
         </ScrollView>
     )
 }
+const styles = StyleSheet.create({
+
+    container:{
+        flex: 1,
+        backgroundColor: '#FFFFFF',
+    },
+})
