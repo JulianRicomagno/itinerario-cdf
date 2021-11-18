@@ -24,8 +24,8 @@ export function LoginForm(props) {
   const updateUser = useAuthUpdateContext();
 
   useEffect(() => {
-    handleUser('update' , updateUser);
-  }, [])
+    handleUser('updateLocal' , updateUser);
+}, [])
 
   function login(values){
     setTimeout(() => {

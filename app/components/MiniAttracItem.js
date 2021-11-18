@@ -3,8 +3,10 @@ import { ListItem , Text , View } from 'react-native-elements';
 import {StyleSheet , TouchableOpacity, Image} from 'react-native';
 import React  from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import addButtonIcon from '../../assets/addButtonIcon.png';
+import locationIcon from '../../assets/locationIcon.png';
 
-export default function MiniAttracItem({item, onPress}) {
+export default function MiniAttracItem({item, onPress}) {  
     if(item.title !== ''){
       item.name = item.title;
       item.status = item.description;
@@ -14,18 +16,18 @@ export default function MiniAttracItem({item, onPress}) {
             containerStyle={[styles.atracItem]}           
             >
                     <ListItem.Content style={{padding: 5, marginTop: 15,}}>
-                            <ListItem.Title style={styles.title}>{item.title}</ListItem.Title>
+                            <ListItem.Title style={[styles.title, {fontSize: item.title.length < 15 ? 20 : 16}]}>{item.title}</ListItem.Title>
                             <TouchableOpacity disabled={true} style={styles.miniContainer}>
                                 <ListItem.Subtitle style={styles.primary}>{item.description}</ListItem.Subtitle>
                                 <ListItem.Subtitle style={styles.secondary}>{item.gender}</ListItem.Subtitle>
                             </TouchableOpacity>
                             <TouchableOpacity disabled={true} style={styles.miniContainerImage}>
-                                <Image style={styles.imageDos} source={{uri: 'https://cdn.discordapp.com/attachments/246346905003622400/906006629416304691/unknown.png'}}/>
+                                <Image style={styles.imageDos} source={locationIcon}/>
                                 <ListItem.Subtitle>{item.species}</ListItem.Subtitle>
                             </TouchableOpacity>
                     </ListItem.Content>
             <TouchableOpacity style={styles.imageTouchable} onPress={onPress}>
-                <Image style={styles.image} source={{uri: 'https://cdn.discordapp.com/attachments/246346905003622400/906004788452393010/unknown.png'}}/>
+                <Image style={styles.image} source={addButtonIcon}/>
             </TouchableOpacity>
             </ListItem>
             </SafeAreaView>
@@ -66,6 +68,7 @@ const styles = StyleSheet.create({
         elevation: 8,
         shadowOffset : {width: 1,height: 1},
         flexDirection: 'row',
+        marginVertical: -5,
       },
       image:{
         width: 20,
@@ -92,7 +95,6 @@ const styles = StyleSheet.create({
       },
       title:{
         color: '#385F5E',
-        fontSize: 22,
       },
       primary:{
         fontSize: 16,

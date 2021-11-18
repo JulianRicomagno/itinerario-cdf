@@ -1,13 +1,25 @@
 import React , {useState, useEffect} from "react";
 import { View, Text , StyleSheet , FlatList  } from "react-native";
-import { Avatar } from "react-native-elements";
 import DayItem from "../../components/DayItem";
+import { handleUser } from "../../utils/Context/Storage";
+import { useAuthUpdateContext } from "../../utils/Context/AuthContext";
 
 
 export default function MyTrip({ route, navigation }) {
-  //const { item } = route.params;
+  const updateUser = useAuthUpdateContext()
   const [atraccion, setAtraccion] = useState([]);
-  const data = [{time: '0.9', title: 'name' , description: 'desc',}, {time: '0.9', title: 'name' , description: 'desc',}, {time: '0.9', title: 'name' , description: 'desc',},]
+
+  async function buscarItinerario(){
+    try{
+      const data = handleUser('updateApi' , updateUser);
+      setAtraccion(data.user.itinerary.totalDays);
+      
+    }
+    catch(e){
+      console.log(e)
+    }
+
+  }
   async function buscarAtraccion() {
 
   const requestOptions = {
@@ -29,7 +41,9 @@ export default function MyTrip({ route, navigation }) {
     }
   }
 
-  const renderItem = ({ item  }) => {
+  const renderItem = ({ item , index  }) => {
+    item.number = index + 1;
+    item.date = 'Mar 8';
     return (
       <DayItem
       item= {item}
@@ -45,6 +59,16 @@ export default function MyTrip({ route, navigation }) {
     }, 400);
   }, [])
   
+
+  if (atraccion == null){
+    return (
+      <View>
+        <Text>
+          Crea tu itinerario
+        </Text>
+      </View>
+    );
+  }
   return(
     <View style={styles.container}>
       <FlatList
@@ -52,23 +76,6 @@ export default function MyTrip({ route, navigation }) {
         keyExtractor={(item) => item.id.toString()} 
         renderItem={renderItem}
       />
-    </View>
-  );
-
-  if (atraccion == null){
-    return (
-      <View>
-        <Text>
-          No carga atracciones
-        </Text>
-      </View>
-    );
-  }
-  return(
-    <View>
-      <Text>
-        Cargo atracciones
-      </Text>
     </View>
   );
 
@@ -80,5 +87,6 @@ const styles = StyleSheet.create({
     flex: 1, 
     padding: 20,
     backgroundColor: '#FFFFFF',
+    marginBottom: 5,
   },
 })
