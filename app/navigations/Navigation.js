@@ -33,7 +33,7 @@ export default function Navigation() {
                 <Tab.Screen
                     name='explore'
                     component={AttractionsStack}
-                    options={{ title: 'Atracciones' }} />
+                    options={{ title: 'Atracciones', headerShown: false }} />
                 <Tab.Screen
                     name='itinerary'
                     component={ItineraryStack}

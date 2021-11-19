@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Text,
   View,
+  Button,
 } from "react-native";
 import COLORS from "../colors";
 import Icon from "react-native-vector-icons/MaterialIcons";
@@ -13,7 +14,7 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 export default function DetalleAtraccion({ route, navigation }) {
   const { item } = route.params;
 
-  console.log(item.image);
+  //console.log(item.image);
 
   return (
     <ScrollView
@@ -23,11 +24,7 @@ export default function DetalleAtraccion({ route, navigation }) {
         paddingBottom: 20,
       }}
     >
-      <StatusBar
-        barStyle="light-content"
-        translucent
-        backgroundColor="rgba(0,0,0,0)"
-      />
+      
       <ImageBackground style={style.headerImage} source={{ uri: item.image }}>
         <View style={style.header}>
           <Icon

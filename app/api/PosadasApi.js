@@ -22,7 +22,7 @@ export async function loginUser(user){
       user.token = await AsyncStorage.getItem('token');
       // Por algún motivo el Content-Length es importante
       const request ={
-        url: `${API_HOST}api/usertourist/id`,
+        url: `${API_HOST}api/usertourist/fetchbyid`,
         method: 'GET',
         headers: {
             'Content-Type' : 'application/json',
@@ -61,7 +61,7 @@ const request = {
 
 export async function getToken(){
     return await axios({
-        method: 'get',
+        method: 'GET',
         url: 'https://www.universal-tutorial.com/api/getaccesstoken',
         headers: {
             "Accept": "application/json",
@@ -74,7 +74,7 @@ export async function getToken(){
     
 export async function getCountries(token){
     return await axios({
-    method: 'get',
+    method: 'GET',
     url: 'https://www.universal-tutorial.com/api/countries/',
         headers: {
         "Authorization": `bearer ${token}`,
@@ -85,11 +85,64 @@ export async function getCountries(token){
 
 export async function getCities(token, country){
     return await axios({
-    method: 'get',
+    method: 'GET',
     url: `https://www.universal-tutorial.com/api/states/${country} `,
         headers: {
         "Authorization": `bearer ${token}`,
         "Accept": "application/json"
         }
     })
+}
+
+export async function getAllAttractions(){
+
+    const token = await AsyncStorage.getItem('token');
+
+    return await axios({
+        method: 'GET',
+        url: `${API_HOST}api/attraction/fetchall`,
+        headers: {
+            'Content-Type' : 'application/json',
+            'x-token': token
+        },
+    })
+}
+
+export async function getAttractionsByType(type){
+
+    const token = await AsyncStorage.getItem('token');
+    return await axios({
+        method: 'GET',
+        url: `${API_HOST}api/attraction/searchbytype/${type}`,
+        headers: {
+            'Content-Type' : 'application/json',
+            'x-token': token,
+        }});
+}
+
+export async function getAttractionsByName(name){
+
+    const token = await AsyncStorage.getItem('token');
+    return await axios({
+        method: 'GET',
+        url: `${API_HOST}api/attraction/searchbyname/${name}`,
+        headers: {
+            'Content-Type' : 'application/json',
+            'x-token': token,
+        }});
+}
+
+export async function getAttractionsTypes(){
+
+    const token = await AsyncStorage.getItem('token');
+
+    return await axios({
+      url:  `${API_HOST}api/attraction/types`,
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-token': token, 
+      },
+    })
+
 }
