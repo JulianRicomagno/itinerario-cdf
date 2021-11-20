@@ -10,7 +10,7 @@ export default function AttractionsStack() {
             <Stack.Screen
                 name="attractions"
                 component={SearchAtraccion}
-                options={{ title: 'Atracciones' }}
+                options={{ title: 'Atracciones', headerShown: false}}
             />
         </Stack.Navigator>
     )
