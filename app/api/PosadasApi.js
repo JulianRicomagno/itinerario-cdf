@@ -93,3 +93,22 @@ export async function getCities(token, country){
         }
     })
 }
+
+
+export async function forgotPassword(data){
+    console.log(data)
+   
+    return await axios({
+       
+        method: 'POST',
+        url: `${API_HOST}public-api/auth/recuperarpassword`,
+        headers: {
+            'Content-Type' : 'application/json',
+        },
+        data:{
+            "email":data,
+            "device": 'mobileApp',
+        }
+        
+    })
+}
