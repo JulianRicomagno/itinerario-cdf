@@ -16,24 +16,20 @@ export async function loginUser(user){
     return axios(request);
   };
 
-  export async function updateUser(){
-      const user = {id: '' , token: ''};
-      user.id = await AsyncStorage.getItem('id');
-      user.token = await AsyncStorage.getItem('token');
+  export async function fetchUser(){
       // Por algún motivo el Content-Length es importante
+      const token = await AsyncStorage.getItem('token');
+      const id = await AsyncStorage.getItem('id')
       const request ={
-        url: `${API_HOST}api/usertourist/fetchbyid`,
+        url: `${API_HOST}api/usertourist/search/${id}`,
         method: 'GET',
         headers: {
             'Content-Type' : 'application/json',
-            'Content-Length' : user.token.length,
-            'x-token' : user.token
-        },
-        data:{
-            id: user.id,
+            'Content-Length' : token.length,
+            'x-token' : token
         },
       }
-      return axios(request);
+      return await axios(request);
   }
     
 export function registerUser(user){

@@ -1,10 +1,43 @@
 import React from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {loginUser , registerUser, updateUser} from '../../api/PosadasApi';
+import {loginUser , registerUser, fetchUser} from '../../api/PosadasApi';
+import axios from 'axios';
+import {API_HOST} from '../constants';
+
+// Recibe un usuario, una acción con el usuario y un hook al cual correr.
+export async function handleUser(action, hook, user){
+    switch(action){
+        case 'login' :
+            loginUserStorage(user, hook)
+            break;
+        case 'logout' :
+            removeUser(hook);
+            console.log('logout');
+            break;
+        case 'forceUpdate' :
+            forceUpdateCredentials(hook);
+            console.log('forceUpdate');
+            break;
+        case 'updateLocal' :
+            console.log('updateLocal');
+            updateLocalCredentials(hook);
+            break;
+        case 'register' :
+            console.log('register');
+            register(user);
+            break;
+        case 'getUser' :
+            console.log('fetch');
+            getUser()
+            break;
+    }
+}
 
 async function addUser(data){
     try{
         const user = data.user;
+        //console.log('user: ' , user , 'token: ' , data.token)
+        //console.log('el user id:    ' + user.id)
         await AsyncStorage.setItem('token' , data.token);
         await AsyncStorage.setItem('id' , user.id);
 /*      
@@ -22,9 +55,12 @@ async function addUser(data){
 async function checkCredentials(){
     if(await AsyncStorage.getItem('token') != null){
         try{
-            updateUser().then(response => {
+            fetchUser().then(response => {
                 const data = response.data;
-                AsyncStorage.setItem('token' , data.token);
+                if(data == null){
+                    removeUser();
+                    return false;
+                }
         })}catch(e){console.log(e); await AsyncStorage.removeItem('token')}
     }
     return await AsyncStorage.getItem('token') != null;
@@ -73,34 +109,6 @@ function register(user){
     }catch(e){alert(e)};
 };
 
-// Recibe un usuario, una acción con el usuario y un hook al cual correr.
-export async function handleUser(action, hook, user){
-    switch(action){
-        case 'login' :
-            loginUserStorage(user, hook)
-            break;
-        case 'logout' :
-            removeUser(hook);
-            console.log('logout');
-            break;
-        case 'forceUpdate' :
-            forceUpdateCredentials(hook);
-            console.log('forceUpdate');
-            break;
-        case 'updateLocal' :
-            console.log('updateLocal');
-            updateLocalCredentials(hook);
-            break;
-        case 'register' :
-            console.log('register');
-            register(user);
-            break;
-        case 'updateApi' :
-            console.log('updateApi');
-            updateApi(hook)
-            break;
-    }
-}
 
 // No usar este a menos que token e id estén llenos
 async function forceUpdateCredentials(hook){
@@ -125,14 +133,13 @@ async function updateLocalCredentials(hook){
     }catch(e){console.log(e)}
 }
 
-async function updateApi(hook){
+async function getUser(){
     // La verdad a esta altura ya ni se qué estoy haciendo
     try{
-        updateUser().then(response => {
-            const data = response.data;
-            addUser(data);
-            hook({generalInfo: data.user.generalInfo});
-            return data;
+        let data = await fetchUser()
+            .then(response => {
+                data = response.data;
+                return data;
         })
-    }catch(e){alert('Ocurrió un error.')}
+    }catch(e){alert('Ocurrió un error.'); console.log(e)}
 }
