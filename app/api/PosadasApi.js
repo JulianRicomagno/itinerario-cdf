@@ -106,6 +106,8 @@ export async function forgotPassword(data){
             "email":data,
             "device": 'mobileApp',
         }
+    })
+}
         
 export async function getAllAttractions(){
 
