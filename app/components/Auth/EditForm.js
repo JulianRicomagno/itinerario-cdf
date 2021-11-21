@@ -55,19 +55,21 @@ const generalInfoSchema = Yup.object().shape({
 
 
 
-export function GeneralInfoForm({route , navigation,countryNames,token}) {
-  const {userName, email, passwd} = route.params.user;
-  const [gender, setGender] = useState('Genero');
-  const [nationality, setNationality] = useState('Nacionalidad');
-  const [country, setCountry] = useState('Pais de Residencia');
-  const [city, setCity] = useState('Ciudad de Residencia');
+export function EditForm({route , navigation,countryNames,token}) {
+  const {Pais, Ciudad, Gen, name, lastName, nacionalidad, edad} = route.params.userInfo;
+  const [gender, setGender] = useState(Gen);
+  const [nationality, setNationality] = useState(nacionalidad);
+  const [country, setCountry] = useState(Pais);
+  const [city, setCity] = useState(Ciudad);
+
+  //! No testear con ciudad y pais mandado por postman!!!
 
  	const [citiesName, setCitiesName] = useState([]);
 	
   useEffect(() => {
     getAllCities(token, country)
-    console.log("a")
   },[country])
+
 
   function getAllCities(token, country){ 
     if(token && country){
@@ -88,11 +90,12 @@ export function GeneralInfoForm({route , navigation,countryNames,token}) {
   }
 
 
-  function register(data){
-    const user = {
-      userName : userName, 
-      email: email, 
-      passwd: passwd, 
+  function update(data){
+    /*
+      userName : 'Pepito', 
+      email: 'Pepito@gmail.com', 
+      passwd: '12345678',*/
+    const generalInfo = { 
       name: data.name, 
       lastName: data.surname, 
       age: data.age, 
@@ -101,9 +104,10 @@ export function GeneralInfoForm({route , navigation,countryNames,token}) {
       country: data.countryResidence, 
       city: data.cityResidence,
     }
-    if(user){
-      handleUser('register' , () => {} , user);
-      navigation.navigate('login');
+    console.log(generalInfo);
+    if(generalInfo){
+      //handleUser('register' , () => {} , user);
+      navigation.navigate('datos');
     }
   }
 
@@ -124,7 +128,7 @@ export function GeneralInfoForm({route , navigation,countryNames,token}) {
 
   const cityPlaceHolder = {
     label: 'Ciudad de Residencia',
-    value: 'Ciudad de Residencia',
+    value: 'Ciudad de Residencia', 
   };
 
   const generos = [
@@ -137,18 +141,18 @@ export function GeneralInfoForm({route , navigation,countryNames,token}) {
 
     <Formik
     initialValues={{
-      name: '' ,
-      surname: '',
-      age: '',
-      genre: '',
-      countryOrigin: '',
-      countryResidence: '',
-      cityResidence: '',
+      name: name ,
+      surname: lastName,
+      age: edad,
+      genre: Gen,
+      countryOrigin: nacionalidad,
+      countryResidence: Pais,
+      cityResidence: Ciudad,
     }}
     validationSchema={generalInfoSchema}
     onSubmit={
       (values)=> {
-        register(values);
+        update(values);
       }
     }
     >
@@ -204,8 +208,8 @@ export function GeneralInfoForm({route , navigation,countryNames,token}) {
           placeholder={nationalityPlaceHolder}
           items={countryNames}
           onValueChange={(value) => { 
-            setNationality(value);
-            setFieldValue('countryOrigin',value);
+              setNationality(value);
+              setFieldValue('countryOrigin',value);
           }}
           value={values.countryOrigin}
         >
@@ -244,7 +248,7 @@ export function GeneralInfoForm({route , navigation,countryNames,token}) {
       </View>
       <Text style={styles.errorText}>{errors.cityResidence}</Text>
 
-      <GreenButton onPress={handleSubmit} text="Registrarse" />
+      <GreenButton onPress={handleSubmit} text="Guardar Cambios" />
     </View>
     )}
     </Formik>
