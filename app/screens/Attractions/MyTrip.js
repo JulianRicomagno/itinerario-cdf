@@ -2,24 +2,27 @@ import React , {useState, useEffect} from "react";
 import { View, Text , StyleSheet , FlatList  } from "react-native";
 import DayItem from "../../components/DayItem";
 import { handleUser } from "../../utils/Context/Storage";
-import { useAuthUpdateContext } from "../../utils/Context/AuthContext";
+import { useAuthContext } from "../../utils/Context/AuthContext";
+import { fetchUser } from "../../api/PosadasApi";
 
 
 export default function MyTrip({ route, navigation }) {
-  const updateUser = useAuthUpdateContext()
+  //const user = useAuthContext()
   const [atraccion, setAtraccion] = useState([]);
+  const [user , setUser] = useState();
 
-  async function buscarItinerario(){
-    try{
-      const data = handleUser('updateApi' , updateUser);
-      setAtraccion(data.user.itinerary.totalDays);
-      
-    }
-    catch(e){
-      console.log(e)
-    }
-
+  async function crearItinerario(){
+    setAtraccion(user.itinerary.totalDays);
   }
+
+  function getUsuario(){
+    fetchUser().then(res =>
+      {
+        setUser(res.data);
+      }).catch(error => console.log(error));
+  }
+
+  /*
   async function buscarAtraccion() {
 
   const requestOptions = {
@@ -40,6 +43,7 @@ export default function MyTrip({ route, navigation }) {
       console.log(error.message);
     }
   }
+*/
 
   const renderItem = ({ item , index  }) => {
     item.number = index + 1;
@@ -54,10 +58,17 @@ export default function MyTrip({ route, navigation }) {
   }
 
   useEffect(() => {
-    setTimeout(() => {
-      buscarAtraccion();
-    }, 400);
+    
+      getUsuario();
+    
   }, [])
+
+  useEffect(() => {
+    if(user != null){
+      console.log('entro')
+      crearItinerario();
+    }
+  }, [user])
   
 
   if (atraccion == null){
@@ -73,7 +84,7 @@ export default function MyTrip({ route, navigation }) {
     <View style={styles.container}>
       <FlatList
         data={atraccion}
-        keyExtractor={(item) => item.id.toString()} 
+        keyExtractor={(item) => item.attendanceDate.toString()} 
         renderItem={renderItem}
       />
     </View>
