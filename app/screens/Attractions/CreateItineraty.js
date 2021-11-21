@@ -2,10 +2,8 @@ import React, { useState, useEffect } from "react";
 import {
   View,
   Button,
-  Platform,
   Text,
   FlatList,
-  TextInput,
   StyleSheet,
   KeyboardAvoidingView,
   Image,
@@ -13,11 +11,10 @@ import {
   TouchableOpacity,
 } from "react-native";
 import moment from "moment";
-import DateTimePicker from "@react-native-community/datetimepicker";
 import CalendarPicker from "react-native-calendar-picker";
 import RNPickerSelect from "react-native-picker-select";
 import { SearchBar, ListItem, Icon, Avatar } from "react-native-elements";
-import { fetchUser } from "../../api/PosadasApi";
+import { fetchUser , getAttractionsByName , updateUser , getAllAttractions} from "../../api/PosadasApi";
 //import { handleUser } from "../../utils/Context/Storage";
 
 
@@ -25,57 +22,90 @@ export default function CreateItineraty(props) {
   const { navigation, route } = props;
   const [selectedStartDate, setSelectedStartDate] = useState(Date);
   const [selectedEndDate, setSelectedEndDate] = useState(Date);
-  const [startDate , setStartDate] = useState();
-  const [finDate , setFinDate] = useState();
   const minDate = new Date(); // Today
   const maxDate = new Date(2035, 12, 30);
-  //const startDate  =  selectedStartDate ? selectedStartDate.toString() : '';
-  //const endDate = selectedEndDate ? selectedEndDate.toString() : '';
   const [place, setPlace] = useState("Seleccionar tipo de estadía");
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState('');
   const [hoteles, setHoteles] = useState([]);
   const [userInfo , setUserInfo] = useState({});
-  const [isLoading , setIsLoading] = useState(true)
+  const [isLoading , setIsLoading] = useState(true);
+  const [completed , setCompleted] = useState(false);
 
   async function buscarHotel() {
-    const requestOptions = {
-      method: "GET",
-    };
-    try {
-      const atr = fetch(
-        `https://rickandmortyapi.com/api/character/?name=${search}`,
-        requestOptions
-      );
-      return atr
-        .then((res) => res.json())
-        .then((data) => {
-          setHoteles(data.results);
-        })
-        .catch((error) => console.log("Ocurrio un error" + error));
-    } catch (error) {
-      console.log(error.message);
+    if(search !== ''){
+      try {
+        getAttractionsByName(search)
+          .then((res) => {
+            setHoteles(res.data);
+          })
+          .catch((error) => console.log("Ocurrio un error" + error));
+      } catch (error) {
+        console.log(error.message);
+    }} else {
+      getAllAttractions().then(res => {
+        setHoteles(res.data);
+      })
+      .catch(error => {console.log('Ocurrio un error ' , error)});
     }
   }
 
   function onDateChange(date, type) {
     if (type === "END_DATE") {
       setSelectedEndDate(date);
-      
     } else {
       setSelectedEndDate(null);
       setSelectedStartDate(date);
-      
-//      setSelectedEndDate(null);
     }
-    //selectedStartDate == null ? console.log() : setStartDate(moment(selectedStartDate));
-    //selectedEndDate == null ? console.log() : setFinDate(moment(selectedEndDate).toISOString());
-    //console.log('Inicio: ' + startDate + '. Fin: ' + finDate);
-    //console.log('Inicio: ' + selectedStartDate)
-    //console.log('Fin: ' + selectedEndDate)
   }
 
+  const pressEnd = () =>{
+    if(start !=  null && end != null)
+    {
+      const momentStart = moment(selectedStartDate);
+      const momentEnd = moment(selectedEndDate);
+      let momentArray = moment(selectedStartDate);
+      const startDate = momentStart.format('yyyy-MM-DD');
+      const endDate = momentEnd.format('yyyy-MM-DD');
+      //console.log('Inicio: ' +  momentStart.format('yyyy-MM-DD') + '. Final: ' + momentEnd.format('yyyy-MM-DD'));
+      let totalDays = momentEnd.diff(momentStart, 'days')+1;
+      //console.log((momentEnd.diff(momentStart, 'days')+1) + ' dias de estadía.');
+      let arr = [];
+      let i = 0;
+      let x = 0;
+      while(i < totalDays){
+        arr.push({attendanceDate : momentArray.add(x , 'days').format('yyyy-MM-DD'), isDayOff : false, attractions: []});
+        if(x == 0){
+          x++;
+        }
+        i++;
+      }
+      arr[0] = { attendanceDate: momentStart.format('yyyy-MM-DD'), isDayOff: false, attractions : [{name: 'hola' , id: '12345'}] };
+      console.log('Fecha inicio: ', startDate, '. Fecha fin: ' , endDate, '. Cantidad de días: ' , totalDays, '. Información del usuario: ' , userInfo.generalInfo, '. id y tipo de usuario: ', userInfo.id , ',' , userInfo.type)
+      const reqArray = arr;
+      // Request para hacerle update al itinerario
+      
+      const request = {
+        id: userInfo.id,
+        type: userInfo.type,
+        itinerary : {
+          dayFrom: startDate,
+          dayTo: endDate,
+          hotel : place,
+          totalDays : reqArray,
+        },
+      };
+      
+      // Fin de la request
+      updateUser(JSON.stringify(request));
+    }
+  }
+  
   useEffect(() => {
-    if (search) {
+    setCompleted(checkCompleted());
+  }, [selectedStartDate , selectedEndDate, place])
+
+  useEffect(() => {
+    if (search !== '') {
       buscarHotel();
     }
   }, [search]);
@@ -92,7 +122,10 @@ export default function CreateItineraty(props) {
 
   function fetchUserInfo(){
     fetchUser().then(response => setUserInfo(response.data));
-    //console.log('entro.' , user);
+  }
+
+  function checkCompleted(){
+    return place !== "Seleccionar tipo de estadía" && place !== null && selectedStartDate !== null && selectedEndDate !== null && selectedStartDate !== selectedEndDate;
   }
 
 // CalendarPicker no puede cambiar el idioma lamentablemente ☹
@@ -113,8 +146,7 @@ export default function CreateItineraty(props) {
           onDateChange={onDateChange}
         />
         <TouchableOpacity 
-            style={{heigth: 55, width: 55, backgroundColor: 'green', marginHorizontal: 150,}} 
-            onPress={(event) => pressEnd(selectedStartDate, selectedEndDate, userInfo, place)}>
+            style={{heigth: 55, width: 55, backgroundColor: 'green', marginHorizontal: 150,}}>
           <Text>Botón</Text>
         </TouchableOpacity>
         <Text style={styles.text}> Lugar de Estadía </Text>
@@ -159,10 +191,13 @@ export default function CreateItineraty(props) {
             </KeyboardAvoidingView>
           ) : (
             <View style={styles.bottom}>
-              <Button
-                title="Confirmar"
-                onPress={() => navigation.navigate("myTrip")}
-              />
+              <TouchableOpacity
+                onPress={() => pressEnd}
+                disabled={!completed}
+                style={[styles.button , {backgroundColor : completed ? '#32BB77' : '#F1F1F1' , borderColor : completed ? '#32BB77' : '#E33674'}]}
+              >
+                <Text style={[styles.buttonText , {color: completed? '#FFFFFF' : '#385F5E'} ]}>Confirmar</Text>
+              </TouchableOpacity>
             </View>
           )}
         </View>
@@ -172,52 +207,6 @@ export default function CreateItineraty(props) {
 }
 
 
-const pressEnd = (start ,end, userInfo, place) =>{
-  if(start !=  null && end != null)
-  {
-    const momentStart = moment(start);
-    const momentEnd = moment(end);
-    let momentArray = moment(start);
-    const startDate = momentStart.format('yyyy-MM-DD');
-    const endDate = momentEnd.format('yyyy-MM-DD');
-    //console.log('Inicio: ' +  momentStart.format('yyyy-MM-DD') + '. Final: ' + momentEnd.format('yyyy-MM-DD'));
-    let totalDays = momentEnd.diff(momentStart, 'days')+1;
-    //console.log((momentEnd.diff(momentStart, 'days')+1) + ' dias de estadía.');
-    let arr = [];
-    let i = 0;
-    let x = 0;
-    while(i < totalDays){
-      arr.push({attendanceDate : momentArray.add(x , 'days').format('yyyy-MM-DD'), isDayOff : false, attractions: []});
-      if(x == 0){
-        x++;
-      }
-      i++;
-    }
-    arr[0] = { attendanceDate: momentStart.format('yyyy-MM-DD'), isDayOff: false, attractions : [{name: 'hola' , id: '12345'}] };
-    console.log('Fecha inicio: ', startDate, '. Fecha fin: ' , endDate, '. Cantidad de días: ' , totalDays, '. Información del usuario: ' , userInfo.generalInfo, '. id y tipo de usuario: ', userInfo.id , ',' , userInfo.type)
-    const reqArray = arr;
-    // Request para hacerle update al itinerario
-    /*
-    const request = {
-      id: userInfo.id,
-      type: userInfo.type,
-      generalInfo: userInfo.generalInfo,
-      itinerary : {
-        dayFrom: startDate,
-        dayTo: endDate,
-        hotel : place,
-        totalDays : reqArray,
-      },
-      newAttraction:{ 
-        typeAttraction: 'hotel',
-        name: 'el hotel',
-        attendanceDate: startDate
-      },
-    };
-    */
-    // Fin de la request
-  }
-}
 
 function NoFoundRestaurants() {
   return (
@@ -288,5 +277,18 @@ const styles = StyleSheet.create({
   },
   bottom: {
     margin: 50,
+  },
+  button: {
+    alignSelf: 'center',
+    paddingVertical: 10,
+    marginVertical: 10,
+    width: '75%',
+    borderRadius: 32,
+    borderColor: '#32BB77',
+    borderWidth: 1,
+  },
+  buttonText : {
+    textAlign: 'center',
+    fontSize: 18
   },
 });

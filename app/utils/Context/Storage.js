@@ -1,8 +1,6 @@
 import React from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {loginUser , registerUser, fetchUser} from '../../api/PosadasApi';
-import axios from 'axios';
-import {API_HOST} from '../constants';
 
 // Recibe un usuario, una acción con el usuario y un hook al cual correr.
 export async function handleUser(action, hook, user){
@@ -12,43 +10,57 @@ export async function handleUser(action, hook, user){
             break;
         case 'logout' :
             removeUser(hook);
-            console.log('logout');
             break;
         case 'forceUpdate' :
             forceUpdateCredentials(hook);
-            console.log('forceUpdate');
             break;
         case 'updateLocal' :
-            console.log('updateLocal');
             updateLocalCredentials(hook);
             break;
         case 'register' :
-            console.log('register');
             register(user);
             break;
         case 'getUser' :
-            console.log('fetch');
-            getUser()
+            getUser();
+            break;
+        case 'updateLocalUser':
+            updateLocalUser(hook , user);
+            break;
+        case 'setLocalUser': // Busca el fetch del usuario al server y lo guarda localmente
+            setLocalUser(hook);
+            break;
+        case 'getLocalUser':
+            getLocalUser(hook);
             break;
     }
+}
+
+// USEN CONTEXT EN LUGAR DE ESTO PERO BUENO SI QUIEREN TENER UNA LINEA MENOS DE IMPORT USEN ESTO
+async function updateLocalUser(hook , user){
+    hook({generalInfo : user}); //lol
+}
+
+async function getLocalUser(hook){
+    return hook();
+}
+
+//  DE ACA EN ADELANTE YA SE PUEDEN USAR :).
+async function setLocalUser(hook){
+    fetchUser().then(
+        res => {
+            const user = res.data;
+            hook({token: user.token , id: user.id, generalInfo: user.generalInfo , itinerary : user.itinerary})
+        }
+    ).catch(
+        error => {console.log(error); removeUser();} // TEÓRICAMENTE SI EL FETCH FALLA ES PORQUE O EL USUARIO NO EXISTE, EL TOKEN EXPIRÓ, O EL SERVER ESTÁ CAÍDO.
+    );
 }
 
 async function addUser(data){
     try{
         const user = data.user;
-        //console.log('user: ' , user , 'token: ' , data.token)
-        //console.log('el user id:    ' + user.id)
         await AsyncStorage.setItem('token' , data.token);
         await AsyncStorage.setItem('id' , user.id);
-/*      
-        await AsyncStorage.setItem('name' , user.generalInfo.name);
-        await AsyncStorage.setItem('lastName' , user.generalInfo.lastName);
-        await AsyncStorage.setItem('age' , user.generalInfo.age);
-        await AsyncStorage.setItem('country' , user.generalInfo.country);
-        await AsyncStorage.setItem('nationality' , user.generalInfo.nationality);
-        await AsyncStorage.setItem('city' , user.generalInfo.city);
-        await AsyncStorage.setItem('gender' , user.generalInfo.gender);
-*/
     }catch(e){console.log(e);}
 }
 
