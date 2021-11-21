@@ -17,13 +17,13 @@ export function useAuthRemoveContext(){
 }
 
 export function AuthProvider({children}){   
-    const [user, setUser] = useState({token: '' , id: '', generalInfo : {}});
+    const [user, setUser] = useState({token: '' , id: '', generalInfo : {} , itinerary : {}});
 
     function updateUser(receivedUser){
         setUser(receivedUser);
     }
     function removeUser(){
-        setUser({token: '' , id: '', generalInfo : {}})
+        setUser({token: '' , id: '', generalInfo : {} , itinerary : {}})
     }
 
     return(

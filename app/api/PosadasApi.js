@@ -142,3 +142,16 @@ export async function getAttractionsTypes(){
     })
 
 }
+
+export async function updateUser(data){
+    const token = await AsyncStorage.getItem('token');
+    return await axios({
+        url : `${API_HOST}api/usertourist/update`,
+        method : 'POST',
+        headers: {
+            'Content-Type' : 'application/json',
+            'x-token' : token,
+        },
+        data : data,
+    })
+}
