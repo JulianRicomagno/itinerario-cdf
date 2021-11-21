@@ -1,0 +1,171 @@
+import React, {useState, useEffect} from "react";
+import { StyleSheet, View, Text, Modal, Image, TouchableOpacity, Button } from "react-native";
+import { InputI } from "../../components/inputI";
+import { GreenButton } from "../../components/buttonI";
+import { forgotPassword } from "../../api/PosadasApi";
+
+import * as Yup from 'yup';
+import { Formik } from 'formik';
+
+const forgotSchema = Yup.object().shape({
+    email: Yup
+      .string('Ingrese su email')
+      .email('Ingrese un email valido')
+      .required('El email es requerido'),
+  })
+  
+  
+  
+const ModalPopUp = ({visible, children}) =>{
+  const [showModal, setShowModal] = useState(visible)
+
+    
+  
+    useEffect(() => {
+        toggleModal();
+    },[visible])
+  
+    const toggleModal = () => {
+        if(visible){
+          setShowModal(true);
+        }else {
+          setShowModal(false);
+        }
+    };
+  
+    return <Modal transparent visible ={showModal}>
+    
+      <View style={styles.modalBackground} >
+        <View style={[styles.modalContainer]}>
+          {children}
+        </View>
+      </View>
+    </Modal>
+ 
+
+  };
+
+  export function ForgotPassModal(props){
+    const {open, setVisible = useState()} = props
+    const [disabled , setDisabled] = useState(true);
+    const [forgotEmail , setForgotEmail] = useState();
+
+    function checkCompleted(){
+      setDisabled(!validateEmail()) 
+       
+    }
+
+
+    useEffect(() => {
+      checkCompleted();
+  }, [forgotEmail])
+
+
+  function validateEmail() {
+
+    var re = /\S+@\S+.\S+/;
+    return re.test(forgotEmail);
+     
+  }
+
+  function passWord(){
+    
+  forgotPassword(forgotEmail).then((response) => {
+    setVisible()
+  }).catch((error) => {
+    console.log(error.message)
+  })
+    alert("Si el email se encuentra registrado le llegará un email, chequear spam por las dudas ")
+  }
+
+          
+
+    return(
+    
+    <ModalPopUp visible={open}> 
+        <View style={{alignItems: 'center'}}>
+          <View style={styles.header}>
+            <TouchableOpacity onPress={() => setVisible(false)}> 
+            <Image
+            source={require('../../../assets/x.png')}
+            style={{height: 20, width: 20}}
+            />
+            </TouchableOpacity>
+          </View>
+          <Text> Se te olvidó la contraseña? Te enviaremos una nueva a tu correo</Text>
+            <View style={styles.button}>
+          <InputI
+            placeHolder={"Ingresa tu correo"} 
+            isSecure={false}
+            id={"email"}
+            defaultValue={forgotEmail}
+            onChangeText={(email) =>setForgotEmail(email)}
+               
+          />
+          </View>
+
+          <View style={styles.button}>
+
+          <TouchableOpacity   style={[styles.buttonPosta , {backgroundColor: disabled? '#FFFFFF' : '#32BB77' , borderColor: '#6A6A6A'}]} disabled={disabled}  onPress={()=>{passWord()}}>
+            <Text style={[styles.buttonText , {color : disabled? '#6A6A6A' : '#FFFFFF'}]}>
+              Enviar
+            </Text>
+
+            </TouchableOpacity>
+                    
+          </View>
+       
+        </View>
+      </ModalPopUp>
+  
+
+
+    );
+
+  }
+
+  const styles = StyleSheet.create({
+    modalBackground:{
+        flex:1,
+        backgroundColor: "rgba(0,0,0,0.5)",
+        justifyContent: "center",
+        alignItems: "center",
+      },
+      modalContainer:{
+        width: "80%",
+        backgroundColor: "white",
+        paddingHorizontal: 20,
+        paddingVertical: 30,
+        borderRadius: 20,
+        elevation:20,
+      },
+      header: {
+        width: '100%',
+        height: 40,
+        alignItems: 'flex-end',
+        marginBottom: 10,
+    
+      },
+      button:{
+        width: "80%",
+        marginTop:30,  
+    
+      },
+      buttonPosta: {
+        alignSelf: 'center',
+        paddingVertical: 10,
+        marginVertical: 10,
+        width: '75%',
+        borderRadius: 32,
+        borderColor: '#32BB77',
+        borderWidth: 1,
+        backgroundColor: '#32BB77'
+      },
+      buttonText:{
+        color: '#f1f1f1',
+        textAlign: 'center',
+        fontSize: 18
+      }
+  })
+  
+  

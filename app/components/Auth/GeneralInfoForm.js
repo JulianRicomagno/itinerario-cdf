@@ -66,7 +66,6 @@ export function GeneralInfoForm({route , navigation,countryNames,token}) {
 	
   useEffect(() => {
     getAllCities(token, country)
-    console.log("a")
   },[country])
 
   function getAllCities(token, country){ 

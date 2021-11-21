@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   View,
@@ -11,73 +11,79 @@ import { SearchBar } from "react-native-elements";
 import AttracItem from "../../components/attracItem";
 import TagItem from "../../components/tagItem";
 
+
+import {getAttractionsByType, getAttractionsTypes, getAllAttractions} from "../../api/PosadasApi"
+
 export default function SearchAtraccion(props) {
   const { navigation, route } = props;
   const [atraccion, setAtraccion] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [search, setSearch] = useState("");
-  const [selectedId, setSelectedId] = useState("all");
+  const [search, setSearch] = useState('');
+  const [selectedId, setSelectedId] = useState('');
+  const [tags,setTags] = useState();
 
-  const tags = [
-    { title: "all", id: "all" },
-    { title: "alive", id: "alive" },
-    { title: "dead", id: "dead" },
-    { title: "unknown", id: "unknown" },
-    { title: "fillertext", id: "aa3" },
-    { title: "fillertext", id: "aa4" },
-    { title: "fillertext", id: "aa5" },
-  ];
 
-  async function buscarAtraccion() {
-    const requestOptions = {
-      method: "GET",
-    };
-    if (selectedId === "all") {
-      try {
-        const atr = fetch(
-          `https://rickandmortyapi.com/api/character/?name=${search}`,
-          requestOptions
-        );
-        return atr
-          .then((res) => res.json())
-          .then((data) => {
-            setAtraccion(data.results);
-          })
-          .catch((error) => console.log("Ocurrio un error " + error));
-      } catch (error) {
-        console.log(error.message);
-      }
+  async function searchByType() {
+    if (selectedId === '' && search === '') {
+      getAllAttractions().then((response)=>{
+        setAtraccion(response.data);
+      })
+      .catch(() => alert("Error de servidor"));
     }
-    try {
-      const atr = fetch(
-        `https://rickandmortyapi.com/api/character/?name=${search}&status=${selectedId}`,
-        requestOptions
-      );
-      return atr
-        .then((res) => res.json())
-        .then((data) => {
-          console.log(data.results);
-          setAtraccion(data.results);
-        })
-        .catch((error) => console.log("Ocurrio un error" + error));
-    } catch (error) {
-      console.log(error.message);
+    if(selectedId !== ''){
+      getAttractionsByType(selectedId).then((response)=>{
+        setAtraccion(response.data);
+      })
+      .catch(() => alert("Error de servidor"));
     }
   }
 
+  async function setAllTypes(){
+    let tagFinal = []
+    getAttractionsTypes()
+    .then((attractions) => {
+      attractions.data.forEach((tagName) => {
+        let tag = {
+          title: tagName, id: tagName
+        }
+        tagFinal.push(tag)
+      })
+      setTags(tagFinal);
+    })
+    .catch(() => alert("Error de servidor"));
+  }
+
+  async function searchItems(value){
+    setSearch(value);
+    getAllAttractions()
+    .then((attractions) => {
+      if (search !== '') {
+        const filteredData = attractions.data.filter((i) => {
+        return Object.values(i).join('').toLowerCase().includes(search.toLowerCase())
+        })
+        setAtraccion(filteredData)
+      }
+      else{
+        setAtraccion(attractions.data)
+      }
+  })
+  }
+ 
   useEffect(() => {
-    setTimeout(() => {
-      buscarAtraccion();
-      setIsLoading(false);
-    }, 400);
-  }, [search, selectedId]);
+    setAllTypes();
+  },[])
+
+  useEffect(() => {
+    searchByType();
+  }, [selectedId]);
+
+  
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
-      <View style={{ padding: 20 }}>
+    <View style={{ flex: 1, backgroundColor: "#FFFFFF", marginTop:20}}>
+      <View style={{ padding: 20}}>
         <SearchBar
-          placeholder="Search Attractions..."
-          onChangeText={(e) => setSearch(e)}
+          placeholder="Buscar Atracciones..."
+          onChangeText={(e) => searchItems(e)}
           value={search}
           placeholderTextColor={"#0B3534"}
           inputContainerStyle={styles.searchBarInput}
@@ -98,14 +104,9 @@ export default function SearchAtraccion(props) {
           />
         </SafeAreaView>
       </View>
-      {atraccion == undefined ? (
-        <View>
-          <Text style={styles.primaryText}>No se encontraron resultados</Text>
-        </View>
-      ) : (
-        <View
-          style={{ flex: 1, flexDirection: "column", justifyContent: "center" }}
-        >
+
+      {(search.length) > 0 || search === '' ? (
+        <View style={{ flex: 1, flexDirection: "column", justifyContent: "center" }}>
           <SafeAreaView style={styles.container}>
             <FlatList
               keyExtractor={(item) => item.id.toString()}
@@ -114,7 +115,11 @@ export default function SearchAtraccion(props) {
             />
           </SafeAreaView>
         </View>
-      )}
+      ): 
+      <View>
+          <Text style={styles.secondaryText}>No se encontraron resultados</Text>
+        </View>
+      }
     </View>
   );
 
@@ -123,7 +128,7 @@ export default function SearchAtraccion(props) {
       <AttracItem
         item={item}
         onPress={() => {
-          console.log(item);
+          //console.log(item);
           navigation.navigate("detalleAtraccion", { item: item });
         }}
       />
@@ -137,12 +142,20 @@ export default function SearchAtraccion(props) {
     return (
       <TagItem
         item={item}
-        onPress={() => setSelectedId(item.id)}
+        onPress={() => {
+          if(selectedId === ''){
+            setSelectedId(item.id)
+          }else{
+            setSelectedId('')
+          }
+        }}
         backgroundColor={{ backgroundColor }}
         textColor={{ color }}
       />
     );
   }
+
+
 }
 
 const styles = StyleSheet.create({
@@ -176,7 +189,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    marginTop: StatusBar.currentHeight || 0,
+    //marginTop: StatusBar.currentHeight || 0,
   },
   secondaryText: {
     fontSize: 14,
