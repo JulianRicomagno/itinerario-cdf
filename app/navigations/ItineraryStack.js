@@ -16,19 +16,20 @@ export default function ItineraryStack() {
             <Stack.Screen 
                 name="createItineraty" 
                 component={CreateItineraty} 
-                options={{title: "Crear Itinerario"}}/>
+                options={{title: "Crear Itinerario", headerShown: false}}
+                />
             <Stack.Screen 
                 name="detalleAtraccion" 
                 component={DetalleAtraccion} 
-                options={{title: "Detalle Atraccion"}}/>
+                options={{title: "Detalle Atraccion", headerShown: true}}/>
             <Stack.Screen 
                 name="myTrip" 
                 component={MyTrip} 
-                options={{title: "Mi viaje"}}/>
+                options={{title: "Mi viaje", headerShown: false}}/>
             <Stack.Screen 
                 name="searchAtraccion" 
                 component={SearchAtraccion} 
-                options={{title: "Search Atraccion"}}/> 
+                options={{title: "Buscar Atracciones", headerShown: false}}/> 
         </Stack.Navigator>
     )
     

@@ -6,14 +6,17 @@ import {
   StyleSheet,
   Text,
   View,
+  Button,
 } from "react-native";
 import COLORS from "../colors";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
+import {GreenButton} from "../../components/buttonI";
+
 export default function DetalleAtraccion({ route, navigation }) {
   const { item } = route.params;
 
-  console.log(item.image);
+  console.log(item);
 
   return (
     <ScrollView
@@ -23,106 +26,77 @@ export default function DetalleAtraccion({ route, navigation }) {
         paddingBottom: 20,
       }}
     >
-      <StatusBar
-        barStyle="light-content"
-        translucent
-        backgroundColor="rgba(0,0,0,0)"
-      />
-      <ImageBackground style={style.headerImage} source={{ uri: item.image }}>
-        <View style={style.header}>
-          <Icon
-            name="arrow-back-ios"
-            size={28}
-            color={COLORS.white}
-            onPress={console.log("Atrass")}
-          />
-          <Icon name="bookmark-border" size={28} color={COLORS.white} />
-        </View>
-      </ImageBackground>
+      <ImageBackground style={style.headerImage} source={{ uri: item.image }} />
       <View>
-        <View style={style.iconContainer}>
+        {/*<View style={style.iconContainer}>
           <Icon
             name="place"
             color={COLORS.white}
             size={28}
             onPress={console.log("te encontre")}
-          />
+          /> marginTop: 20, marginBottom: 10, marginLeft: 10, marginRight: 10
+        </View margin:auto,width:80%>*/}
+
+        <View style={{ marginTop: 20, paddingHorizontal: 20}}>
+          <Text style={{ fontSize: 30, fontWeight: "bold", textAlign:'center' }}>{item.name}</Text>
+          <View style={{marginTop: 20, marginBottom: 10, marginLeft: 10, marginRight: 10}}>
+              <Text style={{ fontSize: 20, textAlign:'center' }}>
+                {item.description}
+              </Text>
+          </View>
         </View>
-        <View style={{ marginTop: 20, paddingHorizontal: 20 }}>
-          <Text style={{ fontSize: 20, fontWeight: "bold" }}>{item.name}</Text>
-          <Text
-            style={{
-              fontSize: 12,
-              fontWeight: "400",
-              color: COLORS.grey,
-              marginTop: 5,
-            }}
-          >
-            {item.species}
+
+        <View style={style.marginInfo}>
+          <Text style={{ fontSize: 20, fontWeight: "bold" }}>
+            DÍA: 
           </Text>
-          <View
-            style={{
-              marginTop: 10,
-              flexDirection: "row",
-              justifyContent: "space-between",
-            }}
-          >
-            <View style={{ flexDirection: "row" }}>
-              <View style={{ flexDirection: "row" }}>
-                <Icon name="star" size={20} color={COLORS.orange} />
-                <Icon name="star" size={20} color={COLORS.orange} />
-                <Icon name="star" size={20} color={COLORS.orange} />
-                <Icon name="star" size={20} color={COLORS.orange} />
-                <Icon name="star" size={20} color={COLORS.grey} />
-              </View>
-              <Text style={{ fontWeight: "bold", fontSize: 18, marginLeft: 5 }}>
-                4.0
+          <View style={style.tagInfo}>
+            <Text style={{fontSize: 20, fontWeight: "bold", color: COLORS.grey, marginLeft: 5}}>
+              {item.dateAndHour}
+            </Text>
+          </View>
+        </View>
+
+        <View style={style.marginInfo}>
+          <Text style={{ fontSize: 20, fontWeight: "bold" }}>
+            UBICACIÓN: 
+          </Text>
+          <View style={style.tagInfo}>
+            <Text style={{fontSize: 20, fontWeight: "bold", color: COLORS.grey, marginLeft: 5}}>
+              {item.address} 
+            </Text>
+          </View>
+        </View>
+    
+        <View style={style.marginInfo}>
+            <View style={{ justiftyContent:"center", alignItems:"center", flexDirection: "row" }}>
+              <Text style={{ fontSize: 20, fontWeight: "bold" }}>
+                PUNTAJE: 
+              </Text>
+            <View style={style.tagInfo}>
+              <Text style={{fontSize: 20, fontWeight: "bold", color: COLORS.grey, marginLeft: 5}}>
+                {item.rating}
+                <Icon name="star" size={20} color={COLORS.orange}/>
               </Text>
             </View>
-            <Text style={{ fontSize: 13, color: COLORS.grey }}>365reviews</Text>
+            </View>
           </View>
-          <View style={{ marginTop: 20 }}>
-            <Text style={{ lineHeight: 20, color: COLORS.grey }}>
-              {item.gender}
-            </Text>
-          </View>
-        </View>
-        <View
-          style={{
-            marginTop: 20,
-            flexDirection: "row",
-            justifyContent: "space-between",
-            paddingLeft: 20,
-            alignItems: "center",
-          }}
-        >
+
+        <View style={style.marginInfo}>
           <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-            Price per night
+            Categoria:
           </Text>
-          <View style={style.priceTag}>
-            <Text
-              style={{
-                fontSize: 16,
-                fontWeight: "bold",
-                color: COLORS.grey,
-                marginLeft: 5,
-              }}
-            >
-              ${item.created}
-            </Text>
-            <Text
-              style={{
-                fontSize: 12,
-                fontWeight: "bold",
-                color: COLORS.grey,
-                marginLeft: 5,
-              }}
-            >
-              +breakfast
+          <View style={style.tagInfo}>
+            <Text style={{fontSize: 20, fontWeight: "bold", color: COLORS.grey, marginLeft: 5}}>
+              {item.typeAttraction}
             </Text>
           </View>
         </View>
-        <View style={style.btn}>
+
+        <View style={{marginTop: 10}}>
+          <GreenButton text={"AGREGAR"} onPress={() => navigation.navigate("myTrip", { item: item })} />
+        </View>
+        {/*<View style={style.btn}>
           <Text
             style={{ color: COLORS.white, fontSize: 18, fontWeight: "bold" }}
             onPress={() => {
@@ -130,9 +104,9 @@ export default function DetalleAtraccion({ route, navigation }) {
               navigation.navigate("myTrip", { item: item });
             }}
           >
-            Book Now
+            AGREGAR
           </Text>
-        </View>
+          </View> */}
       </View>
     </ScrollView>
   );
@@ -148,8 +122,7 @@ const style = StyleSheet.create({
     marginHorizontal: 20,
     borderRadius: 10,
   },
-
-  priceTag: {
+  tagInfo: {
     height: 40,
     alignItems: "center",
     marginLeft: 40,
@@ -173,8 +146,8 @@ const style = StyleSheet.create({
   },
   headerImage: {
     height: 400,
-    borderBottomRightRadius: 40,
-    borderBottomLeftRadius: 40,
+    borderBottomRightRadius: 160,
+    borderBottomLeftRadius: 160,
     overflow: "hidden",
   },
   header: {
@@ -184,4 +157,11 @@ const style = StyleSheet.create({
     marginHorizontal: 20,
     justifyContent: "space-between",
   },
+  marginInfo: {
+    marginTop: 20,
+    flexDirection: "row", 
+    justifyContent: "space-between",  
+    paddingLeft: 20, 
+    alignItems: "center"
+  }
 });
