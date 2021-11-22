@@ -15,7 +15,7 @@ import { fetchUser } from "../api/PosadasApi";
 const Stack = createStackNavigator();
 
 export default function ItineraryStack() {
-    const [tieneItinerario, setTieneItinerario] = useState(false);
+    const [tieneItinerario, setTieneItinerario] = useState(true);
  
     const [user , setUser] = useState();
   
