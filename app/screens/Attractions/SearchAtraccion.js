@@ -179,7 +179,7 @@ export default function SearchAtraccion(props) {
       <AttracItem
         item={item}
         onPress={() => {
-          if(!tieneItinerario){
+          if(tieneItinerario){
             alert('No creaste itinerario')
           }else{
             navigation.navigate("detalleAtraccion", { item: item });

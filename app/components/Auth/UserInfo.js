@@ -7,7 +7,7 @@ import { useAuthRemoveContext , useAuthContext } from "../../utils/Context/AuthC
 import {handleUser} from '../../utils/Context/Storage';
 import { Text } from 'react-native-elements';
 import { StyleSheet } from 'react-native';
-import {fetchUserById} from '../../api/PosadasApi'
+import {fetchUser} from '../../api/PosadasApi'
 
 
 
@@ -19,7 +19,7 @@ export default function UserInfo({navigation}) {
     const [generalInfo, setGeneralInfo] = useState()
     
     useEffect(() => {
-        fetchUserById()
+        fetchUser()
          .then(response => {
             setUser(response);
             //console.log(user.data);
