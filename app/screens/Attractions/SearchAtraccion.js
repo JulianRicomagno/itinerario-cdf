@@ -12,7 +12,7 @@ import AttracItem from "../../components/attracItem";
 import TagItem from "../../components/tagItem";
 
 
-import {getAttractionsByType, getAttractionsTypes, getAllAttractions} from "../../api/PosadasApi"
+import {getAttractionsByType, getAttractionsTypes, getAllAttractions, fetchUser} from "../../api/PosadasApi"
 
 export default function SearchAtraccion(props) {
   const { navigation, route } = props;
@@ -20,7 +20,32 @@ export default function SearchAtraccion(props) {
   const [search, setSearch] = useState('');
   const [selectedId, setSelectedId] = useState('');
   const [tags,setTags] = useState();
+  const [tieneItinerario, setTieneItinerario] = useState(false);
+ 
+ 
+ 
+  const [user , setUser] = useState();
 
+   function verificarItinerario(){
+    setTieneItinerario(user.itinerary.totalDays.length === 0);
+  }
+
+  function getUsuario(){
+    fetchUser().then(res =>
+      {
+        setUser(res.data);
+      }).catch(error => console.log(error));  
+  }
+
+  useEffect(() => {
+      getUsuario();
+  }, [])
+
+  useEffect(() => {
+    if(user != null){
+      verificarItinerario();
+    }
+  }, [user])
 
   async function searchByType() {
     if (selectedId === '' && search === '') {
@@ -125,11 +150,17 @@ export default function SearchAtraccion(props) {
 
   function renderAtracc({ item }) {
     return (
+     
       <AttracItem
         item={item}
         onPress={() => {
-          //console.log(item);
-          navigation.navigate("detalleAtraccion", { item: item });
+          if(!tieneItinerario){
+            alert('No creaste itinerario')
+          }else{
+            navigation.navigate("detalleAtraccion", { item: item });
+
+          }   
+         
         }}
       />
     );

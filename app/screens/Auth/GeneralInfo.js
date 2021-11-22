@@ -63,6 +63,7 @@ const styles = StyleSheet.create({
   container: {
     width: "80%",
     alignSelf: "center",
+    marginTop: 45
   },
   logo: {
     width: "100%",

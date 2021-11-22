@@ -18,7 +18,6 @@ export default function Register(props) {
         <Image style={styles.logo} source={logo} />
         <Text style={styles.textTitles}> Sign Up </Text>
         <RegisterForm navigation={navigation} />
-        <Text onPress={() => navigation.navigate("login")}> Log in </Text>
       </View>
     </ScrollView>
   );
@@ -28,6 +27,7 @@ const styles = StyleSheet.create({
   container: {
     width: "80%",
     alignSelf: "center",
+    marginTop: 45
   },
   logo: {
     width: "100%",

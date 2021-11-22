@@ -83,11 +83,17 @@ export function RegisterForm({route, navigation}) {
       errorMessage={errors.passwordConfirm}
       id={"passwordConfirm"}
       />
-
+      <View>
       <GreenButton
         onPress={handleSubmit}
         text="Continuar"
       />
+      <GreenButton
+        onPress={() => navigation.navigate("login")}
+        text={"Volver"}
+      />
+      </View>
+  
     </View>
      )}
     </Formik>
