@@ -123,30 +123,6 @@ export async function getAllAttractions(){
     })
 }
 
-export async function getAttractionsByType(type){
-
-    const token = await AsyncStorage.getItem('token');
-    return await axios({
-        method: 'GET',
-        url: `${API_HOST}api/attraction/searchbytype/${type}`,
-        headers: {
-            'Content-Type' : 'application/json',
-            'x-token': token,
-        }});
-}
-
-export async function getAttractionsByName(name){
-
-    const token = await AsyncStorage.getItem('token');
-    return await axios({
-        method: 'GET',
-        url: `${API_HOST}api/attraction/searchbyname/${name}`,
-        headers: {
-            'Content-Type' : 'application/json',
-            'x-token': token,
-        }});
-}
-
 export async function getAttractionsTypes(){
 
     const token = await AsyncStorage.getItem('token');
