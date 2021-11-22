@@ -59,7 +59,7 @@ export default function CreateItineraty(props) {
   }
 
   const pressEnd = () =>{
-    if(start !=  null && end != null)
+    if(selectedStartDate !=  null && selectedEndDate != null)
     {
       const momentStart = moment(selectedStartDate);
       const momentEnd = moment(selectedEndDate);
@@ -80,7 +80,7 @@ export default function CreateItineraty(props) {
         i++;
       }
       arr[0] = { attendanceDate: momentStart.format('yyyy-MM-DD'), isDayOff: false, attractions : [{name: 'hola' , id: '12345'}] };
-      console.log('Fecha inicio: ', startDate, '. Fecha fin: ' , endDate, '. Cantidad de días: ' , totalDays, '. Información del usuario: ' , userInfo.generalInfo, '. id y tipo de usuario: ', userInfo.id , ',' , userInfo.type)
+      //console.log('Fecha inicio: ', startDate, '. Fecha fin: ' , endDate, '. Cantidad de días: ' , totalDays, '. Información del usuario: ' , userInfo.generalInfo, '. id y tipo de usuario: ', userInfo.id , ',' , userInfo.type)
       const reqArray = arr;
       // Request para hacerle update al itinerario
       
@@ -96,7 +96,12 @@ export default function CreateItineraty(props) {
       };
       
       // Fin de la request
-      updateUser(JSON.stringify(request));
+      updateUser(JSON.stringify(request)).then(
+        res => {
+          res.status == 200 ? alert('Itinerario creado') : alert(res.status)
+          navigation.navigate('myTrip');
+        }
+      ).catch(error => console.log(error));
     }
   }
   
@@ -192,7 +197,7 @@ export default function CreateItineraty(props) {
           ) : (
             <View style={styles.bottom}>
               <TouchableOpacity
-                onPress={() => pressEnd}
+                onPress={() => pressEnd()}
                 disabled={!completed}
                 style={[styles.button , {backgroundColor : completed ? '#32BB77' : '#F1F1F1' , borderColor : completed ? '#32BB77' : '#E33674'}]}
               >

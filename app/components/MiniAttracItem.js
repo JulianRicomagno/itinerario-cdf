@@ -16,7 +16,7 @@ export default function MiniAttracItem({item, onPress}) {
             containerStyle={[styles.atracItem]}           
             >
                     <ListItem.Content style={{padding: 5, marginTop: 15,}}>
-                            <ListItem.Title style={[styles.title, {fontSize: item.title.length < 15 ? 20 : 16}]}>{item.title}</ListItem.Title>
+                            <ListItem.Title style={[styles.title, {/*fontSize: item.title.length < 15 ? 20 : 16*/}]}>{item.title}</ListItem.Title>
                             <TouchableOpacity disabled={true} style={styles.miniContainer}>
                                 <ListItem.Subtitle style={styles.primary}>{item.description}</ListItem.Subtitle>
                                 <ListItem.Subtitle style={styles.secondary}>{item.gender}</ListItem.Subtitle>

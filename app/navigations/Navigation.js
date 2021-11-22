@@ -26,7 +26,8 @@ export default function Navigation() {
                     tabBarInactiveTintColor: '#385F5E',
                     tabBarActiveTintColor: '#32BB77',
                     headerShown: false,
-                    tabBarIcon: ({ color }) => screenOptions(route, color), 
+                    tabBarIcon: ({ color }) => screenOptions(route, color),
+                    tabBarHideOnKeyboard: true,
                 })}
             >
                 
