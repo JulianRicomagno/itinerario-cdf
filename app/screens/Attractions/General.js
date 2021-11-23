@@ -1,23 +1,13 @@
 import React from 'react';
-import {View, Text, StyleSheet, ImageBackground, ScrollView, Image, Textstyle} from 'react-native';
-import { Button } from 'react-native-elements';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import {View, StyleSheet, ImageBackground, ScrollView, Image} from 'react-native';
 import COLORS from "../colors"
 import {GreenButton} from "../../components/buttonI";
 import logo from "../../../assets/PosadasLogoHome.png";
-import {useAuthContext, useAuthUpdateContext} from '../../utils/Context/AuthContext' 
-
 
 export default function General(props) {
-    const { navigation, flag}= props
-
-    const user = useAuthContext();
-
-  
-    return (
-
-       
-        
+    const { navigation }= props  
+    
+    return (  
     <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
@@ -36,14 +26,7 @@ export default function General(props) {
                     <GreenButton onPress={() => navigation.navigate("searchAtraccion")} text={"Explorar"} > </GreenButton>  
               </View> 
             </View>
-
-
-
-
-
-
     </ScrollView>
-  
     )
 }
 
@@ -84,7 +67,5 @@ const styles =  StyleSheet.create ({
       },
       TextContainer:{
         display: "flex",
-
-        
       }
 })

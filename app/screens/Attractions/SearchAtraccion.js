@@ -28,9 +28,7 @@ export default function SearchAtraccion(props) {
 
 
    function verificarItinerario(){
-     console.log(JSON.stringify(user));
-     console.log(user.itinerary.totalDays.length)
-    setTieneItinerario(user.itinerary.totalDays.length !== 0);
+    setTieneItinerario(user.itinerary.dayFrom !== '');
   }
 
   function getUsuario(){

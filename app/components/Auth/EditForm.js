@@ -109,7 +109,7 @@ export function EditForm({route , navigation,countryNames,token}) {
       updateGralInfo(generalInfo)
       .then(() => {
       handleUser('updateGeneralInfo' , () => {} , generalInfo);
-      navigation.navigate('datos');
+      navigation.reset({index : 0 , routes : [{name: 'datos'}]});
       })
       .catch(error => {
         console.log(error.msg)

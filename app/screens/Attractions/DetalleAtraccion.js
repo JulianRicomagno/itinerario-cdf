@@ -16,8 +16,8 @@ import {fetchUser , updateItinerary} from '../../api/PosadasApi';
 export default function DetalleAtraccion({ route, navigation }) {
   const { item , index  , horas} = route.params;
   const [horariosDisponibles , setHorariosDisponibles] = useState([]);
-  const [horario , setHorario] = useState();  
-  const [user , setUser] = useState({});
+  const [horario , setHorario] = useState();
+  const [user , setUser] = useState();
 
 useEffect(() => {
   fetchUser().then(res => setUser(res.data)).catch(error=> console.log(error));
@@ -70,14 +70,13 @@ const updateItineraryApiCall = (request) => {
   updateItinerary(JSON.stringify(request)).then(
     res => {
       if(res.status == 200){
-        alert('Completado!')
         setTimeout(() => {
           navigation.reset({index : 0, routes: [{name: 'myTrip'}]})
         } , 600)
       }
     }
   ).catch(error => {
-    alert('algo malio sal');
+    alert('Error del servidor.');
   })
 }
 
