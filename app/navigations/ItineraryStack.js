@@ -15,12 +15,13 @@ import { fetchUser } from "../api/PosadasApi";
 const Stack = createStackNavigator();
 
 export default function ItineraryStack() {
-    const [tieneItinerario, setTieneItinerario] = useState(true);
+    const [tieneItinerario, setTieneItinerario] = useState(false);
  
     const [user , setUser] = useState();
   
      function verificarItinerario(){
-      setTieneItinerario(user.itinerary.totalDays.length === 0);
+      setTieneItinerario(user.itinerary.totalDays.length !== 0);
+      console.log(user.itinerary.totalDays.length);
     }
   
     function getUsuario(){

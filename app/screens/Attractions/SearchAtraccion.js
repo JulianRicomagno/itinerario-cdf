@@ -28,7 +28,9 @@ export default function SearchAtraccion(props) {
 
 
    function verificarItinerario(){
-    setTieneItinerario(user.itinerary.totalDays.length === 0);
+     console.log(JSON.stringify(user));
+     console.log(user.itinerary.totalDays.length)
+    setTieneItinerario(user.itinerary.totalDays.length !== 0);
   }
 
   function getUsuario(){
@@ -176,7 +178,7 @@ export default function SearchAtraccion(props) {
       <AttracItem
         item={item}
         onPress={() => {
-          if(tieneItinerario){
+          if(!tieneItinerario){
             alert('No creaste itinerario')
           }else{
             navigation.navigate("detalleAtraccion", { item: item , index: index , horas : horas});
