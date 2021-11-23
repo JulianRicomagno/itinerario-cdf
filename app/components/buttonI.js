@@ -62,6 +62,26 @@ export function WhiteButton(props) {
     )
 }
 
+export function PinkButton(props){
+    const {onPress, text} = props;
+    return(
+        <TouchableOpacity
+            style={{
+                ...styles.button,
+                backgroundColor: '#E33674',
+                borderColor: '#000000',
+            }}
+            onPress={onPress}
+        >
+            <Text
+            style={{...styles.buttonText,
+                    color:'#FFFFFF'}}>
+                        {text}
+            </Text>
+        </TouchableOpacity>
+    )
+}
+
 const styles = StyleSheet.create({
     button: {
         alignSelf: 'center',

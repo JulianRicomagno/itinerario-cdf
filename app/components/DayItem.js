@@ -1,6 +1,6 @@
 import React , {useState , useEffect} from 'react'
 import { ListItem, Button} from 'react-native-elements'
-import {  StyleSheet , TouchableOpacity} from 'react-native'
+import {  StyleSheet , TouchableOpacity , Text} from 'react-native'
 import { SafeAreaView } from "react-native-safe-area-context";
 import Timeline from 'react-native-timeline-flatlist';
 import MiniAttracItem from './MiniAttracItem';
@@ -25,11 +25,12 @@ export default function DayItem({item, navigator}) {
     const index = item.number - 1; // Esto va a la ruta de SearchAttraction para enviarselo a lo demás
     
     const renderDetail = (rowData, sectionID, rowID) => {
-        //console.log('item: ' + rowData);
         return(
             <MiniAttracItem
+                indexAttrac={sectionID}
                 item={rowData}
-                //onPress={() => navigator.navigate("detalleAtraccion", { item: rowData })}
+                navigator={navigator}
+                indexDia={index}
             />
         );
     }
@@ -62,7 +63,12 @@ export default function DayItem({item, navigator}) {
                         }}
                 />
             </ListItem>
-            <Timeline
+            {  
+            item.attractions.length === 0 ? 
+            (<Text style={{color: '#385F5E' , textAlign:'center'}}>Agregue atracciones con el botón +.</Text>) 
+            : 
+            (               
+                <Timeline
                 circleColor={'#32BB77'}
                 lineColor={'#32BB77'}
                 data={data}
@@ -70,7 +76,8 @@ export default function DayItem({item, navigator}) {
                 renderDetail={renderDetail}
                 renderFullLine={true}
                 circleSize={20}
-            />
+                
+            />)}
         </SafeAreaView>
     )
 }

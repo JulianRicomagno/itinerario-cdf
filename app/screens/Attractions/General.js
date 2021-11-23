@@ -33,7 +33,7 @@ export default function General(props) {
 const styles =  StyleSheet.create ({
     viewBody : {
       flex : 1 ,
-      backgroundColor : "#fff" ,
+      backgroundColor : "#FFFFFF" ,
     },
     bottom:{
         margin: 50,

@@ -9,23 +9,28 @@ import {
 import COLORS from "../colors";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { Rating } from 'react-native-elements';
-import {GreenButton} from "../../components/buttonI";
-import {fetchUser , updateItinerary} from '../../api/PosadasApi';
+import {WhiteButton , PinkButton} from "../../components/buttonI";
+import {fetchUser , updateUser , fetchAttraction} from '../../api/PosadasApi';
 
 export default function AtraccionEnItinerario({ route, navigation }) {
-  const { item , index } = route.params;
-  //console.log(item);
-  const [user , setUser] = useState({});
+  const { id , indexAttrac , dateAndHour, indexDia} = route.params;
+  const [item , setItem] = useState();
+  const [user , setUser] = useState();
+  const [loading , setLoading] = useState(true);
 
 useEffect(() => {
+  fetchAttraction(id).then(res => setItem(res.data)).catch(error => console.log(error));
   fetchUser().then(res => setUser(res.data)).catch(error=> console.log(error));
+  setTimeout(() => {
+    setLoading(false);
+  } , 700) 
 } , [])
 
 const removeAttraction = () => {
     let workUser = user;
-    let arr = user.itinerary.totalDays[index].attractions; // Array de atracciones del día
-    arr.splice(index , 1);  // Remuevo la atracción del día
-    workUser.itinerary.totalDays[index].attractions = arr; // Piso el día en el usuario con el actualizado
+    let arr = user.itinerary.totalDays[indexDia].attractions; // Array de atracciones del día
+    arr.splice(indexAttrac , 1);  // Remuevo la atracción del día
+    workUser.itinerary.totalDays[indexDia].attractions = arr; // Piso el día en el usuario con el actualizado
     //console.log('workuser:' , JSON.stringify(workUser.itinerary.totalDays));
     const request = {
       id: user.id,
@@ -41,19 +46,23 @@ const removeAttraction = () => {
 }
 
 const callApiUpdate = (request) =>  {
-  updateItinerary(JSON.stringify(request)).then(
-    res => {
-      if(res.status == 200){
-        alert('Atracción removida.')
-        setTimeout(() => {
-          navigation.reset({index : 0, routes: [{name: 'myTrip'}]})
-        } , 600)
-      }
-    }
-  ).catch(error => {
-    alert('Error del servidor.');
-  })
+  updateUser(JSON.stringify(request)).then(
+     res => {
+       if(res.status == 200){
+         alert('Atracción removida.')
+         setTimeout(() => {
+           navigation.reset({index : 0, routes: [{name: 'myTrip'}]})
+         } , 600)
+       }
+     }
+   ).catch(error => {
+     alert('Error del servidor.');
+   })
 }
+
+  if(loading){
+    return(<Text>Loading...</Text>)
+  }
 
   return (
     <ScrollView
@@ -97,18 +106,6 @@ const callApiUpdate = (request) =>  {
               </Text>
           </View>
         </View>
-  
-
-        <View style={style.marginInfo}>
-          <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-            Horarios: 
-          </Text>
-          <View style={style.tagInfo}>
-            <Text style={{fontSize: 20, fontWeight: 'bold' , color: COLORS.grey, marginLeft: 5,}}>
-              {item.dateAndHour}
-            </Text>
-          </View>
-        </View>
         <View style={style.marginInfo}>
           <Text style={{ fontSize: 20, fontWeight: "bold" }}>
             Categoria:
@@ -126,12 +123,13 @@ const callApiUpdate = (request) =>  {
           </Text>
           <View style={[style.tagInfo,{marginLeft: 70}]}>
             <Text style={{fontSize: 20, fontWeight: "bold", color: COLORS.grey, }}>
-              {item.dateAndHour}
+              {dateAndHour}
             </Text>
           </View>
         </View>
         <View style={{marginTop: 10}}>
-          <GreenButton text={"AGREGAR"} onPress={addAttraction} />
+          <PinkButton text={"Remover Atracción"} onPress={() => removeAttraction()}/>
+          <WhiteButton text={"Regresar a Itinerario"} onPress={() => {navigation.navigate('myTrip')}} />
         </View>
 
       </View>
@@ -200,5 +198,8 @@ const style = StyleSheet.create({
     marginBottom: 10,
     textAlign: 'center'
      
-  }
+  },
+  removeButton: {
+    
+  },
 });

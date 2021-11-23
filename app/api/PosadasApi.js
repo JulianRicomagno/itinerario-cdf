@@ -199,3 +199,15 @@ export async function updateItinerary(data){
         data : data,
     })
 }
+
+export async function fetchAttraction(id){
+    const token = await AsyncStorage.getItem('token');
+    return await axios({
+        url : `${API_HOST}api/attraction/searchbyid/${id}` ,
+        method : 'GET' , 
+        headers : {
+            'Content-Type' : 'application/json' ,
+            'x-token' : token ,
+        },
+    })
+}
