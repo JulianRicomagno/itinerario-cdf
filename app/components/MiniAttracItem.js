@@ -6,7 +6,10 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import addButtonIcon from '../../assets/addButtonIcon.png';
 import locationIcon from '../../assets/locationIcon.png';
 
-export default function MiniAttracItem({item, onPress}) {  
+export default function MiniAttracItem({item, navigator, indexAttrac , indexDia}) {
+  const onPress = () => {
+   navigator.navigate('detalleEnItinerario' ,{id: item.id, indexAttrac: indexAttrac, dateAndHour: item.dateAndHour , indexDia: indexDia});
+  }
     if(item.name !== ''){
     return (
         <SafeAreaView style={{marginBottom: 35, flex: 1, marginTop: -15,}}>

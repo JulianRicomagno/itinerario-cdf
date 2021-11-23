@@ -1,14 +1,14 @@
 import React,  { useState, useEffect } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-
+import AtraccionEnItinerario from "../screens/Attractions/AtraccionEnItinerario";
 import General from "../screens/Attractions/General";
 import CreateItineraty from "../screens/Attractions/CreateItineraty";
 import DetalleAtraccion from "../screens/Attractions/DetalleAtraccion";
 import MyTrip from "../screens/Attractions/MyTrip";
 import SearchAtraccion from "../screens/Attractions/SearchAtraccion";
-import {handleUser} from "../utils/Context/Storage";
 import { useAuthContext } from "../utils/Context/AuthContext";
 import { fetchUser } from "../api/PosadasApi";
+
 
 
 
@@ -61,7 +61,12 @@ export default function ItineraryStack() {
                 <Stack.Screen 
                     name="searchAtraccion" 
                     component={SearchAtraccion} 
-                    options={{title: "Buscar Atracciones", headerShown: false}}/> 
+                    options={{title: "Buscar Atracciones", headerShown: false}}/>
+                <Stack.Screen
+                    name="detalleEnItinerario"
+                    component={AtraccionEnItinerario}
+                    options={{title: 'Detalle Atraccion' , headerShown: false}}
+                />
             </Stack.Navigator>
         )
         

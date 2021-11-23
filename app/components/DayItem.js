@@ -25,11 +25,12 @@ export default function DayItem({item, navigator}) {
     const index = item.number - 1; // Esto va a la ruta de SearchAttraction para enviarselo a lo demás
     
     const renderDetail = (rowData, sectionID, rowID) => {
-        //console.log('item: ' + rowData);
         return(
             <MiniAttracItem
+                indexAttrac={sectionID}
                 item={rowData}
-                //onPress={() => navigator.navigate("detalleAtraccion", { item: rowData })}
+                navigator={navigator}
+                indexDia={index}
             />
         );
     }
