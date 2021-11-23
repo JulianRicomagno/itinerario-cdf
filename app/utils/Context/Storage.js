@@ -32,6 +32,8 @@ export async function handleUser(action, hook, user){
         case 'getLocalUser':
             getLocalUser(hook);
             break;
+        case 'updateGeneralInfo':
+            updateGeneralInfo(user)
     }
 }
 
@@ -49,7 +51,7 @@ async function setLocalUser(hook){
     fetchUser().then(
         res => {
             const user = res.data;
-            hook({token: user.token , id: user.id, generalInfo: user.generalInfo , itinerary : user.itinerary})
+            hook({token: user.token , id: user.id, generalInfo: user.generalInfo , email: user.email,  itinerary : user.itinerary})
         }
     ).catch(
         error => {console.log(error); removeUser();} // TEÓRICAMENTE SI EL FETCH FALLA ES PORQUE O EL USUARIO NO EXISTE, EL TOKEN EXPIRÓ, O EL SERVER ESTÁ CAÍDO.
@@ -59,9 +61,32 @@ async function setLocalUser(hook){
 async function addUser(data){
     try{
         const user = data.user;
+        const myInfo = user.generalInfo
         await AsyncStorage.setItem('token' , data.token);
         await AsyncStorage.setItem('id' , user.id);
+        await AsyncStorage.setItem('email', user.email);
+        await AsyncStorage.setItem('name' , user.generalInfo.name);
+        await AsyncStorage.setItem('lastName' , user.generalInfo.lastName);
+        await AsyncStorage.setItem('age' , JSON.stringify(user.generalInfo.age));
+        await AsyncStorage.setItem('country' , user.generalInfo.country);
+        await AsyncStorage.setItem('nationality' , user.generalInfo.nationality);
+        await AsyncStorage.setItem('city' , user.generalInfo.city);
+        await AsyncStorage.setItem('gender' , user.generalInfo.gender);
     }catch(e){console.log(e);}
+}
+
+async function updateGeneralInfo(info) {
+    try{
+        await AsyncStorage.setItem('name' , info.name);
+        await AsyncStorage.setItem('lastName' , info.lastName);
+        await AsyncStorage.setItem('age' , info.age);
+        await AsyncStorage.setItem('country' , info.country);
+        await AsyncStorage.setItem('nationality' , info.nationality);
+        await AsyncStorage.setItem('city' , info.city);
+        await AsyncStorage.setItem('gender' , info.gender);
+
+    }catch(err){console.log(err.msg)}
+
 }
 
 async function checkCredentials(){
@@ -82,6 +107,14 @@ async function removeUser(hook){
     try{
         await AsyncStorage.removeItem('token');
         await AsyncStorage.removeItem('id');
+        await AsyncStorage.removeItem('email');
+        await AsyncStorage.removeItem('name' );
+        await AsyncStorage.removeItem('lastName' );
+        await AsyncStorage.removeItem('age' );
+        await AsyncStorage.removeItem('country' );
+        await AsyncStorage.removeItem('nationality' );
+        await AsyncStorage.removeItem('city' );
+        await AsyncStorage.removeItem('gender' );
         hook();
     }
     catch(e) {console.log(e)};

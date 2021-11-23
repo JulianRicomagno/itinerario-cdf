@@ -13,7 +13,7 @@ export async function loginUser(user){
             device: 'mobileApp',
         }
     }
-    return axios(request);
+    return await axios(request);
   };
 
   export async function fetchUser(){
@@ -29,10 +29,63 @@ export async function loginUser(user){
             'x-token' : token
         },
       }
+
       return await axios(request);
   }
+
+
+  export async function updateGralInfo(info){
+
+    const id = await AsyncStorage.getItem('id')
+        const token = await AsyncStorage.getItem('token')
+        //const type = await AsyncStorage.getItem('typeUser')
+        return await axios({
+        method: 'POST',
+        url: `${API_HOST}api/usertourist/update`,
+        headers: {
+            'Content-Type' : 'application/json',
+            'x-token': token
+        },
+        data: {
+            "id":id,
+            "type": 'UserTourist',
+            "generalInfo": {
+                "name": info.name,
+                "lastName": info.lastName,
+                "age": info.age,
+                "nationality": info.nationality,
+                "country": info.country,
+                "city": info.city,
+                "gender": info.gender
+                }
+        }
+    })
+
+  }
+
+
+
+  export async function updatePassword(password){
+        const id = await AsyncStorage.getItem('id')
+        const token = await AsyncStorage.getItem('token')
+        //const type = await AsyncStorage.getItem('typeUser')
+        return await axios({
+        method: 'POST',
+        url: `${API_HOST}api/usertourist/updatepassword`,
+        headers: {
+            'Content-Type' : 'application/json',
+            'x-token': token
+        },
+        data: {
+            "id":id,
+            "type": 'UserTourist',
+            "passwd": password
+        }
+    })
+
+  }
     
-export function registerUser(user){
+export async function registerUser(user){
 const request = {
     url : `${API_HOST}public-api/usertourist/create`,
     method: 'POST',
@@ -51,8 +104,10 @@ const request = {
             gender: user.gender,
         }
     }
-    return axios(request)
+    return await axios(request)
 }
+
+
 
 
 export async function getToken(){
