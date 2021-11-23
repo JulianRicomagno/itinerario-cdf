@@ -44,7 +44,7 @@ export default function DayItem({item, navigator}) {
     }
 
     return (
-        <SafeAreaView>
+        <SafeAreaView style={{marginLeft:20,marginRight:20,marginTop:20}}>
             <ListItem Component={TouchableOpacity} disabled={true} containerStyle={styles.container}>
                 <ListItem.Title style={styles.primaryText}>
                    {'Día ' + item.number}

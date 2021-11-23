@@ -84,8 +84,8 @@ export default function MyTrip({ route, navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1, 
-    padding: 20,
+    //padding: 20,
     backgroundColor: '#FFFFFF',
-    marginBottom: 5,
+    //marginBottom: 5,
   },
 })
