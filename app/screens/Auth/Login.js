@@ -28,6 +28,7 @@ const styles = StyleSheet.create({
   container: {
     width: "80%",
     alignSelf: "center",
+    marginTop: 80
   },
   logo: {
     width: "100%",

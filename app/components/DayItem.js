@@ -1,4 +1,4 @@
-import React , {useState} from 'react'
+import React , {useState , useEffect} from 'react'
 import { ListItem, Button} from 'react-native-elements'
 import {  StyleSheet , TouchableOpacity} from 'react-native'
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -8,18 +8,37 @@ import ButtonAdd from './ButtonAdd';
 import moment from 'moment';
 
 export default function DayItem({item, navigator}) {
-    const data = [
+    //const data = [
                     /*{title: item.name , description: item.status , image: item.image, gender: item.gender, species: item.species,},
                     {title: 'nombre2' , description: item.status , image: item.image, gender: item.gender, species: item.species,},*/
-                ]
+      //          ]
+      let data = [];
+    item.attractions.forEach((attrac) => {
+        data.push
+        ({
+            name: attrac.name,
+            description: attrac?.desc,
+            dateAndHour: attrac?.dateAndHour,
+            address: attrac?.address,
+            typeAttraction: attrac?.typeAttraction,
+            rating: attrac?.rating,
+            id: attrac.id,
+        })});
+    const horas = item.attractions.map(att => att.dateAndHour.split(':' , 1)[0]);
     const date = moment(item.attendanceDate).format('MMM DD') // Esto es para que el día se muestre "Mes : Nom   Día : 00"
-    const index = item.number - 1; // Esto va al botón como ruta
+    const index = item.number - 1; // Esto va a la ruta de SearchAttraction para enviarselo a lo demás
+
+    useEffect( () => {
+        //console.log('datos: ' , item.attractions);
+        //console.log('otros datos: ' + JSON.stringify(item));
+    }, [])
     
     const renderDetail = (rowData, sectionID, rowID) => {
+        //console.log('item: ' + rowData);
         return(
             <MiniAttracItem
                 item={rowData}
-                onPress={() => navigator.navigate("detalleAtraccion", { item: rowData })}
+                //onPress={() => navigator.navigate("detalleAtraccion", { item: rowData })}
             />
         );
     }
@@ -42,7 +61,15 @@ export default function DayItem({item, navigator}) {
                 <ListItem.Subtitle style={styles.secondaryText}>
                     {date}
                 </ListItem.Subtitle>
-                <ButtonAdd onPress={() => {navigator.navigate('searchAtraccion', {index : index})}}/>
+                <ButtonAdd 
+                    onPress={() => {navigator.navigate('searchAtraccion', {index : index , horas: horas})}}
+                    styleButton={{
+                        marginBottom: 20, 
+                        marginLeft: item.number < 10 ? 15 
+                                    : item.number >= 10 && item.number < 100 ? 4
+                                    : -12 ,
+                        }}
+                />
             </ListItem>
             <Timeline
                 circleColor={'#32BB77'}

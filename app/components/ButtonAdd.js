@@ -2,10 +2,10 @@ import React from 'react'
 import { Text } from 'react-native-elements'
 import { StyleSheet, TouchableOpacity } from 'react-native'
 
-export default function ButtonAdd({onPress}) {
+export default function ButtonAdd({onPress , styleButton , styleText}) {
     return (
-        <TouchableOpacity onPress={onPress} style={styles.button}>
-            <Text style={styles.text}>+</Text>
+        <TouchableOpacity onPress={onPress} style={[styles.button , styleButton]}>
+            <Text style={[styles.text , styleText]}>+</Text>
         </TouchableOpacity>
     )
 }
@@ -18,8 +18,6 @@ const styles = StyleSheet.create({
         borderRadius: 100,
         borderColor: '#FFFFFF',
         borderWidth: 3,
-        marginBottom: 16,
-        marginLeft: 25,
 
     },
     text: {

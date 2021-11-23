@@ -79,7 +79,7 @@ export default function CreateItineraty(props) {
         }
         i++;
       }
-      arr[0] = { attendanceDate: momentStart.format('yyyy-MM-DD'), isDayOff: false, attractions : [{name: 'hola' , id: '12345'}] };
+      arr[0] = { attendanceDate: momentStart.format('yyyy-MM-DD'), isDayOff: false, attractions : [{name: 'Nuevo Hotel' , id: '12345', description: 'El hotel' , dateAndHour : '15:00' , typeAttraction: 'Hotel' , rating: 3, address: 'Lugar'}] };
       //console.log('Fecha inicio: ', startDate, '. Fecha fin: ' , endDate, '. Cantidad de días: ' , totalDays, '. Información del usuario: ' , userInfo.generalInfo, '. id y tipo de usuario: ', userInfo.id , ',' , userInfo.type)
       const reqArray = arr;
       // Request para hacerle update al itinerario
@@ -137,7 +137,7 @@ export default function CreateItineraty(props) {
 //TODO - cambiar visibilidad del Return para que sea más fácil de leer.
 
   return (
-    <ScrollView>
+    <ScrollView style={{backgroundColor: '#FFFFFF'}}>
       <View style={styles.container}>
         <Text style={styles.text}> Fechas de Estadía </Text>
         <CalendarPicker
@@ -150,10 +150,6 @@ export default function CreateItineraty(props) {
           selectedDayTextColor="#FFFFFF"
           onDateChange={onDateChange}
         />
-        <TouchableOpacity 
-            style={{heigth: 55, width: 55, backgroundColor: 'green', marginHorizontal: 150,}}>
-          <Text>Botón</Text>
-        </TouchableOpacity>
         <Text style={styles.text}> Lugar de Estadía </Text>
         <View>
           <View style={styles.picker}>
