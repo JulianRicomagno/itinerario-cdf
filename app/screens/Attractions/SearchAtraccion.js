@@ -9,15 +9,12 @@ import {
 import { SearchBar } from "react-native-elements";
 import AttracItem from "../../components/attracItem";
 import TagItem from "../../components/tagItem";
-
-
-
 import {getAttractionsByType, getAttractionsTypes, getAllAttractions, fetchUser} from "../../api/PosadasApi"
-
-
 
 export default function SearchAtraccion(props) {
   const { navigation, route } = props;
+  const index = route.params?.index;
+  const horas = route.params?.horas;
   const [atraccion, setAtraccion] = useState([]);
   const [search, setSearch] = useState('');
   const [selectedId, setSelectedId] = useState('');
@@ -182,10 +179,9 @@ export default function SearchAtraccion(props) {
           if(tieneItinerario){
             alert('No creaste itinerario')
           }else{
-            navigation.navigate("detalleAtraccion", { item: item });
+            navigation.navigate("detalleAtraccion", { item: item , index: index , horas : horas});
 
-          }   
-         
+          }
         }}
       />
     );

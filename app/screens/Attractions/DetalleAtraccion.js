@@ -1,24 +1,99 @@
-import React, { useState, useEffect, Component } from "react";
+import React, { useState, useEffect } from "react";
 import {
   ImageBackground,
   ScrollView,
-  StatusBar,
   StyleSheet,
   Text,
   View,
-  Button,
 } from "react-native";
 import COLORS from "../colors";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { Rating } from 'react-native-elements';
-
-
 import {GreenButton} from "../../components/buttonI";
+import RNPickerSelect from "react-native-picker-select";
+import {fetchUser , updateItinerary} from '../../api/PosadasApi';
 
 export default function DetalleAtraccion({ route, navigation }) {
-  const { item } = route.params;
+  const { item , index  , horas} = route.params;
+  const [horariosDisponibles , setHorariosDisponibles] = useState([]);
+  const [horario , setHorario] = useState();
+  //console.log(item);
+  const [user , setUser] = useState({});
 
-  console.log(item);
+useEffect(() => {
+  fetchUser().then(res => setUser(res.data)).catch(error=> console.log(error));
+
+  const data = timeAvailability(horas).map(
+    horario => horario < 10 ? 
+    ({value: `0${horario.toString()}:00`, label: `0${horario.toString()}:00`}) 
+    : ({value: `${horario.toString()}:00` , label : `${horario.toString()}:00`})
+  ); // NO LEER ESTO
+
+  setHorariosDisponibles(data);
+  setHorario(data[0].label);
+  //console.log('Horarios : ',JSON.stringify(horariosDisponibles))
+} , [])
+
+//useEffect( ()=> {console.log(JSON.stringify(user));}, [user]); //ignorar
+
+const addAttraction = () => {
+  //console.log(horario);
+
+  if(horario !== 'asd'){
+    let workUser = user;
+    let arr = user.itinerary.totalDays[index].attractions;
+    arr.push({
+        address: item.address,
+        dateAndHour: horario,
+        id: item.id,
+        name: item.name,
+        typeAttraction: item.typeAttraction,
+        rating: item.rating,
+        description: item.description,
+      })
+    arr.sort((a, b) => {return Number(a.dateAndHour.split(':' , 1)) - Number(b.dateAndHour.split(':' , 1))}); //magia
+    workUser.itinerary.totalDays[index].attractions = arr;
+    const attendanceDate = workUser.itinerary.totalDays[index].attendanceDate;
+    //console.log('workuser:' , JSON.stringify(workUser.itinerary.totalDays));
+    const request = {
+      generalInfo: user.generalInfo,
+      id: user.id,
+      type: user.type,
+      itinerary: {
+        hotel: user.itinerary.hotel,
+        dayFrom: user.itinerary.dayFrom,
+        dayTo: user.itinerary.dayTo,
+        totalDays: workUser.itinerary.totalDays,
+      },
+      newAttraction:{
+        typeAttraction : item.typeAttraction,
+        name: item.name,
+        attendanceDate: item.typeAttraction == 'Evento' ? item.dateAndHour : attendanceDate,
+      }
+    }
+    updateItinerary(JSON.stringify(request)).then(
+      res => {
+        if(res.status == 200){
+          alert('Completado!')
+          setTimeout(() => {
+            navigation.reset({index : 0, routes: [{name: 'myTrip'}]})
+          } , 600)
+        }
+      }
+    ).catch(error => {
+      alert('algo malio sal');
+    })
+
+  }
+}
+
+
+const timeAvailability = (attractions) => {
+   let hours = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24];
+   let timeUsed = attractions.sort((a, b) => { return b - a });
+   timeUsed.forEach(hour => hours.splice(hour - 1, 1));
+   return hours;
+}
 
   return (
     <ScrollView
@@ -66,6 +141,25 @@ export default function DetalleAtraccion({ route, navigation }) {
 
         <View style={style.marginInfo}>
           <Text style={{ fontSize: 20, fontWeight: "bold" }}>
+            Horarios: 
+          </Text>
+          <View style={style.tagInfo}>
+            { item.typeAttraction !== 'Evento' ? (
+             <RNPickerSelect
+              placeholder={{value: 'asd'  , label: 'Seleccione un horario'}}
+              items={horariosDisponibles}
+              onValueChange={(value) => { 
+                setHorario(value);
+              }}
+            > 
+              <Text style={{marginLeft: 5}}>{horario}</Text>
+            </RNPickerSelect>) : (<Text style={{fontSize: 20, fontWeight: 'bold' , color: COLORS.grey, marginLeft: 5,}}>{item.dateAndHour}</Text>)
+            }
+          </View>
+        </View>
+
+        <View style={style.marginInfo}>
+          <Text style={{ fontSize: 20, fontWeight: "bold" }}>
             Categoria:
           </Text>
           <View style={[style.tagInfo, {marginLeft: 50}]}>
@@ -85,9 +179,8 @@ export default function DetalleAtraccion({ route, navigation }) {
             </Text>
           </View>
         </View>
-
         <View style={{marginTop: 10}}>
-          <GreenButton text={"AGREGAR"} onPress={() => navigation.navigate("myTrip", { item: item })} />
+          <GreenButton text={"AGREGAR"} onPress={addAttraction} />
         </View>
 
       </View>

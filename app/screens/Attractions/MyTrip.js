@@ -1,15 +1,23 @@
 import React , {useState, useEffect} from "react";
 import { View, Text , StyleSheet , FlatList  } from "react-native";
 import DayItem from "../../components/DayItem";
-import { handleUser } from "../../utils/Context/Storage";
-import { useAuthContext } from "../../utils/Context/AuthContext";
 import { fetchUser } from "../../api/PosadasApi";
+import { TouchableOpacity } from "react-native";
 
 
 export default function MyTrip({ route, navigation }) {
-  //const user = useAuthContext()
   const [atraccion, setAtraccion] = useState([]);
   const [user , setUser] = useState();
+  const [isLoading , setIsLoading] = useState(false);
+
+  // function onPress() {
+  //   deleteItinerary(user)
+  //   axios({
+  //     method: 'POST',
+  //     headers: 'headers',
+  //     data: [{itinerary: {dateTo:  '',dayFrom: '', attractions: [] }}]
+  //   })
+  // }
 
   async function crearItinerario(){
     setAtraccion(user.itinerary.totalDays);
@@ -19,35 +27,12 @@ export default function MyTrip({ route, navigation }) {
     fetchUser().then(res =>
       {
         setUser(res.data);
-      }).catch(error => console.log(error));
+      }).catch(error => console.log(error));  
   }
-
-  /*
-  async function buscarAtraccion() {
-
-  const requestOptions = {
-      method: "GET",
-    };
-    try { 
-      const atr = fetch(
-        `https://rickandmortyapi.com/api/character/`,
-        requestOptions
-      );
-      return atr
-        .then((res) => res.json())
-        .then((data) => {
-          setAtraccion(data.results);
-        })
-        .catch((error) => console.log("Ocurrio un error" + error));
-    } catch (error) {
-      console.log(error.message);
-    }
-  }
-*/
 
   const renderItem = ({ item , index  }) => {
     item.number = index + 1;
-    item.date = 'Mar 8';
+    //console.log('el item:' + item.name)
     return (
       <DayItem
       item= {item}
@@ -58,30 +43,33 @@ export default function MyTrip({ route, navigation }) {
   }
 
   useEffect(() => {
-    
       getUsuario();
-    
   }, [])
 
   useEffect(() => {
     if(user != null){
-      console.log('entro')
-      crearItinerario();
+      setTimeout(() => {
+      crearItinerario()}
+      , 400)
     }
   }, [user])
-  
 
-  if (atraccion == null){
+  if (isLoading){
     return (
       <View>
         <Text>
-          Crea tu itinerario
+          Cargando
         </Text>
       </View>
     );
   }
   return(
     <View style={styles.container}>
+      {/* <TouchableOpacity onPress={(event) => {
+
+      }}>
+        <Text>Borrar</Text>
+      </TouchableOpacity> */}
       <FlatList
         data={atraccion}
         keyExtractor={(item) => item.attendanceDate.toString()} 
