@@ -90,6 +90,25 @@ export async function getCities(token, country){
     })
 }
 
+
+
+export async function forgotPassword(data){
+    console.log(data)
+   
+    return await axios({
+       
+        method: 'POST',
+        url: `${API_HOST}public-api/auth/recuperarpassword`,
+        headers: {
+            'Content-Type' : 'application/json',
+        },
+        data:{
+            "email":data,
+            "device": 'mobileApp',
+        }
+    })
+}
+        
 export async function getAllAttractions(){
 
     const token = await AsyncStorage.getItem('token');
@@ -102,30 +121,6 @@ export async function getAllAttractions(){
             'x-token': token
         },
     })
-}
-
-export async function getAttractionsByType(type){
-
-    const token = await AsyncStorage.getItem('token');
-    return await axios({
-        method: 'GET',
-        url: `${API_HOST}api/attraction/searchbytype/${type}`,
-        headers: {
-            'Content-Type' : 'application/json',
-            'x-token': token,
-        }});
-}
-
-export async function getAttractionsByName(name){
-
-    const token = await AsyncStorage.getItem('token');
-    return await axios({
-        method: 'GET',
-        url: `${API_HOST}api/attraction/searchbyname/${name}`,
-        headers: {
-            'Content-Type' : 'application/json',
-            'x-token': token,
-        }});
 }
 
 export async function getAttractionsTypes(){

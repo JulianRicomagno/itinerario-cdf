@@ -9,7 +9,7 @@ import {
 import { SearchBar } from "react-native-elements";
 import AttracItem from "../../components/attracItem";
 import TagItem from "../../components/tagItem";
-import {getAttractionsByType, getAttractionsTypes, getAllAttractions} from "../../api/PosadasApi";
+import {getAttractionsByType, getAttractionsTypes, getAllAttractions, fetchUser} from "../../api/PosadasApi"
 
 export default function SearchAtraccion(props) {
   const { navigation, route } = props;
@@ -19,21 +19,59 @@ export default function SearchAtraccion(props) {
   const [search, setSearch] = useState('');
   const [selectedId, setSelectedId] = useState('');
   const [tags,setTags] = useState();
+  const [tieneItinerario, setTieneItinerario] = useState(false);
+  const [savedAtraccions,setSavedAtraccions] = useState([]);
+ 
+ 
+ 
+  const [user , setUser] = useState();
 
 
-  async function searchByType() {
-    if (selectedId === '' && search === '') {
-      getAllAttractions().then((response)=>{
-        setAtraccion(response.data);
-      })
-      .catch(() => alert("Error de servidor"));
+   function verificarItinerario(){
+    setTieneItinerario(user.itinerary.totalDays.length === 0);
+  }
+
+  function getUsuario(){
+    fetchUser().then(res =>
+      {
+        setUser(res.data);
+      }).catch(error => console.log(error));  
+  }
+
+  useEffect(() => {
+      getUsuario();
+  }, [])
+
+  useEffect(() => {
+    if(user != null){
+      verificarItinerario();
     }
-    if(selectedId !== ''){
-      getAttractionsByType(selectedId).then((response)=>{
-        setAtraccion(response.data);
-      })
-      .catch(() => alert("Error de servidor"));
+  }, [user])
+
+
+  async function searchByTypeText() {
+    //CASO: buscador vacio y fitro desactivado
+    if(search === '' && selectedId === ''){
+      setAtraccion(savedAtraccions);
     }
+    //CASO: buscador vacio y filtro activado
+    if(search === '' && selectedId !== ''){
+      setAtraccion(filterRecreationByType(savedAtraccions,selectedId));
+    }
+    //CASO: buscador con info y filtro desactivado
+    if(search !== ''  && selectedId === ''  ){
+      let data = filterData(savedAtraccions);
+      setAtraccion(data);
+    }
+    //CASO: buscador con info y filtro activado
+    if(search !== ''  && selectedId !== ''){
+      let data = filterData(atraccion);
+      setAtraccion(filterRecreationByType(data,selectedId));
+    }
+  }
+
+  function filterRecreationByType(array, type) {
+    return array.filter((attr) => attr.typeAttraction === type);
   }
 
   async function setAllTypes(){
@@ -51,29 +89,39 @@ export default function SearchAtraccion(props) {
     .catch(() => alert("Error de servidor"));
   }
 
+
   async function searchItems(value){
     setSearch(value);
+    if (search !== '') {
+      let filteredData = filterData(atraccion);
+      setAtraccion(filteredData)
+    }
+  }
+
+  function filterData(array){
+    return array.filter((i) => {
+      return Object.values(i).join('').toLowerCase().includes(search.toLowerCase())
+     })
+  }
+
+  async function getAttractions(){
     getAllAttractions()
-    .then((attractions) => {
-      if (search !== '') {
-        const filteredData = attractions.data.filter((i) => {
-        return Object.values(i).join('').toLowerCase().includes(search.toLowerCase())
-        })
-        setAtraccion(filteredData)
-      }
-      else{
-        setAtraccion(attractions.data)
-      }
-  })
+    .then((response) => {
+      setSavedAtraccions(response.data)
+      setAtraccion(response.data)
+    })
+    .catch(() => alert("Error al conectarse con el servidor"));
   }
  
   useEffect(() => {
     setAllTypes();
+    getAttractions();
   },[])
 
+
   useEffect(() => {
-    searchByType();
-  }, [selectedId]);
+    searchByTypeText();
+  },[search,selectedId])
 
   
 
@@ -104,7 +152,7 @@ export default function SearchAtraccion(props) {
         </SafeAreaView>
       </View>
 
-      {(search.length) > 0 || search === '' ? (
+      { atraccion.length > 0 ? (
         <View style={{ flex: 1, flexDirection: "column", justifyContent: "center" }}>
           <SafeAreaView style={styles.container}>
             <FlatList
@@ -124,11 +172,16 @@ export default function SearchAtraccion(props) {
 
   function renderAtracc({ item }) {
     return (
+     
       <AttracItem
         item={item}
         onPress={() => {
-          //console.log(item);
-          navigation.navigate("detalleAtraccion", { item: item , index: index , horas : horas});
+          if(tieneItinerario){
+            alert('No creaste itinerario')
+          }else{
+            navigation.navigate("detalleAtraccion", { item: item , index: index , horas : horas});
+
+          }
         }}
       />
     );

@@ -14,17 +14,17 @@ export default function AccountStack() {
       <Stack.Screen
         name="login"
         component={Login}
-        options={{ title: "Iniciar Sesion" }}
+        options={{title: "Mi viaje", headerShown: false}}
       />
       <Stack.Screen
         name="register"
         component={Register}
-        options={{ title: "Registro" }}
+        options={{ title: "Registro", headerShown: false}}
       />
       <Stack.Screen
         name="generalinfo"
         component={GeneralInfo}
-        options={{ title: "General Info" }}
+        options={{ title: "General Info", headerShown: false}}
       />
     </Stack.Navigator>
   );

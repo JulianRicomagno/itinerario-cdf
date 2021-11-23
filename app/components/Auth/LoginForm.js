@@ -1,9 +1,10 @@
 import React, {useState, useEffect} from "react";
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text, Modal, Image, TouchableOpacity, Button } from "react-native";
 import { InputI } from "../../components/inputI";
 import { GreenButton, WhiteButton } from "../../components/buttonI";
 import { handleUser } from "../../utils/Context/Storage";
 import { useAuthUpdateContext } from '../../utils/Context/AuthContext';
+import { ForgotPassModal } from "../../components/Auth/ForgotPassModal";
 
 import * as Yup from 'yup';
 import { Formik } from 'formik';
@@ -15,14 +16,20 @@ const loginSchema = Yup.object().shape({
     .required('El email es requerido'),
   passwd: Yup
     .string('Ingrese su contraseña')
-    .min(6,'La contraseña debe tener un minimo de 6 caracteres')
+    .min(4,'La contraseña debe tener un minimo de 6 caracteres')
     .required('La contraseña es requerida'),
 });
+
+
+
+
 
 export function LoginForm(props) {
   const { navigation } = props;
   const updateUser = useAuthUpdateContext();
-  const [loading , setLoading] = useState(true);
+  const [visible, setVisible] = useState(false);
+ 
+
 
   useEffect(() => {
     handleUser('updateLocal' , updateUser);
@@ -33,6 +40,9 @@ export function LoginForm(props) {
       handleUser('login' , updateUser , {email: values.email, passwd: values.passwd}); 
     }, 800)
   };
+
+   
+
 
   return (
 
@@ -48,7 +58,7 @@ export function LoginForm(props) {
       }
     }
     >
-
+ 
     {({ errors, handleChange, handleSubmit, values }) => (
 
     <View style={styles.formContainer}>
@@ -70,9 +80,13 @@ export function LoginForm(props) {
       errorMessage={errors.passwd}
       id={"passwd"}
       />
+    
+   
+      <ForgotPassModal open={visible} setVisible={()=> setVisible()} />
+  
 
       <ForgotPassword style={styles.forgotPassword} />
-      <GreenButton onPress={handleSubmit} text="Login" />
+      <GreenButton  onPress={handleSubmit} text="Login" />
 
       <WhiteButton
         onPress={() => navigation.navigate("register")}
@@ -82,19 +96,20 @@ export function LoginForm(props) {
     )}
     </Formik>
   );
-}
 
-// Boton que va a llevar a la funcion olvido su pass, falta funcionamiento.
-function ForgotPassword() {
-  return (
-    <Text
-      style={styles.forgotPassword}
-      onPress={() => alert("Olvide mi password!")}
-    >
-      {" "}
-      Forgot password?
-    </Text>
-  );
+
+  function ForgotPassword() {
+    return (
+      <Text
+        style={styles.forgotPassword}
+        onPress={() => setVisible(true)}
+      >
+        {" "}
+        Forgot password?
+      </Text>
+    );
+  }
+
 }
 
 const styles = StyleSheet.create({
@@ -111,4 +126,30 @@ const styles = StyleSheet.create({
     marginRight: 10,
     fontStyle: "italic",
   },
+  modalBackground:{
+    flex:1,
+    backgroundColor: "rgba(0,0,0,0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalContainer:{
+    width: "80%",
+    backgroundColor: "white",
+    paddingHorizontal: 20,
+    paddingVertical: 30,
+    borderRadius: 20,
+    elevation:20,
+  },
+  header: {
+    width: '100%',
+    height: 40,
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+
+  },
+  button:{
+    width: "80%",
+    marginTop:30,  
+
+  }
 });

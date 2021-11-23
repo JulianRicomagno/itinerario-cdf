@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import COLORS from "../colors";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import { Rating } from 'react-native-elements';
 import {GreenButton} from "../../components/buttonI";
 import RNPickerSelect from "react-native-picker-select";
 import {fetchUser , updateItinerary} from '../../api/PosadasApi';
@@ -67,7 +68,7 @@ const addAttraction = () => {
       newAttraction:{
         typeAttraction : item.typeAttraction,
         name: item.name,
-        attendanceDate: attendanceDate,
+        attendanceDate: item.typeAttraction == 'Evento' ? item.dateAndHour : attendanceDate,
       }
     }
     updateItinerary(JSON.stringify(request)).then(
@@ -104,27 +105,43 @@ const timeAvailability = (attractions) => {
     >
       <ImageBackground style={style.headerImage} source={{ uri: item.image }} />
       <View>
-        {/*<View style={style.iconContainer}>
-          <Icon
-            name="place"
-            color={COLORS.white}
-            size={28}
-            onPress={console.log("te encontre")}
-          /> marginTop: 20, marginBottom: 10, marginLeft: 10, marginRight: 10
-        </View margin:auto,width:80%>*/}
+   
 
         <View style={{ marginTop: 20, paddingHorizontal: 20}}>
           <Text style={{ fontSize: 30, fontWeight: "bold", textAlign:'center' }}>{item.name}</Text>
+          <View>
+            <Rating    
+                  style={{ paddingVertical: 10 }}
+                  readonly 
+                  startingValue={item.rating}
+                  imageSize={20}
+                />
+            </View>
+          <View style ={style.directionContainer}>
+                    <Icon
+                      name='room'
+                      color='#32bb77' 
+                      size={28}
+                     />
+
+                 <Text style={{ fontSize: 17, textAlign:'center', color: COLORS.grey, fontWeight: "bold"}}>
+                    {item.address}
+                  </Text>
+
+            </View>
+           
+
           <View style={{marginTop: 20, marginBottom: 10, marginLeft: 10, marginRight: 10}}>
-              <Text style={{ fontSize: 20, textAlign:'center' }}>
+              <Text style={{ fontSize: 20, textAlign:'justify' }}>
                 {item.description}
               </Text>
           </View>
         </View>
+  
 
         <View style={style.marginInfo}>
           <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-            DÍA: 
+            Horarios: 
           </Text>
           <View style={style.tagInfo}>
             { item.typeAttraction !== 'Evento' ? (
@@ -143,53 +160,29 @@ const timeAvailability = (attractions) => {
 
         <View style={style.marginInfo}>
           <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-            UBICACIÓN: 
+            Categoria:
           </Text>
-          <View style={style.tagInfo}>
-            <Text style={{fontSize: 20, fontWeight: "bold", color: COLORS.grey, marginLeft: 5}}>
-              {item.address} 
+          <View style={[style.tagInfo, {marginLeft: 50}]}>
+            <Text style={{fontSize: 20, fontWeight: "bold", color: COLORS.grey}}>
+              {item.typeAttraction}
             </Text>
           </View>
         </View>
-    
-        <View style={style.marginInfo}>
-            <View style={{ justiftyContent:"center", alignItems:"center", flexDirection: "row" }}>
-              <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-                PUNTAJE: 
-              </Text>
-            <View style={style.tagInfo}>
-              <Text style={{fontSize: 20, fontWeight: "bold", color: COLORS.grey, marginLeft: 5}}>
-                {item.rating}
-                <Icon name="star" size={20} color={COLORS.orange}/>
-              </Text>
-            </View>
-            </View>
-          </View>
 
         <View style={style.marginInfo}>
           <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-            Categoria:
+            Horario: 
           </Text>
-          <View style={style.tagInfo}>
-            <Text style={{fontSize: 20, fontWeight: "bold", color: COLORS.grey, marginLeft: 5}}>
-              {item.typeAttraction}
+          <View style={[style.tagInfo,{marginLeft: 70}]}>
+            <Text style={{fontSize: 20, fontWeight: "bold", color: COLORS.grey, }}>
+              {item.dateAndHour}
             </Text>
           </View>
         </View>
         <View style={{marginTop: 10}}>
           <GreenButton text={"AGREGAR"} onPress={addAttraction} />
         </View>
-        {/*<View style={style.btn}>
-          <Text
-            style={{ color: COLORS.white, fontSize: 18, fontWeight: "bold" }}
-            onPress={() => {
-              console.log(item);
-              navigation.navigate("myTrip", { item: item });
-            }}
-          >
-            AGREGAR
-          </Text>
-          </View> */}
+
       </View>
     </ScrollView>
   );
@@ -246,5 +239,15 @@ const style = StyleSheet.create({
     justifyContent: "space-between",  
     paddingLeft: 20, 
     alignItems: "center"
+  },
+  direccion:{
+    marginTop:10,
+  },
+  directionContainer: {
+    flexDirection: 'row',
+    marginTop: 10,
+    marginBottom: 10,
+    textAlign: 'center'
+     
   }
 });
