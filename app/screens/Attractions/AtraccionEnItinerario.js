@@ -10,44 +10,24 @@ import COLORS from "../colors";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { Rating } from 'react-native-elements';
 import {GreenButton} from "../../components/buttonI";
-import RNPickerSelect from "react-native-picker-select";
 import {fetchUser , updateItinerary} from '../../api/PosadasApi';
 
-export default function DetalleAtraccion({ route, navigation }) {
-  const { item , index  , horas} = route.params;
-  const [horariosDisponibles , setHorariosDisponibles] = useState([]);
-  const [horario , setHorario] = useState();  
+export default function AtraccionEnItinerario({ route, navigation }) {
+  const { item , index } = route.params;
+  //console.log(item);
   const [user , setUser] = useState({});
 
 useEffect(() => {
   fetchUser().then(res => setUser(res.data)).catch(error=> console.log(error));
-  const data = timeAvailability(horas).map(
-    horario => horario < 10 ? 
-    ({value: `0${horario.toString()}:00`, label: `0${horario.toString()}:00`}) 
-    : ({value: `${horario.toString()}:00` , label : `${horario.toString()}:00`})
-  );
-  setHorariosDisponibles(data);
-  setHorario(data[0].label);
 } , [])
 
-const addAttraction = () => {
-  if(horario !== 'asd'){
+const removeAttraction = () => {
     let workUser = user;
-    let arr = user.itinerary.totalDays[index].attractions;
-    arr.push({
-        address: item.address,
-        dateAndHour: horario,
-        id: item.id,
-        name: item.name,
-        typeAttraction: item.typeAttraction,
-        rating: item.rating,
-        description: item.description,
-      })
-    arr.sort((a, b) => {return Number(a.dateAndHour.split(':' , 1)) - Number(b.dateAndHour.split(':' , 1))}); //magia
-    workUser.itinerary.totalDays[index].attractions = arr;
-    const attendanceDate = workUser.itinerary.totalDays[index].attendanceDate;
+    let arr = user.itinerary.totalDays[index].attractions; // Array de atracciones del día
+    arr.splice(index , 1);  // Remuevo la atracción del día
+    workUser.itinerary.totalDays[index].attractions = arr; // Piso el día en el usuario con el actualizado
+    //console.log('workuser:' , JSON.stringify(workUser.itinerary.totalDays));
     const request = {
-      generalInfo: user.generalInfo,
       id: user.id,
       type: user.type,
       itinerary: {
@@ -55,38 +35,24 @@ const addAttraction = () => {
         dayFrom: user.itinerary.dayFrom,
         dayTo: user.itinerary.dayTo,
         totalDays: workUser.itinerary.totalDays,
-      },
-      newAttraction:{
-        typeAttraction : item.typeAttraction,
-        name: item.name,
-        attendanceDate: attendanceDate,
       }
     }
-    updateItineraryApiCall(request)
-  }
+    callApiUpdate(request);
 }
 
-const updateItineraryApiCall = (request) => {
+const callApiUpdate = (request) =>  {
   updateItinerary(JSON.stringify(request)).then(
     res => {
       if(res.status == 200){
-        alert('Completado!')
+        alert('Atracción removida.')
         setTimeout(() => {
           navigation.reset({index : 0, routes: [{name: 'myTrip'}]})
         } , 600)
       }
     }
   ).catch(error => {
-    alert('algo malio sal');
+    alert('Error del servidor.');
   })
-}
-
-
-const timeAvailability = (attractions) => {
-   let hours = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24];
-   let timeUsed = attractions.sort((a, b) => { return b - a });
-   timeUsed.forEach(hour => hours.splice(hour - 1, 1));
-   return hours;
 }
 
   return (
@@ -114,7 +80,7 @@ const timeAvailability = (attractions) => {
           <View style ={style.directionContainer}>
                     <Icon
                       name='room'
-                      color='#32bb77' 
+                      color='#32BB77' 
                       size={28}
                      />
 
@@ -129,6 +95,18 @@ const timeAvailability = (attractions) => {
               <Text style={{ fontSize: 20, textAlign:'justify' }}>
                 {item.description}
               </Text>
+          </View>
+        </View>
+  
+
+        <View style={style.marginInfo}>
+          <Text style={{ fontSize: 20, fontWeight: "bold" }}>
+            Horarios: 
+          </Text>
+          <View style={style.tagInfo}>
+            <Text style={{fontSize: 20, fontWeight: 'bold' , color: COLORS.grey, marginLeft: 5,}}>
+              {item.dateAndHour}
+            </Text>
           </View>
         </View>
         <View style={style.marginInfo}>
@@ -147,17 +125,9 @@ const timeAvailability = (attractions) => {
             Horario: 
           </Text>
           <View style={[style.tagInfo,{marginLeft: 70}]}>
-            <RNPickerSelect
-              placeholder={{value: 'asd'  , label: 'Seleccione un horario'}}
-              items={horariosDisponibles}
-              onValueChange={(value) => { 
-                setHorario(value);
-              }}
-            >
-              <Text style={{marginLeft: 5}}>
-                {horario}
-              </Text>
-            </RNPickerSelect>
+            <Text style={{fontSize: 20, fontWeight: "bold", color: COLORS.grey, }}>
+              {item.dateAndHour}
+            </Text>
           </View>
         </View>
         <View style={{marginTop: 10}}>
