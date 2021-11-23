@@ -5,6 +5,7 @@ import { GreenButton, WhiteButton } from "../../components/buttonI";
 import { handleUser } from "../../utils/Context/Storage";
 import { useAuthUpdateContext } from '../../utils/Context/AuthContext';
 import { ForgotPassModal } from "../../components/Auth/ForgotPassModal";
+import { fetchUser } from "../../api/PosadasApi";
 
 import * as Yup from 'yup';
 import { Formik } from 'formik';
@@ -32,11 +33,13 @@ export function LoginForm(props) {
 
   useEffect(() => {
     handleUser('updateLocal' , updateUser);
+    
 }, [])
 
   function login(values){
     setTimeout(() => {
-      handleUser('login' , updateUser , {email: values.email, passwd: values.passwd}); 
+      handleUser('login' , updateUser , {email: values.email, passwd: values.passwd});
+      
     }, 800)
   };
 

@@ -22,6 +22,26 @@ export function GreenButton(props) {
     )
 }
 
+export function SmallButton(props){
+    const {onPress, text } = props;
+    return (
+        <TouchableOpacity
+            style={{
+                ...styles.smallBtn,
+                backgroundColor: '#32BB77',
+            }}
+            onPress={onPress}
+        >
+            <Text
+            style={{
+                ...styles.smallbtnText,
+                color: '#f1f1f1'
+            }}
+            >{ text }</Text>
+        </TouchableOpacity>
+    )
+}
+
 export function WhiteButton(props) {
     const { onPress, text } = props;
     return (
@@ -55,5 +75,17 @@ const styles = StyleSheet.create({
     buttonText: {
         textAlign: 'center',
         fontSize: 18
+    },
+    smallBtn: {
+        paddingVertical: 2,
+        marginVertical: 2,
+        width: 60,
+        borderRadius: 30,
+        borderColor: '#32BB77',
+        borderWidth: 1,
+    },
+    smallbtnText: {
+        textAlign: 'center',
+        fontSize: 12
     }
 })

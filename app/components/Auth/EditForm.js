@@ -8,7 +8,7 @@ import { ItemDropdown } from "../ItemDropdown";
 import * as Yup from 'yup';
 import { Formik } from 'formik';
 import RNPickerSelect from "react-native-picker-select";
-import {getCities} from "../../api/PosadasApi"
+import {getCities, updateGralInfo} from "../../api/PosadasApi"
 
 const mensajeYup = "El campo es obligatorio";
 
@@ -56,11 +56,11 @@ const generalInfoSchema = Yup.object().shape({
 
 
 export function EditForm({route , navigation,countryNames,token}) {
-  const {Pais, Ciudad, Gen, name, lastName, nacionalidad, edad} = route.params.userInfo;
-  const [gender, setGender] = useState(Gen);
-  const [nationality, setNationality] = useState(nacionalidad);
-  const [country, setCountry] = useState(Pais);
-  const [city, setCity] = useState(Ciudad);
+  const {myAge, myCity, myCountry, myGender, mySurname, myName, myNationality, myEmail} = route.params.userInfo;
+  const [gender, setGender] = useState(myGender);
+  const [nationality, setNationality] = useState(myNationality);
+  const [country, setCountry] = useState(myCountry);
+  const [city, setCity] = useState(myCity);
 
   //! No testear con ciudad y pais mandado por postman!!!
 
@@ -106,8 +106,14 @@ export function EditForm({route , navigation,countryNames,token}) {
     }
     console.log(generalInfo);
     if(generalInfo){
-      //handleUser('register' , () => {} , user);
+      updateGralInfo(generalInfo)
+      .then(() => {
+      handleUser('updateGeneralInfo' , () => {} , generalInfo);
       navigation.navigate('datos');
+      })
+      .catch(error => {
+        console.log(error.msg)
+      })
     }
   }
 
@@ -141,13 +147,13 @@ export function EditForm({route , navigation,countryNames,token}) {
 
     <Formik
     initialValues={{
-      name: name ,
-      surname: lastName,
-      age: edad,
-      genre: Gen,
-      countryOrigin: nacionalidad,
-      countryResidence: Pais,
-      cityResidence: Ciudad,
+      name: myName ,
+      surname: mySurname,
+      age: myAge,
+      genre: myGender,
+      countryOrigin: myNationality,
+      countryResidence: myCountry,
+      cityResidence: myCity,
     }}
     validationSchema={generalInfoSchema}
     onSubmit={
