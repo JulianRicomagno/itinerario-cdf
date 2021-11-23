@@ -27,7 +27,7 @@ export default function UserInfo({navigation}) {
     async function getUsuario(){
         try{
             
-            const myAge = await AsyncStorage.getItem('age');
+            let myAge = await AsyncStorage.getItem('age');
             const myEmail = await AsyncStorage.getItem('email');
             const myName = await AsyncStorage.getItem('name');
             const mySurname = await AsyncStorage.getItem('lastName');
@@ -35,16 +35,20 @@ export default function UserInfo({navigation}) {
             const myCountry = await AsyncStorage.getItem('country');
             const myCity = await AsyncStorage.getItem('city');
             const myGender = await AsyncStorage.getItem('gender');
+            myAge = myAge.split('"' , 2)[1];
             const genInfo = {myAge, myEmail, myName, mySurname, myNationality, myCountry, myCity, myGender};
             setGeneralInfo(genInfo);
-            console.log(genInfo);
+            //console.log(genInfo);
         }
         catch(e){console.log(e)}
     }
 
     const removeUser = useAuthRemoveContext();
     function logout(){
-        handleUser('logout' , removeUser);
+        setTimeout( () => {
+            navigation.reset({index: 0 , routes: [{name: 'itinerary'}]})
+            handleUser('logout' , removeUser);
+        } , 600)
     }
 
     function editInfo(){

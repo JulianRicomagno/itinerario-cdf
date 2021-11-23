@@ -8,10 +8,6 @@ import ButtonAdd from './ButtonAdd';
 import moment from 'moment';
 
 export default function DayItem({item, navigator}) {
-    //const data = [
-                    /*{title: item.name , description: item.status , image: item.image, gender: item.gender, species: item.species,},
-                    {title: 'nombre2' , description: item.status , image: item.image, gender: item.gender, species: item.species,},*/
-      //          ]
       let data = [];
     item.attractions.forEach((attrac) => {
         data.push
@@ -27,11 +23,6 @@ export default function DayItem({item, navigator}) {
     const horas = item.attractions.map(att => att.dateAndHour.split(':' , 1)[0]);
     const date = moment(item.attendanceDate).format('MMM DD') // Esto es para que el día se muestre "Mes : Nom   Día : 00"
     const index = item.number - 1; // Esto va a la ruta de SearchAttraction para enviarselo a lo demás
-
-    useEffect( () => {
-        //console.log('datos: ' , item.attractions);
-        //console.log('otros datos: ' + JSON.stringify(item));
-    }, [])
     
     const renderDetail = (rowData, sectionID, rowID) => {
         //console.log('item: ' + rowData);

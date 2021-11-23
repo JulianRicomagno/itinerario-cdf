@@ -7,7 +7,7 @@ import DetalleAtraccion from "../screens/Attractions/DetalleAtraccion";
 import MyTrip from "../screens/Attractions/MyTrip";
 import SearchAtraccion from "../screens/Attractions/SearchAtraccion";
 import {handleUser} from "../utils/Context/Storage";
-import { useAuthUpdateContext } from "../utils/Context/AuthContext";
+import { useAuthContext } from "../utils/Context/AuthContext";
 import { fetchUser } from "../api/PosadasApi";
 
 
@@ -15,20 +15,20 @@ import { fetchUser } from "../api/PosadasApi";
 const Stack = createStackNavigator();
 
 export default function ItineraryStack() {
-    const [tieneItinerario, setTieneItinerario] = useState(false);
+    const userContext = useAuthContext();
+    const [tieneItinerario, setTieneItinerario] = useState();
  
     const [user , setUser] = useState();
   
      function verificarItinerario(){
-      setTieneItinerario(user.itinerary.totalDays.length !== 0);
-      console.log(user.itinerary.totalDays.length);
+      setTieneItinerario(user.itinerary.dayFrom !== '');
     }
   
     function getUsuario(){
-      fetchUser().then(res =>
-        {
-          setUser(res.data);
-        }).catch(error => console.log(error));  
+        fetchUser().then(res =>
+            {
+                setUser(res.data);
+            }).catch(error => {});
     }
   
     useEffect(() => {
