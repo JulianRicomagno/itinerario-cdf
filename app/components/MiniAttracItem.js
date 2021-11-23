@@ -7,23 +7,21 @@ import addButtonIcon from '../../assets/addButtonIcon.png';
 import locationIcon from '../../assets/locationIcon.png';
 
 export default function MiniAttracItem({item, onPress}) {  
-    if(item.title !== ''){
-      item.name = item.title;
-      item.status = item.description;
+    if(item.name !== ''){
     return (
         <SafeAreaView style={{marginBottom: 35, flex: 1, marginTop: -15,}}>
         <ListItem
             containerStyle={[styles.atracItem]}           
             >
                     <ListItem.Content style={{padding: 5, marginTop: 15,}}>
-                            <ListItem.Title style={[styles.title, {/*fontSize: item.title.length < 15 ? 20 : 16*/}]}>{item.title}</ListItem.Title>
+                            <ListItem.Title style={[styles.title, {fontSize: item.name.length < 15 ? 20 : 16}]}>{item.name}</ListItem.Title>
                             <TouchableOpacity disabled={true} style={styles.miniContainer}>
-                                <ListItem.Subtitle style={styles.primary}>{item.description}</ListItem.Subtitle>
-                                <ListItem.Subtitle style={styles.secondary}>{item.gender}</ListItem.Subtitle>
+                                <ListItem.Subtitle style={styles.primary}>{item.typeAttraction}</ListItem.Subtitle>
+                                <ListItem.Subtitle style={styles.secondary}>{item.dateAndHour}</ListItem.Subtitle>
                             </TouchableOpacity>
                             <TouchableOpacity disabled={true} style={styles.miniContainerImage}>
                                 <Image style={styles.imageDos} source={locationIcon}/>
-                                <ListItem.Subtitle>{item.species}</ListItem.Subtitle>
+                                <ListItem.Subtitle>{item.address}</ListItem.Subtitle>
                             </TouchableOpacity>
                     </ListItem.Content>
             <TouchableOpacity style={styles.imageTouchable} onPress={onPress}>

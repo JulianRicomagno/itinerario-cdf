@@ -22,6 +22,7 @@ const loginSchema = Yup.object().shape({
 export function LoginForm(props) {
   const { navigation } = props;
   const updateUser = useAuthUpdateContext();
+  const [loading , setLoading] = useState(true);
 
   useEffect(() => {
     handleUser('updateLocal' , updateUser);
