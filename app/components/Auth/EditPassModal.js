@@ -13,6 +13,12 @@ const passSchema = Yup.object().shape({
       .string('Ingrese su nueva pass')
       .min(6,'La pass debe contener minimo 6 caracteres')
       .required('La contraseña es requerida'),
+    passwordConfirm: Yup
+    .string('Confirme su contraseña')
+    .test(null, 'La contraseña debe coincidir', function(value){
+      return this.parent.passwd === value
+    })
+    .required('Confirme su contraseña'),
   })
   
   
@@ -20,21 +26,19 @@ const passSchema = Yup.object().shape({
 const ModalPopUp = ({visible, children}) =>{
   const [showModal, setShowModal] = useState(visible)
 
-    
+  useEffect(() => {
+    toggleModal();
+  },[visible])
   
-    useEffect(() => {
-        toggleModal();
-    },[visible])
+  const toggleModal = () => {
+    if(visible){
+      setShowModal(true);
+    }else {
+      setShowModal(false);
+    }
+  };
   
-    const toggleModal = () => {
-        if(visible){
-          setShowModal(true);
-        }else {
-          setShowModal(false);
-        }
-    };
-  
-    return <Modal transparent visible ={showModal}>
+  return <Modal transparent visible ={showModal}>
     
       <View style={styles.modalBackground} >
         <View style={[styles.modalContainer]}>
@@ -51,51 +55,28 @@ const ModalPopUp = ({visible, children}) =>{
     const [disabled , setDisabled] = useState(false);
     const [forgotEmail , setForgotEmail] = useState();
 
-    /*
-    function checkCompleted(){
-      setDisabled(!validateEmail()) 
-       
-    }*/
-
-/*
-    useEffect(() => {
-      checkCompleted();
-  }, [forgotEmail])
-*/
-/*
-  function validateEmail() {
-
-    var re = /\S+@\S+.\S+/;
-    return re.test(forgotEmail);
-     
-  }*/
-
-
   //* Function to trigger endpoint
-  function newPass(password){
-    
-  updatePassword(password)
-  .then((response) => {
-    setVisible()
-  }).catch((error) => {
-    console.log(error.message)
-  })
-    alert("La password se actualizo correctamente")
-  }
-
+    function newPass(password){
+      updatePassword(password)
+      .then((response) => {
+        setVisible()
+      }).catch((error) => {
+        console.log(error.message)
+      })
+        alert("La password se actualizo correctamente")
+    }
           
 
     return(
-    
         <Formik
         initialValues={{
           passwd: '',
+          passwordConfirm:''
         }}
         validationSchema={passSchema}
         onSubmit={
           (values)=> {
             newPass(values.passwd)
-            console.log('Pass:' + values.passwd)
           }
         }
         >    
@@ -119,7 +100,15 @@ const ModalPopUp = ({visible, children}) =>{
             value={values.passwd}
             id={"email"}
             errorMessage={errors.passwd}
-            onChangeText={handleChange('passwd')} //* Previous (email) =>setForgotEmail(email)    
+            onChangeText={handleChange('passwd')}  
+          />
+          <InputI
+            placeHolder={"Confirme su contraseña"} 
+            isSecure={true}
+            value={values.passwordConfirm} 
+            onChangeText={handleChange('passwordConfirm')}
+            errorMessage={errors.passwordConfirm}
+            id={"passwordConfirm"}
           />
           </View>
 
@@ -127,19 +116,15 @@ const ModalPopUp = ({visible, children}) =>{
 
           <TouchableOpacity   style={[styles.buttonPosta , {backgroundColor: disabled? '#FFFFFF' : '#32BB77' , borderColor: '#6A6A6A'}]} disabled={disabled}  onPress={handleSubmit}>
             <Text H2 style={[styles.buttonText , {color : disabled? '#6A6A6A' : '#FFFFFF'}]}>
-              Enviar
+              Confirmar
             </Text>
-
-            </TouchableOpacity>
-                    
+            </TouchableOpacity>        
           </View>
        
         </View>
       </ModalPopUp>
         )}
       </Formik>
-
-
     );
 
   }
@@ -167,8 +152,8 @@ const ModalPopUp = ({visible, children}) =>{
     
       },
       button:{
-        width: "80%",
-        marginTop:30,  
+        width: "100%",
+        //marginTop:30,  
     
       },
       buttonPosta: {
@@ -188,6 +173,7 @@ const ModalPopUp = ({visible, children}) =>{
       },
       title: {
           fontSize: 20,
-          fontWeight: 'bold'
+          fontWeight: 'bold',
+          marginBottom: 25
       }
   })

@@ -2,6 +2,8 @@ import React from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {loginUser , registerUser, fetchUser} from '../../api/PosadasApi';
 
+import { Alert } from "react-native";
+
 // Recibe un usuario, una acción con el usuario y un hook al cual correr.
 export async function handleUser(action, hook, user){
     switch(action){
@@ -128,15 +130,13 @@ async function loginUserStorage(user , hook){
                         const data = response.data;
                         addUser(data);
                         hook({token: data.token, id: data.user.id , generalInfo: data.user.generalInfo});
-                        alert('Login correcto.');
                       })
                       .catch(function (error) {
-                        alert(error.message);
+                        Alert.alert("Error","Datos incorrectos");
                       });
                 }catch(e){console.log(e)}
             }else{
                 hook(user);
-                alert('Logeado.');
             }
             
 }
