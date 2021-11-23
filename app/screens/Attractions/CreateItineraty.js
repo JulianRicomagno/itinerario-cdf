@@ -79,7 +79,6 @@ export default function CreateItineraty(props) {
         }
         i++;
       }
-      arr[0] = { attendanceDate: momentStart.format('yyyy-MM-DD'), isDayOff: false, attractions : [{name: 'Nuevo Hotel' , id: '12345', description: 'El hotel' , dateAndHour : '15:00' , typeAttraction: 'Hotel' , rating: 3, address: 'Lugar'}] };
       //console.log('Fecha inicio: ', startDate, '. Fecha fin: ' , endDate, '. Cantidad de días: ' , totalDays, '. Información del usuario: ' , userInfo.generalInfo, '. id y tipo de usuario: ', userInfo.id , ',' , userInfo.type)
       const reqArray = arr;
       // Request para hacerle update al itinerario
@@ -90,7 +89,7 @@ export default function CreateItineraty(props) {
         itinerary : {
           dayFrom: startDate,
           dayTo: endDate,
-          hotel : place,
+          hotel : place, // Esto tiene que cambiar al hotel en sí.
           totalDays : reqArray,
         },
       };
