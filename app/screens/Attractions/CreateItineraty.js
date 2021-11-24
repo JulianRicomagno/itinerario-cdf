@@ -97,8 +97,8 @@ export default function CreateItineraty(props) {
       // Fin de la request
       updateUser(JSON.stringify(request)).then(
         res => {
-          res.status == 200 ? alert('Itinerario creado') : alert(res.status)
-          navigation.navigate('myTrip');
+          if(res.status == 200)  {
+          navigation.navigate('myTrip')}
         }
       ).catch(error => console.log(error));
     }
