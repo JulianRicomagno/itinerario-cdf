@@ -108,7 +108,7 @@ export function LoginForm(props) {
         onPress={() => setVisible(true)}
       >
         {" "}
-        Forgot password?
+        Olvidó su contraseña?
       </Text>
     );
   }

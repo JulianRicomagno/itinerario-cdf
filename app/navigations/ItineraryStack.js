@@ -67,6 +67,17 @@ export default function ItineraryStack() {
                     component={AtraccionEnItinerario}
                     options={{title: 'Detalle Atraccion' , headerShown: false}}
                 />
+                <Stack.Screen 
+                    flag={tieneItinerario}
+                    name="Inicio" 
+                    component={General} 
+                    options={{title: "Inicio", headerShown: false}}
+                    /> 
+                <Stack.Screen 
+                    name="createItineraty" 
+                    component={CreateItineraty} 
+                    options={{title: "Crear Itinerario", headerShown: false}}
+                />
             </Stack.Navigator>
         )
         
