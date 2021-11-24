@@ -1,11 +1,8 @@
 import React, {useState, useEffect} from "react";
 import { StyleSheet, View, Text, Modal, Image, TouchableOpacity, Button } from "react-native";
 import { InputI } from "../../components/inputI";
-import { GreenButton } from "../../components/buttonI";
 import { forgotPassword } from "../../api/PosadasApi";
-
 import * as Yup from 'yup';
-import { Formik } from 'formik';
 
 const forgotSchema = Yup.object().shape({
     email: Yup

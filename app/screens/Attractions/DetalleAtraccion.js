@@ -113,7 +113,7 @@ const timeAvailability = (attractions) => {
           <View style ={style.directionContainer}>
                     <Icon
                       name='room'
-                      color='#32bb77' 
+                      color='#32BB77' 
                       size={28}
                      />
 
