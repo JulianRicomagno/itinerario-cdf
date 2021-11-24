@@ -49,7 +49,6 @@ const callApiUpdate = (request) =>  {
   updateUser(JSON.stringify(request)).then(
      res => {
        if(res.status == 200){
-         alert('Atracción removida.')
          setTimeout(() => {
            navigation.reset({index : 0, routes: [{name: 'myTrip'}]})
          } , 600)
