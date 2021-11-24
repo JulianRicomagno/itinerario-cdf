@@ -21,14 +21,14 @@ export default function ItineraryStack() {
     const [user , setUser] = useState();
   
      function verificarItinerario(){
-      setTieneItinerario(user.itinerary.dayFrom !== '');
+        //console.log(user.itinerary.dayFrom !== '');
+        setTieneItinerario(user.itinerary.dayFrom !== '');
     }
   
     function getUsuario(){
-        fetchUser().then(res =>
-            {
-                setUser(res.data);
-            }).catch(error => {});
+        fetchUser().then(res =>{
+            setUser(res.data);
+        }).catch(error => {});
     }
   
     useEffect(() => {
@@ -38,6 +38,7 @@ export default function ItineraryStack() {
     useEffect(() => {
       if(user != null){
         verificarItinerario();
+        //console.log("entree")
       }
     }, [user])
 
@@ -67,7 +68,7 @@ export default function ItineraryStack() {
                     component={AtraccionEnItinerario}
                     options={{title: 'Detalle Atraccion' , headerShown: false}}
                 />
-                                <Stack.Screen 
+                <Stack.Screen 
                     flag={tieneItinerario}
                     name="Inicio" 
                     component={General} 
@@ -83,8 +84,7 @@ export default function ItineraryStack() {
         
     }else{
         return(
-            <Stack.Navigator 
-            >  
+            <Stack.Navigator>  
                 <Stack.Screen 
                     flag={tieneItinerario}
                     name="Inicio" 

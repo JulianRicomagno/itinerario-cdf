@@ -39,7 +39,7 @@ export default function UserInfo({navigation}) {
 
     const removeUser = useAuthRemoveContext();
     function logout(){
-        navigation.reset({index: 0 , routes: [{name: 'itinerary'}]})
+        //navigation.reset({index: 0 , routes: [{name: 'itinerary'}]})
         handleUser('logout' , removeUser);
     }
 

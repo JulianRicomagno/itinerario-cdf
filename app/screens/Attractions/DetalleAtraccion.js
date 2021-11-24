@@ -31,7 +31,7 @@ useEffect(() => {
 } , [])
 
 const addAttraction = () => {
-  if(horario !== 'asd'){
+  if(horario !== 'Seleccione un horario'){
     let workUser = user;
     let arr = user.itinerary.totalDays[index].attractions;
     arr.push({
@@ -60,6 +60,7 @@ const addAttraction = () => {
         typeAttraction : item.typeAttraction,
         name: item.name,
         attendanceDate: attendanceDate,
+        hour: horario,
       }
     }
     updateItineraryApiCall(request)
@@ -97,7 +98,7 @@ const timeAvailability = (attractions) => {
       }}
     >
       <ImageBackground style={style.headerImage} source={{ uri: item.image }} />
-      <View>
+      
    
 
         <View style={{ marginTop: 20, paddingHorizontal: 20}}>
@@ -107,7 +108,7 @@ const timeAvailability = (attractions) => {
                   style={{ paddingVertical: 10 }}
                   readonly 
                   startingValue={item.rating}
-                  imageSize={20}
+                  imageSize={22}
                 />
             </View>
           <View style ={style.directionContainer}>
@@ -122,8 +123,6 @@ const timeAvailability = (attractions) => {
                   </Text>
 
             </View>
-           
-
           <View style={{marginTop: 20, marginBottom: 10, marginLeft: 10, marginRight: 10}}>
               <Text style={{ fontSize: 20, textAlign:'justify' }}>
                 {item.description}
@@ -141,29 +140,30 @@ const timeAvailability = (attractions) => {
           </View>
         </View>
 
-        <View style={style.marginInfo}>
+        <View style={[style.marginInfo]}>
           <Text style={{ fontSize: 20, fontWeight: "bold" }}>
             Horario: 
           </Text>
-          <View style={[style.tagInfo,{marginLeft: 70}]}>
-            <RNPickerSelect
-              placeholder={{value: 'asd'  , label: 'Seleccione un horario'}}
-              items={horariosDisponibles}
-              onValueChange={(value) => { 
-                setHorario(value);
-              }}
-            >
-              <Text style={{marginLeft: 5}}>
-                {horario}
-              </Text>
-            </RNPickerSelect>
-          </View>
         </View>
+        <View style={style.rnpicker}>
+          <RNPickerSelect
+            placeholder={{value: 'Seleccione un horario' , label: 'Seleccione un horario'}}
+            items={horariosDisponibles}
+            onValueChange={(value) => { 
+              setHorario(value);
+            }}
+          >
+            <Text style={{fontSize: 20, fontWeight: "bold", color: COLORS.grey,textAlign: "left"}}>
+              {horario}
+            </Text>
+          </RNPickerSelect>
+        </View>
+
         <View style={{marginTop: 10}}>
           <GreenButton text={"AGREGAR"} onPress={addAttraction} />
         </View>
 
-      </View>
+      
     </ScrollView>
   );
 }
@@ -188,6 +188,19 @@ const style = StyleSheet.create({
     borderTopLeftRadius: 20,
     borderBottomLeftRadius: 20,
     flexDirection: "row",
+  },
+  rnpicker:{
+    height: 40,
+    //alignItems: "justifiy",
+    marginLeft: 165,
+    paddingLeft: 20,
+    flex: 1,
+    backgroundColor: COLORS.secondary,
+    borderTopLeftRadius: 20,
+    borderBottomLeftRadius: 20,
+    justifyContent: "center",
+    marginTop: -30,
+    //flexDirection: "row",
   },
   iconContainer: {
     position: "absolute",

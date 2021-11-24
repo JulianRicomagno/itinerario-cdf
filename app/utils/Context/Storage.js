@@ -94,13 +94,18 @@ async function updateGeneralInfo(info) {
 async function checkCredentials(){
     if(await AsyncStorage.getItem('token') != null){
         try{
-            fetchUser().then(response => {
+            fetchUser()
+                .then(response => {
                 const data = response.data;
                 if(data == null){
                     removeUser();
                     return false;
-                }
-        })}catch(e){console.log(e); await AsyncStorage.removeItem('token')}
+                }})
+                .catch((error)=> {
+                    console.log(error.message)
+                })
+                    
+    }catch(e){console.log(e); await AsyncStorage.removeItem('token')}
     }
     return await AsyncStorage.getItem('token') != null;
 }
