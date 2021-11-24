@@ -1,34 +1,26 @@
-import React from 'react';
-import {useEffect, useState} from 'react'
+import React , {useEffect, useState} from 'react';
 import { ScrollView} from 'react-native-gesture-handler';
-import { View , ActivityIndicator, Image} from 'react-native'
+import { View , StyleSheet } from 'react-native'
 import { WhiteButton, GreenButton, SmallButton } from '../../components/buttonI';
 import {EditPassModal} from '../../components/Auth/EditPassModal'
 import { useAuthRemoveContext  } from "../../utils/Context/AuthContext";
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {handleUser} from '../../utils/Context/Storage';
 import { Text } from 'react-native-elements';
-import { StyleSheet } from 'react-native';
 import {fetchUser} from "../../api/PosadasApi"
-import logoPosadas from '../../../assets/logoPosadas.png'
 import LoadingScreen from '../loadingScreen';
-
-
-
 
 
 export default function UserInfo({navigation}) {
     
-    //const [generalInfo, setGeneralInfo] = useState({})
     const [visible, setVisible] = useState(false);
     const [user,setUser] = useState({});
     const [account,setAccount] =useState({})
     const [isLoading, setIsLoading] = useState(true);
      
     useEffect(() => {
-    setTimeout(() => {
-        getUsuario()
-    } , 300)
+        setTimeout(() => {
+            getUsuario()
+        } , 300)
     }, [])
 
 
@@ -44,7 +36,6 @@ export default function UserInfo({navigation}) {
 
     const removeUser = useAuthRemoveContext();
     function logout(){
-        //navigation.reset({index: 0 , routes: [{name: 'itinerary'}]})
         handleUser('logout' , removeUser);
     }
 
@@ -62,7 +53,7 @@ export default function UserInfo({navigation}) {
     }    
        
     if(isLoading){
-        return( <LoadingScreen/>)
+        return( <LoadingScreen/> );
     }
     
     return (
@@ -165,7 +156,6 @@ const styles = StyleSheet.create({
         color: '#000000',
         fontSize: 20,
         fontWeight: 'bold',
-        //marginRight: 105,
         marginBottom: 5,
         letterSpacing: 1,
         marginBottom: 10,

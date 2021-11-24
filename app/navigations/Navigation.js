@@ -27,7 +27,6 @@ export default function Navigation() {
                         })}
                     >
                 
-              
                         <Tab.Screen
                             name='itinerary'
                             component={ItineraryStack}

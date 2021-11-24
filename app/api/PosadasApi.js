@@ -128,9 +128,7 @@ export async function getCities(token, country){
 
 
 
-export async function forgotPassword(data){
-    console.log(data)
-   
+export async function forgotPassword(data){   
     return await axios({
        
         method: 'POST',

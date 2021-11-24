@@ -65,15 +65,6 @@ async function addUser(data){
         await AsyncStorage.setItem('dayFrom' , user.itinerary.dayFrom)
         await AsyncStorage.setItem('token' , data.token);
         await AsyncStorage.setItem('id' , user.id);
-        console.log(user.itinerary.dayFrom)
-        // await AsyncStorage.setItem('email', user.email);
-        // await AsyncStorage.setItem('name' , user.generalInfo.name);
-        // await AsyncStorage.setItem('lastName' , user.generalInfo.lastName);
-        // await AsyncStorage.setItem('age' , JSON.stringify(user.generalInfo.age));
-        // await AsyncStorage.setItem('country' , user.generalInfo.country);
-        // await AsyncStorage.setItem('nationality' , user.generalInfo.nationality);
-        // await AsyncStorage.setItem('city' , user.generalInfo.city);
-        // await AsyncStorage.setItem('gender' , user.generalInfo.gender);
     }catch(e){console.log(e);}
 }
 
@@ -174,7 +165,7 @@ async function updateLocalCredentials(hook){
             let id = await AsyncStorage.getItem('id');
             let dayFrom = await AsyncStorage.getItem('dayFrom')
             setTimeout(() => {
-            hook({token: token , id: id , dayFrom: dayFrom}); 
+             hook({token: token , id: id , dayFrom: dayFrom}); 
         }, 250)
         }
     }catch(e){console.log(e)}
