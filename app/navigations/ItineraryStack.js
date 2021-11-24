@@ -9,10 +9,8 @@ import SearchAtraccion from "../screens/Attractions/SearchAtraccion";
 const Stack = createStackNavigator();
 
 export default function ItineraryStack() {
-
         return(
-            <Stack.Navigator 
-            >  
+            <Stack.Navigator>  
                 <Stack.Screen 
                     name="Inicio" 
                     component={General} 

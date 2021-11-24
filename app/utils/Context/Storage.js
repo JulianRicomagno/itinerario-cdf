@@ -95,14 +95,19 @@ async function checkCredentials(){
     const token = await AsyncStorage.getItem('token');
     if(token != null){
         try{
-            fetchUser().then(response => {
+            fetchUser()
+                .then(response => {
                 const data = response.data;
                 addUser({user: data , token: token});
                 if(data == null){
                     removeUser();
                     return false;
-                }
-        })}catch(e){console.log(e); await AsyncStorage.removeItem('token')}
+                }})
+                .catch((error)=> {
+                    console.log(error.message)
+                })
+                    
+    }catch(e){console.log(e); await AsyncStorage.removeItem('token')}
     }
     return token != null;
 }

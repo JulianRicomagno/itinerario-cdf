@@ -94,7 +94,7 @@ const callApiUpdate = (request) =>  {
                   style={{ paddingVertical: 10 }}
                   readonly 
                   startingValue={item.rating}
-                  imageSize={20}
+                  imageSize={22}
                 />
             </View>
           <View style ={style.directionContainer}>

@@ -5,6 +5,7 @@ import {
   Text,
   FlatList,
   SafeAreaView,
+  Alert,
 } from "react-native";
 import { SearchBar } from "react-native-elements";
 import AttracItem from "../../components/attracItem";
@@ -177,7 +178,7 @@ export default function SearchAtraccion(props) {
         item={item}
         onPress={() => {
           if(!tieneItinerario){
-            alert('No creaste itinerario')
+            Alert.alert("Aviso","Para poder ver el detalle, cree el itinerario")
           }else{
             navigation.navigate("detalleAtraccion", { item: item , index: index , horas : horas});
 
