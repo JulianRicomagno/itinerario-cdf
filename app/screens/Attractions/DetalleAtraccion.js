@@ -14,6 +14,7 @@ import RNPickerSelect from "react-native-picker-select";
 import {fetchUser , updateItinerary} from '../../api/PosadasApi';
 
 export default function DetalleAtraccion({ route, navigation }) {
+
   const { item , index  , horas} = route.params;
   const [horariosDisponibles , setHorariosDisponibles] = useState([]);
   const [horario , setHorario] = useState();
@@ -169,15 +170,6 @@ const timeAvailability = (attractions) => {
 }
 
 const style = StyleSheet.create({
-  btn: {
-    height: 55,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 40,
-    backgroundColor: COLORS.primary,
-    marginHorizontal: 20,
-    borderRadius: 10,
-  },
   tagInfo: {
     height: 40,
     alignItems: "center",
@@ -191,7 +183,6 @@ const style = StyleSheet.create({
   },
   rnpicker:{
     height: 40,
-    //alignItems: "justifiy",
     marginLeft: 165,
     paddingLeft: 20,
     flex: 1,
@@ -200,18 +191,6 @@ const style = StyleSheet.create({
     borderBottomLeftRadius: 20,
     justifyContent: "center",
     marginTop: -30,
-    //flexDirection: "row",
-  },
-  iconContainer: {
-    position: "absolute",
-    height: 60,
-    width: 60,
-    backgroundColor: COLORS.primary,
-    top: -30,
-    right: 20,
-    borderRadius: 30,
-    justifyContent: "center",
-    alignItems: "center",
   },
   headerImage: {
     height: 400,
@@ -219,22 +198,12 @@ const style = StyleSheet.create({
     borderBottomLeftRadius: 160,
     overflow: "hidden",
   },
-  header: {
-    marginTop: 60,
-    flexDirection: "row",
-    alignItems: "center",
-    marginHorizontal: 20,
-    justifyContent: "space-between",
-  },
   marginInfo: {
     marginTop: 20,
     flexDirection: "row", 
     justifyContent: "space-between",  
     paddingLeft: 20, 
     alignItems: "center"
-  },
-  direccion:{
-    marginTop:10,
   },
   directionContainer: {
     flexDirection: 'row',

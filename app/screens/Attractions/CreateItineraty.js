@@ -9,11 +9,14 @@ import {
 import moment from "moment";
 import CalendarPicker from "react-native-calendar-picker";
 import RNPickerSelect from "react-native-picker-select";
-import { fetchUser , updateUser , getAllAttractions} from "../../api/PosadasApi";
-
+import { fetchUser ,  updateUser , getAllAttractions} from "../../api/PosadasApi";
+import {useAuthUpdateContext , useAuthContext} from '../../utils/Context/AuthContext';
 
 export default function CreateItineraty(props) {
+  
   const { navigation, route } = props;
+  const updateUserContext = useAuthUpdateContext();
+  const userContext = useAuthContext();
   const [selectedStartDate, setSelectedStartDate] = useState(Date);
   const [selectedEndDate, setSelectedEndDate] = useState(Date);
   const minDate = new Date(); // Today
@@ -45,9 +48,7 @@ export default function CreateItineraty(props) {
       let momentArray = moment(selectedStartDate);
       const startDate = momentStart.format('yyyy-MM-DD');
       const endDate = momentEnd.format('yyyy-MM-DD');
-      //console.log('Inicio: ' +  momentStart.format('yyyy-MM-DD') + '. Final: ' + momentEnd.format('yyyy-MM-DD'));
       let totalDays = momentEnd.diff(momentStart, 'days')+1;
-      //console.log((momentEnd.diff(momentStart, 'days')+1) + ' dias de estadía.');
       let arr = [];
       let i = 0;
       let x = 0;
@@ -58,7 +59,6 @@ export default function CreateItineraty(props) {
         }
         i++;
       }
-      //console.log('Fecha inicio: ', startDate, '. Fecha fin: ' , endDate, '. Cantidad de días: ' , totalDays, '. Información del usuario: ' , userInfo.generalInfo, '. id y tipo de usuario: ', userInfo.id , ',' , userInfo.type)
       const reqArray = arr;
       // Request para hacerle update al itinerario
       
@@ -77,7 +77,9 @@ export default function CreateItineraty(props) {
       updateUser(JSON.stringify(request)).then(
         res => {
           if(res.status == 200)  {
-          navigation.navigate('myTrip')}
+            updateUserContext({...userContext , dayFrom: startDate});
+            setTimeout(()=>{ navigation.navigate('myTrip') } , 200);
+        }
         }
       ).catch(error => console.log(error));
     }
@@ -129,7 +131,7 @@ export default function CreateItineraty(props) {
     return place !== "Seleccionar tipo de estadía" && place !== null && selectedStartDate !== null && selectedEndDate !== null && selectedStartDate !== selectedEndDate && flag;
   }
 
-// CalendarPicker idioma cambiado por gon
+// CalendarPicker idioma cambiado por gon (que es medio puto)
 
   return (
     <ScrollView style={{backgroundColor: '#FFFFFF'}}>
@@ -208,11 +210,6 @@ const styles = StyleSheet.create({
     margin: 20,
     borderRadius: 30,
   },
-  containerr: {
-    flex: 1,
-    paddingTop: 40,
-    alignItems: "center",
-  },
   picker: {
     margin: 10,
     paddingHorizontal: 50,
@@ -223,16 +220,12 @@ const styles = StyleSheet.create({
     color: "black",
     paddingRight: 5,
   },
-  searchBar: {
-    marginBottom: 20,
-  },
   bottom: {
     margin: 10,
   },
   button: {
     alignSelf: 'center',
     paddingVertical: 10,
-    //marginVertical: 10,
     width: '75%',
     borderRadius: 32,
     borderColor: '#32BB77',

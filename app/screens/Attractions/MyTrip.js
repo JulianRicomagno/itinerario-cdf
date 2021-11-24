@@ -4,6 +4,8 @@ import DayItem from "../../components/DayItem";
 import { fetchUser , updateUser } from "../../api/PosadasApi";
 import { TouchableOpacity } from "react-native";
 import { PinkButton } from "../../components/buttonI";
+import { useAuthUpdateContext , useAuthContext } from "../../utils/Context/AuthContext";
+import LoadingScreen from "../../components/loadingScreen";
 
 
 export default function MyTrip({ route, navigation }) {
@@ -11,6 +13,8 @@ export default function MyTrip({ route, navigation }) {
   const [user , setUser] = useState();
   const [isLoading , setIsLoading] = useState(true);
   const [visible, setVisible] = useState(false);
+  const updateUserContext = useAuthUpdateContext();
+  const userContext = useAuthContext();
 
    function deleteItinerary() {
      setVisible(false);
@@ -27,6 +31,7 @@ export default function MyTrip({ route, navigation }) {
      updateUser(JSON.stringify(request))
      .then( res => {
         if(res.status == 200){
+          updateUserContext({...userContext , dayFrom: null})
           setTimeout( () => {
             navigation.reset({index : 0 , routes: [{name: 'Inicio'}]})
           } , 500)
@@ -44,7 +49,9 @@ export default function MyTrip({ route, navigation }) {
     fetchUser().then(res =>
       {
         setUser(res.data);
-      }).catch(error => console.log(error));  
+        setIsLoading(false);
+      })
+      .catch(error => console.log(error));  
   }
 
   const renderItem = ({ item , index  }) => {
@@ -59,28 +66,16 @@ export default function MyTrip({ route, navigation }) {
   }
 
   useEffect(() => {
-      getUsuario();
-      setTimeout(() => { 
-        setIsLoading(false)
-      } , 500)
+    setTimeout( ()=>{ getUsuario();} , 350)
   }, [])
 
   useEffect(() => {
     if(user != null){
-      setTimeout(() => {
       crearItinerario()}
-      , 400)
-    }
   }, [user])
 
   if (isLoading){
-    return (
-      <View>
-        <Text>
-          Cargando...
-        </Text>
-      </View>
-    );
+    return (<LoadingScreen/>);
   }
   return(
     <View style={styles.container}>

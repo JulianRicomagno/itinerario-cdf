@@ -11,12 +11,12 @@ export default function AccountStack() {
       <Stack.Screen
         name='datos'
         component={MyData}
-        options={{ title: "Usuario" }}
+        options={{ title: "Usuario"  , headerShown: false,}}
       />
       <Stack.Screen
       name='edit'
       component={Edit}
-      options={{title: " Editar Informacion "}}
+      options={{title: " Editar Informacion " , headerShown: false,}}
       />
     </Stack.Navigator>
   );
