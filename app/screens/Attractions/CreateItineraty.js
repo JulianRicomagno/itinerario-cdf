@@ -1,21 +1,15 @@
 import React, { useState, useEffect } from "react";
 import {
   View,
-  Button,
   Text,
-  FlatList,
   StyleSheet,
-  KeyboardAvoidingView,
-  Image,
   ScrollView,
   TouchableOpacity,
 } from "react-native";
 import moment from "moment";
 import CalendarPicker from "react-native-calendar-picker";
 import RNPickerSelect from "react-native-picker-select";
-import { SearchBar, ListItem, Icon, Avatar } from "react-native-elements";
-import { fetchUser , getAttractionsByName , updateUser , getAllAttractions} from "../../api/PosadasApi";
-//import { handleUser } from "../../utils/Context/Storage";
+import { fetchUser , updateUser , getAllAttractions} from "../../api/PosadasApi";
 
 
 export default function CreateItineraty(props) {
@@ -25,29 +19,14 @@ export default function CreateItineraty(props) {
   const minDate = new Date(); // Today
   const maxDate = new Date(2035, 12, 30);
   const [place, setPlace] = useState("Seleccionar tipo de estadía");
-  const [search, setSearch] = useState('');
   const [hoteles, setHoteles] = useState([]);
   const [userInfo , setUserInfo] = useState({});
   const [isLoading , setIsLoading] = useState(true);
   const [completed , setCompleted] = useState(false);
 
-  async function buscarHotel() {
-    if(search !== ''){
-      try {
-        getAttractionsByName(search)
-          .then((res) => {
-            setHoteles(res.data);
-          })
-          .catch((error) => console.log("Ocurrio un error" + error));
-      } catch (error) {
-        console.log(error.message);
-    }} else {
-      getAllAttractions().then(res => {
-        setHoteles(res.data);
-      })
-      .catch(error => {console.log('Ocurrio un error ' , error)});
-    }
-  }
+  const [hotel, setHotel] = useState("Seleccione un hotel")
+
+ 
 
   function onDateChange(date, type) {
     if (type === "END_DATE") {
@@ -89,7 +68,7 @@ export default function CreateItineraty(props) {
         itinerary : {
           dayFrom: startDate,
           dayTo: endDate,
-          hotel : place, // Esto tiene que cambiar al hotel en sí.
+          hotel : (place === "Hotel") ? hotel : place, // Carga el place o el hotel que corresponde si se selecciona hotel
           totalDays : reqArray,
         },
       };
@@ -106,15 +85,10 @@ export default function CreateItineraty(props) {
   
   useEffect(() => {
     setCompleted(checkCompleted());
-  }, [selectedStartDate , selectedEndDate, place])
-
-  useEffect(() => {
-    if (search !== '') {
-      buscarHotel();
-    }
-  }, [search]);
+  }, [selectedStartDate , selectedEndDate, place, hotel])
 
   useEffect(()=> {
+    getHoteles();
     setTimeout(() => {
       setIsLoading(false);
     }, 400);
@@ -124,16 +98,38 @@ export default function CreateItineraty(props) {
     fetchUserInfo();
   }, [isLoading])
 
+  function getHoteles() {
+    let arrayHotels = [];
+    getAllAttractions().then(res => {
+      res.data.forEach(h =>{
+        if(h.typeAttraction === "Hotel"){
+          let hotel = {
+            label: h.name,
+            value: h.name
+          }
+          arrayHotels.push(hotel);
+        }
+      })
+      setHoteles(arrayHotels);
+    })
+    .catch((err)=>{
+      console.log(err.message)
+    })
+  }
+
   function fetchUserInfo(){
     fetchUser().then(response => setUserInfo(response.data));
   }
 
   function checkCompleted(){
-    return place !== "Seleccionar tipo de estadía" && place !== null && selectedStartDate !== null && selectedEndDate !== null && selectedStartDate !== selectedEndDate;
+    let flag = true;
+    if(place === "Hotel"){
+      flag = hotel !== "Seleccione un hotel"
+    }
+    return place !== "Seleccionar tipo de estadía" && place !== null && selectedStartDate !== null && selectedEndDate !== null && selectedStartDate !== selectedEndDate && flag;
   }
 
-// CalendarPicker no puede cambiar el idioma lamentablemente ☹
-//TODO - cambiar visibilidad del Return para que sea más fácil de leer.
+// CalendarPicker idioma cambiado por gon
 
   return (
     <ScrollView style={{backgroundColor: '#FFFFFF'}}>
@@ -147,12 +143,17 @@ export default function CreateItineraty(props) {
           todayBackgroundColor="#88ebba"
           selectedDayColor="#32BB77"
           selectedDayTextColor="#FFFFFF"
+          weekdays={['Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab', 'Dom']}
+          months={['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']}
+          previousTitle="Anterior"
+          nextTitle="Próximo"
           onDateChange={onDateChange}
         />
         <Text style={styles.text}> Lugar de Estadía </Text>
         <View>
           <View style={styles.picker}>
             <RNPickerSelect
+              placeholder={{label: "Seleccionar tipo de estadía", value: "Seleccionar tipo de estadía"}}
               items={[
                 { label: "Hotel", value: "Hotel" },
                 { label: "Casa", value: "Casa" },
@@ -163,34 +164,20 @@ export default function CreateItineraty(props) {
               <Text>{place}</Text>
             </RNPickerSelect>
           </View>
+          
           {place === "Hotel" ? (
-            <KeyboardAvoidingView>
-              <View>
-                <View>
-                  <SearchBar
-                    placeholder="Busca tu Hotel..."
-                    onChangeText={(e) => setSearch(e)}
-                    value={search}
-                    containerStyle={styles.searchBar}
-                  />
-                  {hoteles.length === 0 ? (
-                    <View>
-                      <NoFoundRestaurants />
-                    </View>
-                  ) : (
-                    <FlatList
-                      data={hoteles}
-                      renderItem={(hotel) => (
-                        <Hotel hotel={hotel} navigation={navigation} />
-                      )}
-                      keyExtractor={(item, index) => index.toString()}
-                    />
-                  )}
-                </View>
-              </View>
-            </KeyboardAvoidingView>
-          ) : (
-            <View style={styles.bottom}>
+            <View style={styles.picker}>
+            <RNPickerSelect
+              placeholder={{label: "Seleccione un hotel", value: "Seleccione un hotel"}}
+              items={hoteles}
+              onValueChange={(value) => setHotel(value)}
+            >
+              <Text>{hotel}</Text>
+            </RNPickerSelect>
+          </View>
+          ) : <></> 
+          }
+          <View style={styles.bottom}>
               <TouchableOpacity
                 onPress={() => pressEnd()}
                 disabled={!completed}
@@ -198,46 +185,10 @@ export default function CreateItineraty(props) {
               >
                 <Text style={[styles.buttonText , {color: completed? '#FFFFFF' : '#385F5E'} ]}>Confirmar</Text>
               </TouchableOpacity>
-            </View>
-          )}
+          </View>
         </View>
       </View>
     </ScrollView>
-  );
-}
-
-
-
-function NoFoundRestaurants() {
-  return (
-    <View style={{ flex: 1, alignItems: "center" }}>
-      <Image
-        source={require("../../../assets/no-result-found.png")}
-        resizeMode="cover"
-        style={{ width: 200, height: 200 }}
-      />
-    </View>
-  );
-}
-
-function Hotel(props) {
-  const { hotel, navigation } = props;
-  const { id, name, image } = hotel.item;
-  console.log(id);
-  console.log(name);
-  console.log(image);
-
-  return (
-    <View>
-      <ListItem bottomDivider onPress={() => navigation.navigate("myTrip")}>
-        <Avatar source={{ uri: image }} />
-        <ListItem.Content>
-          <ListItem.Title>{name}</ListItem.Title>
-          <ListItem.Subtitle>{id}</ListItem.Subtitle>
-        </ListItem.Content>
-        <ListItem.Chevron />
-      </ListItem>
-    </View>
   );
 }
 
@@ -270,18 +221,18 @@ const styles = StyleSheet.create({
     borderColor: "#32BB77",
     borderRadius: 20,
     color: "black",
-    paddingRight: 50,
+    paddingRight: 5,
   },
   searchBar: {
     marginBottom: 20,
   },
   bottom: {
-    margin: 50,
+    margin: 10,
   },
   button: {
     alignSelf: 'center',
     paddingVertical: 10,
-    marginVertical: 10,
+    //marginVertical: 10,
     width: '75%',
     borderRadius: 32,
     borderColor: '#32BB77',
