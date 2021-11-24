@@ -17,7 +17,7 @@ const loginSchema = Yup.object().shape({
     .required('El email es requerido'),
   passwd: Yup
     .string('Ingrese su contraseña')
-    .min(4,'La contraseña debe tener un minimo de 6 caracteres')
+    .min(6,'La contraseña debe tener un minimo de 6 caracteres')
     .required('La contraseña es requerida'),
 });
 
@@ -33,9 +33,8 @@ export function LoginForm(props) {
 
 
   useEffect(() => {
-    handleUser('updateLocal' , updateUser);
-    
-}, [])
+    handleUser('updateLocal' , updateUser);  
+  }, [])
 
   function login(values){
     setTimeout(() => {
@@ -108,7 +107,7 @@ export function LoginForm(props) {
         onPress={() => setVisible(true)}
       >
         {" "}
-        Olvidó su contraseña?
+        ¿Olvidaste tu contraseña?
       </Text>
     );
   }

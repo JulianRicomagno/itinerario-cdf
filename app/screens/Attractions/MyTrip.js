@@ -49,7 +49,6 @@ export default function MyTrip({ route, navigation }) {
 
   const renderItem = ({ item , index  }) => {
     item.number = index + 1;
-    //console.log('el item:' + item.name)
     return (
       <DayItem
       item= {item}
@@ -78,7 +77,7 @@ export default function MyTrip({ route, navigation }) {
     return (
       <View>
         <Text>
-          Cargando.
+          Cargando...
         </Text>
       </View>
     );
@@ -141,7 +140,6 @@ export default function MyTrip({ route, navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1, 
-    padding: 20,
     backgroundColor: '#FFFFFF',
   },
   centeredView: {

@@ -89,27 +89,23 @@ const ModalPopUp = ({visible, children}) =>{
             />
             </TouchableOpacity>
           </View>
-          <Text> Se te olvidó la contraseña? Te enviaremos una nueva a tu correo</Text>
-            <View style={styles.button}>
+          <Text style={{marginBottom:20}}>¿Se te olvidó la contraseña? Te enviaremos una nueva a tu correo</Text>
+          <View style={styles.button}>
           <InputI
             placeHolder={"Ingresa tu correo"} 
             isSecure={false}
             id={"email"}
             defaultValue={forgotEmail}
-            onChangeText={(email) =>setForgotEmail(email)}
-               
+            onChangeText={(email) =>setForgotEmail(email)}  
           />
           </View>
 
           <View style={styles.button}>
-
-          <TouchableOpacity   style={[styles.buttonPosta , {backgroundColor: disabled? '#FFFFFF' : '#32BB77' , borderColor: '#6A6A6A'}]} disabled={disabled}  onPress={()=>{passWord()}}>
-            <Text style={[styles.buttonText , {color : disabled? '#6A6A6A' : '#FFFFFF'}]}>
-              Enviar
-            </Text>
-
-            </TouchableOpacity>
-                    
+            <TouchableOpacity   style={[styles.buttonPosta , {backgroundColor: disabled? '#FFFFFF' : '#32BB77' , borderColor: '#6A6A6A'}]} disabled={disabled}  onPress={()=>{passWord()}}>
+              <Text style={[styles.buttonText , {color : disabled? '#6A6A6A' : '#FFFFFF'}]}>
+                Enviar
+              </Text>
+            </TouchableOpacity>        
           </View>
        
         </View>
@@ -144,9 +140,7 @@ const ModalPopUp = ({visible, children}) =>{
     
       },
       button:{
-        width: "80%",
-        marginTop:30,  
-    
+        width: "100%",
       },
       buttonPosta: {
         alignSelf: 'center',

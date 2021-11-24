@@ -10,6 +10,7 @@ import {handleUser} from '../../utils/Context/Storage';
 import { Text } from 'react-native-elements';
 import { StyleSheet } from 'react-native';
 
+import {fetchUser} from "../../api/PosadasApi"
 
 
 
@@ -17,69 +18,59 @@ import { StyleSheet } from 'react-native';
 
 export default function UserInfo({navigation}) {
     
-    const [generalInfo, setGeneralInfo] = useState({})
+    //const [generalInfo, setGeneralInfo] = useState({})
     const [visible, setVisible] = useState(false);
+    const [user,setUser] = useState({});
+    const [account,setAccount] =useState({})
      
     useEffect(() => {
         getUsuario()
     }, [])
 
+
     async function getUsuario(){
-        try{
-            
-            let myAge = await AsyncStorage.getItem('age');
-            const myEmail = await AsyncStorage.getItem('email');
-            const myName = await AsyncStorage.getItem('name');
-            const mySurname = await AsyncStorage.getItem('lastName');
-            const myNationality = await AsyncStorage.getItem('nationality');
-            const myCountry = await AsyncStorage.getItem('country');
-            const myCity = await AsyncStorage.getItem('city');
-            const myGender = await AsyncStorage.getItem('gender');
-            myAge = myAge.split('"' , 2)[1];
-            const genInfo = {myAge, myEmail, myName, mySurname, myNationality, myCountry, myCity, myGender};
-            setGeneralInfo(genInfo);
-            //console.log(genInfo);
-        }
-        catch(e){console.log(e)}
+        fetchUser().then(res =>{
+            setUser(res.data.generalInfo);
+            setAccount(res.data);
+        }).catch(() => {
+            alert("Error al conectar con la base de datos");
+        });
     }
 
     const removeUser = useAuthRemoveContext();
     function logout(){
-        setTimeout( () => {
-            navigation.reset({index: 0 , routes: [{name: 'itinerary'}]})
-            handleUser('logout' , removeUser);
-        } , 600)
+        navigation.reset({index: 0 , routes: [{name: 'itinerary'}]})
+        handleUser('logout' , removeUser);
     }
 
     function editInfo(){
-        navigation.navigate('edit', {userInfo: generalInfo} )
+        navigation.navigate('edit', {userInfo: {
+            myAge: user.age,
+            myCity: user.city,
+            myCountry: user.country, 
+            myGender: user.gender,
+            mySurname: user.lastName,
+            myName: user.name,
+            myNationality: user.nationality,
+            myEmal: account.email,
+        }} )
     }    
-    
-    const {myAge, myCity, myCountry, myGender, mySurname, 
-        myName, myNationality, myEmail} = generalInfo;
-
-    
-    //todo Clear mock once tests are done
-    /*const userInfo = {Pais: "Japon" , Ciudad: "Tokyo" , Gen: "Masculino"  , name: "Agustin" ,
-        lastName: "Sorrentino" , nacionalidad: "Argentino", email: "sorren@gmail.com" , edad: "25" } */
-    
+       
     
     return (
-        
         <ScrollView style={styles.container}>
             <Text style={styles.header}>Información de Cuenta</Text>
             <View style={[styles.cardView,{height: 183}]}>
                 <View style={styles.cardContainer}>
-                 
                     <View>
                         <Text style={styles.title}>Nombre</Text>
-                            <Text styles={styles.subtitle}>{myName} {mySurname} </Text>
+                            <Text styles={styles.subtitle}>{user.name} {user.lastName} </Text>
                     </View>
                 <View style={styles.lineView}/>
             
                     <View>
                         <Text style={styles.title}>Email</Text>
-                            <Text styles={styles.subtitle}>{myEmail}</Text>
+                            <Text styles={styles.subtitle}>{account.email}</Text>
                     </View>
                 <View style={styles.lineView}/>
                     <View>
@@ -87,56 +78,55 @@ export default function UserInfo({navigation}) {
                             
                         <SmallButton
                         onPress={() => setVisible(true)}
-                        text={'Editar'}
+                        text={'Cambiar'}
                         />    
                     </View>
                 <View style={styles.lineView}/>
                 </View>
             </View>
-
-
             <Text style={styles.header}>Información Personal</Text>
             <View style={[styles.cardView,{height: 285}]}>
                 <View style={styles.cardContainer}>    
             
                     <View>
                         <Text style={styles.title}>Edad</Text>
-                            <Text styles={styles.subtitle}>{myAge}</Text>
+                            <Text styles={styles.subtitle}>{user.age}</Text>
                     </View>
                 <View style={styles.lineView}/>
 
                     <View>
                         <Text style={styles.title}>Género</Text>
-                            <Text styles={styles.subtitle}>{myGender}</Text>
+                            <Text styles={styles.subtitle}>{user.gender}</Text>
                     </View>
                 <View style={styles.lineView}/>
             
             
                     <View>
                         <Text style={styles.title}>Nacionalidad</Text>
-                            <Text styles={styles.subtitle}>{myNationality}</Text>
+                            <Text styles={styles.subtitle}>{user.nationality}</Text>
                     </View>
                 <View style={styles.lineView}/>
             
             
                     <View>
                         <Text style={styles.title}>País</Text>
-                            <Text styles={styles.subtitle}>{myCountry}</Text>
+                            <Text styles={styles.subtitle}>{user.country}</Text>
                     </View>
                 <View style={styles.lineView}/>
             
             
                     <View>
                         <Text style={styles.title}>Ciudad</Text>
-                            <Text styles={styles.subtitle}>{myCity}</Text>
+                            <Text styles={styles.subtitle}>{user.city}</Text>
                     </View>
                 <View style={styles.lineView}/>
             
                 </View>
             </View>
+           
             <EditPassModal open={visible} setVisible={()=> setVisible()} />
             <GreenButton
-            text={'Editar Informacion'}
+            text={'Editar Información'}
             onPress={editInfo}
             />    
             <WhiteButton
@@ -167,7 +157,7 @@ const styles = StyleSheet.create({
         color: '#000000',
         fontSize: 20,
         fontWeight: 'bold',
-        marginRight: 105,
+        //marginRight: 105,
         marginBottom: 5,
         letterSpacing: 1,
         marginBottom: 10,
