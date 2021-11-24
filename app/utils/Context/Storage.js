@@ -1,7 +1,6 @@
 import React from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {loginUser , registerUser, fetchUser} from '../../api/PosadasApi';
-
 import { Alert } from "react-native";
 
 // Recibe un usuario, una acción con el usuario y un hook al cual correr.
@@ -53,7 +52,7 @@ async function setLocalUser(hook){
     fetchUser().then(
         res => {
             const user = res.data;
-            hook({token: user.token , id: user.id, generalInfo: user.generalInfo , email: user.email,  itinerary : user.itinerary})
+            //hook({token: user.token , id: user.id, generalInfo: user.generalInfo , email: user.email,  itinerary : user.itinerary})
         }
     ).catch(
         error => {console.log(error); removeUser();} // TEÓRICAMENTE SI EL FETCH FALLA ES PORQUE O EL USUARIO NO EXISTE, EL TOKEN EXPIRÓ, O EL SERVER ESTÁ CAÍDO.
@@ -63,17 +62,18 @@ async function setLocalUser(hook){
 async function addUser(data){
     try{
         const user = data.user;
-        const myInfo = user.generalInfo
+        await AsyncStorage.setItem('dayFrom' , user.itinerary.dayFrom)
         await AsyncStorage.setItem('token' , data.token);
         await AsyncStorage.setItem('id' , user.id);
-        await AsyncStorage.setItem('email', user.email);
-        await AsyncStorage.setItem('name' , user.generalInfo.name);
-        await AsyncStorage.setItem('lastName' , user.generalInfo.lastName);
-        await AsyncStorage.setItem('age' , JSON.stringify(user.generalInfo.age));
-        await AsyncStorage.setItem('country' , user.generalInfo.country);
-        await AsyncStorage.setItem('nationality' , user.generalInfo.nationality);
-        await AsyncStorage.setItem('city' , user.generalInfo.city);
-        await AsyncStorage.setItem('gender' , user.generalInfo.gender);
+        console.log(user.itinerary.dayFrom)
+        // await AsyncStorage.setItem('email', user.email);
+        // await AsyncStorage.setItem('name' , user.generalInfo.name);
+        // await AsyncStorage.setItem('lastName' , user.generalInfo.lastName);
+        // await AsyncStorage.setItem('age' , JSON.stringify(user.generalInfo.age));
+        // await AsyncStorage.setItem('country' , user.generalInfo.country);
+        // await AsyncStorage.setItem('nationality' , user.generalInfo.nationality);
+        // await AsyncStorage.setItem('city' , user.generalInfo.city);
+        // await AsyncStorage.setItem('gender' , user.generalInfo.gender);
     }catch(e){console.log(e);}
 }
 
@@ -92,31 +92,26 @@ async function updateGeneralInfo(info) {
 }
 
 async function checkCredentials(){
-    if(await AsyncStorage.getItem('token') != null){
+    const token = await AsyncStorage.getItem('token');
+    if(token != null){
         try{
             fetchUser().then(response => {
                 const data = response.data;
+                addUser({user: data , token: token});
                 if(data == null){
                     removeUser();
                     return false;
                 }
         })}catch(e){console.log(e); await AsyncStorage.removeItem('token')}
     }
-    return await AsyncStorage.getItem('token') != null;
+    return token != null;
 }
 
 async function removeUser(hook){
     try{
         await AsyncStorage.removeItem('token');
         await AsyncStorage.removeItem('id');
-        await AsyncStorage.removeItem('email');
-        await AsyncStorage.removeItem('name' );
-        await AsyncStorage.removeItem('lastName' );
-        await AsyncStorage.removeItem('age' );
-        await AsyncStorage.removeItem('country' );
-        await AsyncStorage.removeItem('nationality' );
-        await AsyncStorage.removeItem('city' );
-        await AsyncStorage.removeItem('gender' );
+        await AsyncStorage.removeItem('dayFrom');
         hook();
     }
     catch(e) {console.log(e)};
@@ -129,7 +124,7 @@ async function loginUserStorage(user , hook){
                     loginUser(user).then(function (response) {
                         const data = response.data;
                         addUser(data);
-                        hook({token: data.token, id: data.user.id , generalInfo: data.user.generalInfo});
+                        hook({token: data.token, id: data.user.id , generalInfo: data.user.generalInfo , dayFrom: data.user.itinerary.dayFrom});
                       })
                       .catch(function (error) {
                         Alert.alert("Error","Datos incorrectos");
@@ -145,7 +140,6 @@ function register(user){
     try{
     registerUser(user)
         .then(response => {
-            //console.log(JSON.stringify(response));
             if(JSON.stringify(response.status) == '200'){
                 return alert('Registro exitoso.');
             }
@@ -173,7 +167,10 @@ async function updateLocalCredentials(hook){
         }else{
             let token = await AsyncStorage.getItem('token');
             let id = await AsyncStorage.getItem('id');
-            hook({token: token, id: id});
+            let dayFrom = await AsyncStorage.getItem('dayFrom')
+            setTimeout(() => {
+            hook({token: token , id: id , dayFrom: dayFrom}); 
+        }, 250)
         }
     }catch(e){console.log(e)}
 }

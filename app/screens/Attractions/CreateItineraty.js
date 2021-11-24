@@ -15,11 +15,14 @@ import CalendarPicker from "react-native-calendar-picker";
 import RNPickerSelect from "react-native-picker-select";
 import { SearchBar, ListItem, Icon, Avatar } from "react-native-elements";
 import { fetchUser , getAttractionsByName , updateUser , getAllAttractions} from "../../api/PosadasApi";
+import {useAuthUpdateContext , useAuthContext} from '../../utils/Context/AuthContext';
 //import { handleUser } from "../../utils/Context/Storage";
 
 
 export default function CreateItineraty(props) {
   const { navigation, route } = props;
+  const updateUserContext = useAuthUpdateContext();
+  const userContext = useAuthContext();
   const [selectedStartDate, setSelectedStartDate] = useState(Date);
   const [selectedEndDate, setSelectedEndDate] = useState(Date);
   const minDate = new Date(); // Today
@@ -98,7 +101,9 @@ export default function CreateItineraty(props) {
       updateUser(JSON.stringify(request)).then(
         res => {
           if(res.status == 200)  {
-          navigation.navigate('myTrip')}
+            updateUserContext({...userContext , dayFrom: startDate});
+            setTimeout(()=>{ navigation.navigate('myTrip') } , 200);
+        }
         }
       ).catch(error => console.log(error));
     }

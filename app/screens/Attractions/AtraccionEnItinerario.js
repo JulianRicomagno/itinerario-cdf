@@ -19,12 +19,24 @@ export default function AtraccionEnItinerario({ route, navigation }) {
   const [loading , setLoading] = useState(true);
 
 useEffect(() => {
-  fetchAttraction(id).then(res => setItem(res.data)).catch(error => console.log(error));
-  fetchUser().then(res => setUser(res.data)).catch(error=> console.log(error));
-  setTimeout(() => {
-    setLoading(false);
-  } , 700) 
+  getData();
 } , [])
+
+const getData = () => {
+  fetchAttraction(id).then(res => { 
+      setItem(res.data)
+    }
+    ).catch(error => 
+      console.log(error)
+    );
+    setTimeout( () => { 
+      fetchUser().then(res => {
+        setUser(res.data)
+        setLoading(false);
+      }).catch(error=> console.log(error));
+    } , 150)
+
+}
 
 const removeAttraction = () => {
     let workUser = user;
@@ -51,7 +63,7 @@ const callApiUpdate = (request) =>  {
        if(res.status == 200){
          setTimeout(() => {
            navigation.reset({index : 0, routes: [{name: 'myTrip'}]})
-         } , 600)
+         } , 150)
        }
      }
    ).catch(error => {
@@ -60,7 +72,7 @@ const callApiUpdate = (request) =>  {
 }
 
   if(loading){
-    return(<Text>Loading...</Text>)
+    return(<View style={{backgroundColor: '#FFFFFF' , width: '100%' , height: '100%'}}/>)
   }
 
   return (

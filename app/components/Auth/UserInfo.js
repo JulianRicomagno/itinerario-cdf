@@ -1,7 +1,7 @@
 import React from 'react';
 import {useEffect, useState} from 'react'
 import { ScrollView} from 'react-native-gesture-handler';
-import { View } from 'react-native'
+import { View , ActivityIndicator, Image} from 'react-native'
 import { WhiteButton, GreenButton, SmallButton } from '../../components/buttonI';
 import {EditPassModal} from '../../components/Auth/EditPassModal'
 import { useAuthRemoveContext  } from "../../utils/Context/AuthContext";
@@ -9,8 +9,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {handleUser} from '../../utils/Context/Storage';
 import { Text } from 'react-native-elements';
 import { StyleSheet } from 'react-native';
-
 import {fetchUser} from "../../api/PosadasApi"
+import logoPosadas from '../../../assets/logoPosadas.png'
+import LoadingScreen from '../loadingScreen';
 
 
 
@@ -22,9 +23,12 @@ export default function UserInfo({navigation}) {
     const [visible, setVisible] = useState(false);
     const [user,setUser] = useState({});
     const [account,setAccount] =useState({})
+    const [isLoading, setIsLoading] = useState(true);
      
     useEffect(() => {
+    setTimeout(() => {
         getUsuario()
+    } , 300)
     }, [])
 
 
@@ -32,6 +36,7 @@ export default function UserInfo({navigation}) {
         fetchUser().then(res =>{
             setUser(res.data.generalInfo);
             setAccount(res.data);
+            setIsLoading(false);
         }).catch(() => {
             alert("Error al conectar con la base de datos");
         });
@@ -39,7 +44,7 @@ export default function UserInfo({navigation}) {
 
     const removeUser = useAuthRemoveContext();
     function logout(){
-        navigation.reset({index: 0 , routes: [{name: 'itinerary'}]})
+        //navigation.reset({index: 0 , routes: [{name: 'itinerary'}]})
         handleUser('logout' , removeUser);
     }
 
@@ -56,6 +61,9 @@ export default function UserInfo({navigation}) {
         }} )
     }    
        
+    if(isLoading){
+        return( <LoadingScreen/>)
+    }
     
     return (
         <ScrollView style={styles.container}>
