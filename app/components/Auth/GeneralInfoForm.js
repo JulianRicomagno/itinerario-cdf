@@ -148,6 +148,8 @@ export function GeneralInfoForm({route , navigation,countryNames,token}) {
         register(values);
       }
     }
+    validateOnChange={false}
+    validateOnBlur={false}
     >
     
     {({ errors,  handleChange, handleSubmit, setFieldValue, values }) => (

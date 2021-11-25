@@ -91,10 +91,6 @@ export function EditForm({route , navigation,countryNames,token}) {
 
 
   function update(data){
-    /*
-      userName : 'Pepito', 
-      email: 'Pepito@gmail.com', 
-      passwd: '12345678',*/
     const generalInfo = { 
       name: data.name, 
       lastName: data.surname, 
@@ -104,7 +100,7 @@ export function EditForm({route , navigation,countryNames,token}) {
       country: data.countryResidence, 
       city: data.cityResidence,
     }
-    console.log(generalInfo);
+    //console.log(generalInfo);
     if(generalInfo){
       updateGralInfo(generalInfo)
       .then(() => {
@@ -156,6 +152,8 @@ export function EditForm({route , navigation,countryNames,token}) {
       cityResidence: myCity,
     }}
     validationSchema={generalInfoSchema}
+    validateOnChange={false}
+    validateOnBlur={false}
     onSubmit={
       (values)=> {
         update(values);

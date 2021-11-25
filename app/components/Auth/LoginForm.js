@@ -54,6 +54,8 @@ export function LoginForm(props) {
       passwd: '',
     }}
     validationSchema={loginSchema}
+    validateOnChange={false}
+    validateOnBlur={false}
     onSubmit={
       (values)=> {
         login(values)
@@ -123,7 +125,8 @@ const styles = StyleSheet.create({
   },
   forgotPassword: {
     alignSelf: "flex-end",
-    marginTop: 15,
+    //marginTop: 15,
+    marginBottom: 20,
     marginLeft: 10,
     marginRight: 10,
     fontStyle: "italic",

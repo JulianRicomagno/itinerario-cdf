@@ -6,6 +6,7 @@ import Timeline from 'react-native-timeline-flatlist';
 import MiniAttracItem from './MiniAttracItem';
 import ButtonAdd from './ButtonAdd';
 import moment from 'moment';
+import 'moment/locale/es'
 
 export default function DayItem({item, navigator}) {
       let data = [];
@@ -21,7 +22,9 @@ export default function DayItem({item, navigator}) {
             id: attrac.id,
         })});
     const horas = item.attractions.map(att => att.dateAndHour.split(':' , 1)[0]);
-    const date = moment(item.attendanceDate).format('MMM DD') // Esto es para que el día se muestre "Mes : Nom   Día : 00"
+    moment.locale('es');
+    const dateLowerCase = moment(item.attendanceDate).format('MMM DD') // Esto es para que el día se muestre "Mes : Nom   Día : 00"
+    const date = dateLowerCase.charAt(0).toUpperCase() + dateLowerCase.slice(1); //Se capitaliza la primera letra para que no quede en minuscula
     const index = item.number - 1; // Esto va a la ruta de SearchAttraction para enviarselo a lo demás
     
     const renderDetail = (rowData, sectionID, rowID) => {

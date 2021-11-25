@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Text,
   View,
+  Alert,
 } from "react-native";
 import COLORS from "../colors";
 import Icon from "react-native-vector-icons/MaterialIcons";
@@ -78,7 +79,7 @@ const updateItineraryApiCall = (request) => {
       }
     }
   ).catch(error => {
-    alert('Error del servidor.');
+    Alert.alert("Aviso",'Error del servidor.');
   })
 }
 
