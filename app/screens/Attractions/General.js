@@ -29,8 +29,8 @@ export default function General(props) {
 const styles =  StyleSheet.create ({
     headerImage: {
         height: 350,
-        borderBottomRightRadius: 150,
-        borderBottomLeftRadius: 150,
+        borderBottomRightRadius: 145,
+        borderBottomLeftRadius: 145,
         overflow: "hidden",
     },
     logo: {
