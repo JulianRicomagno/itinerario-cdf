@@ -7,8 +7,6 @@ import { PinkButton } from "../../components/buttonI";
 import { useAuthUpdateContext , useAuthContext } from "../../utils/Context/AuthContext";
 import LoadingScreen from "../../components/loadingScreen";
 
-//import { TouchableOpacity } from 'react-native-gesture-handler';
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 export default function MyTrip({ route, navigation }) {
   const [atraccion, setAtraccion] = useState([]);
