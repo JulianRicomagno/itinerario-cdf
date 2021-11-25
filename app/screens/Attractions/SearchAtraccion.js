@@ -87,7 +87,7 @@ export default function SearchAtraccion(props) {
       })
       setTags(tagFinal);
     })
-    .catch(() => alert("Error de servidor"));
+    .catch(() => Alert.alert("Aviso","Error de servidor"));
   }
 
 
@@ -111,7 +111,7 @@ export default function SearchAtraccion(props) {
       setSavedAtraccions(response.data)
       setAtraccion(response.data)
     })
-    .catch(() => alert("Error al conectarse con el servidor"));
+    .catch(() => Alert.alert("Aviso","Error al conectarse con el servidor"));
   }
  
   useEffect(() => {

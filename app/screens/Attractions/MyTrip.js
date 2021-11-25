@@ -85,7 +85,7 @@ export default function MyTrip({ route, navigation }) {
         renderItem={renderItem}
       />
       <PinkButton
-        text={'Terminar Estadía'} 
+        text={'Terminar Itinerario'} 
         onPress={() => setVisible(true)}
       />
 

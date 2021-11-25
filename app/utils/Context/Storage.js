@@ -125,7 +125,7 @@ async function loginUserStorage(user , hook){
                       .catch(function (error) {
                         Alert.alert("Error","Datos incorrectos");
                       });
-                }catch(e){console.log(e)}
+                }catch(e){console.log(e.message)}
             }else{
                 hook(user);
             }
@@ -137,11 +137,11 @@ function register(user){
     registerUser(user)
         .then(response => {
             if(JSON.stringify(response.status) == '200'){
-                return alert('Registro exitoso.');
+                return Alert.alert("Aviso",'Registro exitoso.');
             }
             
-        }).catch(e => {alert('Registro no completado, revise los datos ingresados e intente nuevamente.');})
-    }catch(e){alert(e)};
+        }).catch(e => {Alert.alert("Aviso",'Registro no completado, revise los datos ingresados e intente nuevamente.');})
+    }catch(e){console.log(e.message)};
 };
 
 
@@ -179,5 +179,5 @@ async function getUser(){
                 data = response.data;
                 return data;
         })
-    }catch(e){alert('Ocurrió un error.'); console.log(e)}
+    }catch(e){Alert.alert("Aviso",'Ocurrió un error.'); console.log(e)}
 }

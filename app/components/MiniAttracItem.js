@@ -12,7 +12,14 @@ export default function MiniAttracItem({item, navigator, indexAttrac , indexDia}
   }
     if(item.name !== ''){
     return (
-        <SafeAreaView style={{marginBottom: 35, flex: 1, marginTop: -15,}}>
+        <SafeAreaView 
+        style={{
+          //marginBottom: 35,
+          flex: 1, 
+          //marginTop: -15,
+          marginTop: 10,
+          marginBottom: 20
+        }}>
         <ListItem
             containerStyle={[styles.atracItem]}           
             >

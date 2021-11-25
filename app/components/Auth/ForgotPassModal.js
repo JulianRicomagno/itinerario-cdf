@@ -1,18 +1,9 @@
 import React, {useState, useEffect} from "react";
-import { StyleSheet, View, Text, Modal, Image, TouchableOpacity, Button } from "react-native";
+import { StyleSheet, View, Text, Modal, Image, TouchableOpacity, Alert } from "react-native";
 import { InputI } from "../../components/inputI";
 import { forgotPassword } from "../../api/PosadasApi";
-import * as Yup from 'yup';
 
-const forgotSchema = Yup.object().shape({
-    email: Yup
-      .string('Ingrese su email')
-      .email('Ingrese un email valido')
-      .required('El email es requerido'),
-  })
-  
-  
-  
+ 
 const ModalPopUp = ({visible, children}) =>{
   const [showModal, setShowModal] = useState(visible)
 
@@ -72,7 +63,7 @@ const ModalPopUp = ({visible, children}) =>{
   }).catch((error) => {
     console.log(error.message)
   })
-    alert("Si el email se encuentra registrado le llegará un email, chequear spam por las dudas ")
+    Alert.alert("Aviso","Le llegará un email si se encuentra registrado, revisar si se encuentra en SPAM")
   }
 
           
@@ -134,9 +125,9 @@ const ModalPopUp = ({visible, children}) =>{
       },
       header: {
         width: '100%',
-        height: 40,
+        height: 30,
         alignItems: 'flex-end',
-        marginBottom: 10,
+        //marginBottom: 10,
     
       },
       button:{

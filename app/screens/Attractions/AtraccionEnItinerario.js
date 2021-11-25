@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Text,
   View,
+  Alert,
 } from "react-native";
 import COLORS from "../colors";
 import Icon from "react-native-vector-icons/MaterialIcons";
@@ -67,7 +68,7 @@ const callApiUpdate = (request) =>  {
        }
      }
    ).catch(error => {
-     alert('Error del servidor.');
+     Alert.alert("Aviso",'Error del servidor.');
    })
 }
 

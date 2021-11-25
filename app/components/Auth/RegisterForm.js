@@ -43,6 +43,8 @@ export function RegisterForm({route, navigation}) {
         navigation.navigate("generalinfo", { user: {userName: values.userName , passwd: values.passwd, email: values.email}})
       }
     }
+    validateOnChange={false}
+    validateOnBlur={false}
     >
     
     {({ errors, handleChange, handleSubmit, values }) => (
