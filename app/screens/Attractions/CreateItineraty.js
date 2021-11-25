@@ -183,9 +183,9 @@ export default function CreateItineraty(props) {
               <TouchableOpacity
                 onPress={() => pressEnd()}
                 disabled={!completed}
-                style={[styles.button , {backgroundColor : completed ? '#32BB77' : '#F1F1F1' , borderColor : completed ? '#32BB77' : '#E33674'}]}
+                style={[styles.button , {backgroundColor : completed ? '#32BB77' : '#C8C7C6' , borderColor : completed ? '#32BB77' : '#FFFFFF'}]}
               >
-                <Text style={[styles.buttonText , {color: completed? '#FFFFFF' : '#385F5E'} ]}>Confirmar</Text>
+                <Text style={[styles.buttonText , {color: completed? '#FFFFFF' : '#FFFFFF'} ]}>Confirmar</Text>
               </TouchableOpacity>
           </View>
         </View>
