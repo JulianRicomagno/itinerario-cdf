@@ -7,6 +7,8 @@ import { PinkButton } from "../../components/buttonI";
 import { useAuthUpdateContext , useAuthContext } from "../../utils/Context/AuthContext";
 import LoadingScreen from "../../components/loadingScreen";
 
+//import { TouchableOpacity } from 'react-native-gesture-handler';
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 export default function MyTrip({ route, navigation }) {
   const [atraccion, setAtraccion] = useState([]);
@@ -61,8 +63,26 @@ export default function MyTrip({ route, navigation }) {
       item= {item}
       navigator={navigation}
       />
-      
     );
+  }
+
+  const renderEndList= () => {
+    return(
+      <TouchableOpacity
+            style={{
+                ...styles.buttonDelete,
+                backgroundColor: '#E33674',
+                borderColor: '#FF0555',
+            }}
+            onPress={() => setVisible(true)}
+        >
+            <Text
+            style={{...styles.buttonText,
+                    color:'#FFFFFF'}}>
+                        Terminar Itinerario
+            </Text>
+        </TouchableOpacity>
+    )
   }
 
   useEffect(() => {
@@ -83,11 +103,12 @@ export default function MyTrip({ route, navigation }) {
         data={atraccion}
         keyExtractor={(item) => item.attendanceDate.toString()} 
         renderItem={renderItem}
+        ListFooterComponent={renderEndList}
       />
-      <PinkButton
+      {/*<PinkButton
         text={'Terminar Itinerario'} 
         onPress={() => setVisible(true)}
-      />
+      />*/}
 
   <Modal
     animationType="slide"
@@ -185,5 +206,14 @@ const styles = StyleSheet.create({
   modalText: {
     marginBottom: 15,
     textAlign: "center"
+  },
+  buttonDelete: {
+    alignSelf: 'center',
+    paddingVertical: 10,
+    marginVertical: 10,
+    width: '45%',
+    borderRadius: 32,
+    borderColor: '#32BB77',
+    borderWidth: 1,
   }
 })
