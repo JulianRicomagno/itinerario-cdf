@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import { StyleSheet, View, Text, Modal, Image, TouchableOpacity, Button } from "react-native";
+import { StyleSheet, View, Text, Modal, Image, TouchableOpacity, Button, Alert } from "react-native";
 import { InputI } from "../../components/inputI";
 import { GreenButton } from "../../components/buttonI";
 //todo Update with Update endpoint
@@ -10,8 +10,8 @@ import { Formik } from 'formik';
 
 const passSchema = Yup.object().shape({
     passwd: Yup
-      .string('Ingrese su nueva pass')
-      .min(6,'La pass debe contener minimo 6 caracteres')
+      .string('Ingrese su nueva contraseña')
+      .min(6,'La contraseña debe contener minimo 6 caracteres')
       .required('La contraseña es requerida'),
     passwordConfirm: Yup
     .string('Confirme su contraseña')
@@ -53,7 +53,6 @@ const ModalPopUp = ({visible, children}) =>{
   export function EditPassModal(props){
     const {open, setVisible = useState()} = props
     const [disabled , setDisabled] = useState(false);
-    const [forgotEmail , setForgotEmail] = useState();
 
   //* Function to trigger endpoint
     function newPass(password){
@@ -63,7 +62,7 @@ const ModalPopUp = ({visible, children}) =>{
       }).catch((error) => {
         console.log(error.message)
       })
-        alert("La password se actualizo correctamente")
+        Alert.alert("Aviso","La contraseña se actualizo correctamente")
     }
           
 
@@ -74,6 +73,8 @@ const ModalPopUp = ({visible, children}) =>{
           passwordConfirm:''
         }}
         validationSchema={passSchema}
+        validateOnChange={false}
+        validateOnBlur={false}
         onSubmit={
           (values)=> {
             newPass(values.passwd)
@@ -95,7 +96,7 @@ const ModalPopUp = ({visible, children}) =>{
           <Text style={styles.title}> Ingrese su nueva contraseña</Text>
             <View style={styles.button}>
           <InputI
-            placeHolder={"Password"} 
+            placeHolder={"Contraseña"} 
             isSecure={true}
             value={values.passwd}
             id={"email"}

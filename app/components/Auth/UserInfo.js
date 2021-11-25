@@ -1,6 +1,6 @@
 import React , {useEffect, useState} from 'react';
 import { ScrollView} from 'react-native-gesture-handler';
-import { View , StyleSheet } from 'react-native'
+import { View , StyleSheet, Alert } from 'react-native'
 import { WhiteButton, GreenButton, SmallButton } from '../../components/buttonI';
 import {EditPassModal} from '../../components/Auth/EditPassModal'
 import { useAuthRemoveContext  } from "../../utils/Context/AuthContext";
@@ -30,7 +30,7 @@ export default function UserInfo({navigation}) {
             setAccount(res.data);
             setIsLoading(false);
         }).catch(() => {
-            alert("Error al conectar con la base de datos");
+            Alert.alert("Aviso","Error al conectar con la base de datos");
         });
     }
 
@@ -73,7 +73,7 @@ export default function UserInfo({navigation}) {
                     </View>
                 <View style={styles.lineView}/>
                     <View>
-                        <Text style={{...styles.title, alignSelf: 'flex-start'}}>Password</Text>
+                        <Text style={{...styles.title, alignSelf: 'flex-start'}}>Contraseña</Text>
                             
                         <SmallButton
                         onPress={() => setVisible(true)}
