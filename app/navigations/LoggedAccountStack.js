@@ -9,14 +9,14 @@ export default function AccountStack() {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name='datos'
+        name="datos"
         component={MyData}
-        options={{ title: "Usuario"  , headerShown: false,}}
+        options={{ title: "Usuario", headerShown: false }}
       />
       <Stack.Screen
-      name='edit'
-      component={Edit}
-      options={{title: " Editar Informacion " , headerShown: false,}}
+        name="edit"
+        component={Edit}
+        options={{ title: " Editar Informacion ", headerShown: false }}
       />
     </Stack.Navigator>
   );

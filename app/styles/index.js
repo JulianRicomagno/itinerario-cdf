@@ -1,5 +1,3 @@
-import layoutStyle from './layout';
+import layoutStyle from "./layout";
 
-export {
-    layoutStyle
-};
+export { layoutStyle };

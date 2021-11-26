@@ -10,64 +10,64 @@ import {
 import { SearchBar } from "react-native-elements";
 import AttracItem from "../../components/attracItem";
 import TagItem from "../../components/tagItem";
-import {getAttractionsByType, getAttractionsTypes, getAllAttractions, fetchUser} from "../../api/PosadasApi"
+import {
+  getAttractionsTypes,
+  getAllAttractions,
+  fetchUser,
+} from "../../api/PosadasApi";
 
 export default function SearchAtraccion(props) {
   const { navigation, route } = props;
   const index = route.params?.index;
   const horas = route.params?.horas;
   const [atraccion, setAtraccion] = useState([]);
-  const [search, setSearch] = useState('');
-  const [selectedId, setSelectedId] = useState('');
-  const [tags,setTags] = useState();
+  const [search, setSearch] = useState("");
+  const [selectedId, setSelectedId] = useState("");
+  const [tags, setTags] = useState();
   const [tieneItinerario, setTieneItinerario] = useState(false);
-  const [savedAtraccions,setSavedAtraccions] = useState([]);
- 
- 
- 
-  const [user , setUser] = useState();
+  const [savedAtraccions, setSavedAtraccions] = useState([]);
+  const [user, setUser] = useState();
 
-
-   function verificarItinerario(){
-    setTieneItinerario(user.itinerary.dayFrom !== '');
+  function verificarItinerario() {
+    setTieneItinerario(user.itinerary.dayFrom !== "");
   }
 
-  function getUsuario(){
-    fetchUser().then(res =>
-      {
+  function getUsuario() {
+    fetchUser()
+      .then((res) => {
         setUser(res.data);
-      }).catch(error => console.log(error));  
+      })
+      .catch((error) => console.log(error));
   }
 
   useEffect(() => {
-      getUsuario();
-  }, [])
+    getUsuario();
+  }, []);
 
   useEffect(() => {
-    if(user != null){
+    if (user != null) {
       verificarItinerario();
     }
-  }, [user])
-
+  }, [user]);
 
   async function searchByTypeText() {
     //CASO: buscador vacio y fitro desactivado
-    if(search === '' && selectedId === ''){
+    if (search === "" && selectedId === "") {
       setAtraccion(savedAtraccions);
     }
     //CASO: buscador vacio y filtro activado
-    if(search === '' && selectedId !== ''){
-      setAtraccion(filterRecreationByType(savedAtraccions,selectedId));
+    if (search === "" && selectedId !== "") {
+      setAtraccion(filterRecreationByType(savedAtraccions, selectedId));
     }
     //CASO: buscador con info y filtro desactivado
-    if(search !== ''  && selectedId === ''  ){
+    if (search !== "" && selectedId === "") {
       let data = filterData(savedAtraccions);
       setAtraccion(data);
     }
     //CASO: buscador con info y filtro activado
-    if(search !== ''  && selectedId !== ''){
+    if (search !== "" && selectedId !== "") {
       let data = filterData(atraccion);
-      setAtraccion(filterRecreationByType(data,selectedId));
+      setAtraccion(filterRecreationByType(data, selectedId));
     }
   }
 
@@ -75,60 +75,60 @@ export default function SearchAtraccion(props) {
     return array.filter((attr) => attr.typeAttraction === type);
   }
 
-  async function setAllTypes(){
-    let tagFinal = []
+  async function setAllTypes() {
+    let tagFinal = [];
     getAttractionsTypes()
-    .then((attractions) => {
-      attractions.data.forEach((tagName) => {
-        let tag = {
-          title: tagName, id: tagName
-        }
-        tagFinal.push(tag)
+      .then((attractions) => {
+        attractions.data.forEach((tagName) => {
+          let tag = {
+            title: tagName,
+            id: tagName,
+          };
+          tagFinal.push(tag);
+        });
+        setTags(tagFinal);
       })
-      setTags(tagFinal);
-    })
-    .catch(() => Alert.alert("Aviso","Error de servidor"));
+      .catch(() => Alert.alert("Aviso", "Error de servidor"));
   }
 
-
-  async function searchItems(value){
+  async function searchItems(value) {
     setSearch(value);
-    if (search !== '') {
+    if (search !== "") {
       let filteredData = filterData(atraccion);
-      setAtraccion(filteredData)
+      setAtraccion(filteredData);
     }
   }
 
-  function filterData(array){
+  function filterData(array) {
     return array.filter((i) => {
-      return Object.values(i).join('').toLowerCase().includes(search.toLowerCase())
-     })
+      return Object.values(i)
+        .join("")
+        .toLowerCase()
+        .includes(search.toLowerCase());
+    });
   }
 
-  async function getAttractions(){
+  async function getAttractions() {
     getAllAttractions()
-    .then((response) => {
-      setSavedAtraccions(response.data)
-      setAtraccion(response.data)
-    })
-    .catch(() => Alert.alert("Aviso","Error al conectarse con el servidor"));
+      .then((response) => {
+        setSavedAtraccions(response.data);
+        setAtraccion(response.data);
+      })
+      .catch(() => Alert.alert("Aviso", "Error al conectarse con el servidor"));
   }
- 
+
   useEffect(() => {
     setAllTypes();
     getAttractions();
-  },[])
-
+  }, []);
 
   useEffect(() => {
     searchByTypeText();
-  },[search,selectedId])
-
-  
+  }, [search, selectedId]);
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#FFFFFF", marginTop:20}}>
-      <View style={{ padding: 20}}>
+    <View style={{ flex: 1, backgroundColor: "#FFFFFF", marginTop: 20 }}>
+      <View style={{ padding: 20 }}>
         <SearchBar
           placeholder="Buscar Atracciones..."
           onChangeText={(e) => searchItems(e)}
@@ -152,9 +152,10 @@ export default function SearchAtraccion(props) {
           />
         </SafeAreaView>
       </View>
-
-      { atraccion.length > 0 ? (
-        <View style={{ flex: 1, flexDirection: "column", justifyContent: "center" }}>
+      {atraccion.length > 0 ? (
+        <View
+          style={{ flex: 1, flexDirection: "column", justifyContent: "center" }}
+        >
           <SafeAreaView style={styles.container}>
             <FlatList
               keyExtractor={(item) => item.id.toString()}
@@ -163,25 +164,30 @@ export default function SearchAtraccion(props) {
             />
           </SafeAreaView>
         </View>
-      ): 
-      <View>
+      ) : (
+        <View>
           <Text style={styles.secondaryText}>No se encontraron resultados</Text>
         </View>
-      }
+      )}
     </View>
   );
 
   function renderAtracc({ item }) {
     return (
-     
       <AttracItem
         item={item}
         onPress={() => {
-          if(!tieneItinerario){
-            Alert.alert("Aviso","Para poder ver el detalle, cree el itinerario")
-          }else{
-            navigation.navigate("detalleAtraccion", { item: item , index: index , horas : horas});
-
+          if (!tieneItinerario) {
+            Alert.alert(
+              "Aviso",
+              "Para poder ver el detalle, cree el itinerario"
+            );
+          } else {
+            navigation.navigate("detalleAtraccion", {
+              item: item,
+              index: index,
+              horas: horas,
+            });
           }
         }}
       />
@@ -196,10 +202,10 @@ export default function SearchAtraccion(props) {
       <TagItem
         item={item}
         onPress={() => {
-          if(selectedId === ''){
-            setSelectedId(item.id)
-          }else{
-            setSelectedId('')
+          if (selectedId === "") {
+            setSelectedId(item.id);
+          } else {
+            setSelectedId("");
           }
         }}
         backgroundColor={{ backgroundColor }}
@@ -207,8 +213,6 @@ export default function SearchAtraccion(props) {
       />
     );
   }
-
-
 }
 
 const styles = StyleSheet.create({
@@ -242,7 +246,6 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    //marginTop: StatusBar.currentHeight || 0,
   },
   secondaryText: {
     fontSize: 14,
