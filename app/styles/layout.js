@@ -1,12 +1,12 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet } from "react-native";
 
 const layoutStyle = StyleSheet.create({
-    container: {
-        backgroundColor: 'white',
-        flex: 1,
-        justifyContent: 'center',
-        padding: 20
-    },
+  container: {
+    backgroundColor: "white",
+    flex: 1,
+    justifyContent: "center",
+    padding: 20,
+  },
 });
 
 export default layoutStyle;

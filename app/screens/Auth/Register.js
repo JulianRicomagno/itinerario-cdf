@@ -1,12 +1,5 @@
-import React, { useContext, useState, useEffect } from "react";
-import {
-  StyleSheet,
-  Image,
-  ScrollView,
-  View,
-  Text,
-  KeyboardAvoidingView,
-} from "react-native";
+import React from "react";
+import { StyleSheet, Image, ScrollView, View, Text } from "react-native";
 import logo from "../../../assets/logoPosadas.png";
 import { RegisterForm } from "../../components/Auth/RegisterForm";
 
@@ -27,7 +20,7 @@ const styles = StyleSheet.create({
   container: {
     width: "80%",
     alignSelf: "center",
-    marginTop: 45
+    marginTop: 45,
   },
   logo: {
     width: "100%",
