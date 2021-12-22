@@ -89,7 +89,7 @@ export default function UserInfo({ navigation }) {
         </View>
       </View>
       <Text style={styles.header}>Información Personal</Text>
-      <View style={[styles.cardView, { height: 285 }]}>
+      <View style={[styles.cardView, { height: 300 }]}>
         <View style={styles.cardContainer}>
           <View>
             <Text style={styles.title}>Edad</Text>
